@@ -501,7 +501,6 @@
     <Compile Include="classes\MainUI\PartyEditor\PartyEditor.cs" />
     <Compile Include="classes\MainUI\RogueCheats.cs" />
     <Compile Include="classes\Infrastructure\RespecHelper.cs" />
-    <Compile Include="classes\Models\Settings+Multiclass.cs" />
     <Compile Include="classes\Models\Settings+UI.cs" />
     <Compile Include="classes\Models\Settings.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\AkSoundEngineController.cs" />
@@ -540,6 +539,9 @@
     <Content Include="zmisc\api.txt" />
     <None Include="zip-hash-sign.ps1" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Localization\" />
+  </ItemGroup>
   <Import Project="$(SolutionDir)ModKit\ModKitSrc.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -555,7 +557,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

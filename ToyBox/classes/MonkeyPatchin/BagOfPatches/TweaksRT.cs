@@ -115,8 +115,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(AudioServiceDrivingBehaviour), nameof(AudioServiceDrivingBehaviour.OnApplicationFocus))]
         public static class AudioServiceDrivingBehaviourPatch {
             [HarmonyPrefix]
-            private static bool OnApplicationFocus(AkSoundEngineController __instance) {
-                Mod.Trace($"AudioServiceDrivingBehaviour.OnApplicationFocus - {Settings.toggleContinueAudioOnLostFocus}");
+            private static bool OnApplicationFocus() {
                 return !Settings.toggleContinueAudioOnLostFocus;
             }
         }
@@ -124,7 +123,6 @@ namespace ToyBox.BagOfPatches {
         public static class SoundStateOnApplicationFocusChangedPatch {
             [HarmonyPrefix]
             private static bool OnApplicationFocusChanged() {
-                Mod.Trace($"AudioServiceDrivingBehaviour.OnApplicationFocusChanged - {Settings.toggleContinueAudioOnLostFocus}");
                 return !Settings.toggleContinueAudioOnLostFocus;
             }
         }
@@ -141,7 +139,6 @@ namespace ToyBox.BagOfPatches {
                         u.Brain.RestoreAvailableActions();
                     }
                 }
-                if (!inCombat && Settings.toggleRechargeItemsAfterCombat) { }
                 if (!inCombat && Settings.toggleInstantRestAfterCombat) {
                     CheatsCombat.RestAll();
                 }

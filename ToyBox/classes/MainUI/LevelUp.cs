@@ -14,17 +14,10 @@ namespace ToyBox {
             Div(0, 25);
             HStack("Create & Level Up".localize(), 1,
                 () => {
-                    Toggle("Ignore Class Restrictions".localize(), ref Settings.toggleIgnoreClassRestrictions);
-                    Space(25);
-                },
-                () => {
                 },
                 () => Toggle("Ignore Talent Prerequisites".localize(), ref Settings.toggleFeaturesIgnorePrerequisites),
                 () => Toggle("Ignore Required Stat Values".localize(), ref Settings.toggleIgnorePrerequisiteStatValue),
                 () => Toggle("Ignore Required Class Levels".localize(), ref Settings.toggleIgnorePrerequisiteClassLevel),
-#if false // This is incredibly optimistic and requires resolving a bunch of conflicts with the existing gestalt and scroll copy logic
-                () => UI.Toggle("Ignore Spellbook Restrictions When Choosing Spells", ref settings.toggleUniversalSpellbookd),
-#endif
                 () => { }
                 );
         }

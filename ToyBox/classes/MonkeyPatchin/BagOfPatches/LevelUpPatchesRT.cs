@@ -6,18 +6,18 @@ using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Root;
+using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.UnitLogic;
+using Kingmaker.UnitLogic.Progression.Prerequisites;
+using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using ModKit;
 using System.Reflection;
 using System.Reflection.Emit;
 using ToyBox;
-using Kingmaker.UnitLogic.Progression.Prerequisites;
-using Kingmaker.EntitySystem.Entities;
+using UnityEngine;
 //using ToyBox.Multiclass;
 
 namespace ToyBox.BagOfPatches {
@@ -25,22 +25,13 @@ namespace ToyBox.BagOfPatches {
         public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
-        [HarmonyPatch(typeof(LevelUpController), nameof(LevelUpController.CanLevelUp))]
-        private static class LevelUpController_CanLevelUp_Patch {
-            private static void Postfix(ref bool __result) {
-                if (Settings.toggleNoLevelUpRestrictions) {
-                    __result = true;
-                }
-            }
-        }
 
-        
         [HarmonyPatch(typeof(PrerequisiteLevel), nameof(PrerequisiteLevel.MeetsInternal))]
         public static class PrerequisiteLevelPatch {
             [HarmonyPostfix]
             public static void MeetsInternal(PrerequisiteLevel __instance, BaseUnitEntity unit, ref bool __result) {
                 if (!unit.IsPartyOrPet()) return; // don't give extra feats to NPCs
-                if (!__result && Settings.toggleIgnorePrerequisiteClassLevel || Settings.toggleIgnoreFeatRestrictions) {
+                if (!__result && Settings.toggleIgnorePrerequisiteClassLevel) {
                     Mod.Debug($"PrerequisiteLevel.MeetsInternal - {unit.CharacterName} - {__instance.GetCaptionInternal()} -{__result} -> {true} ");
                     __result = true;
                 }
@@ -51,7 +42,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPostfix]
             public static void MeetsInternal(PrerequisiteFact __instance, BaseUnitEntity unit, ref bool __result) {
                 if (!unit.IsPartyOrPet()) return; // don't give extra feats to NPCs
-                if (!__result && Settings.toggleFeaturesIgnorePrerequisites || Settings.toggleIgnoreFeatRestrictions) {
+                if (!__result && Settings.toggleFeaturesIgnorePrerequisites) {
                     Mod.Debug($"PrerequisiteFact.MeetsInternal - {unit.CharacterName} - {__instance.GetCaptionInternal()} -{__result} -> {true} ");
                     __result = true;
                 }
@@ -62,7 +53,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPostfix]
             public static void MeetsInternal(PrerequisiteStat __instance, BaseUnitEntity unit, ref bool __result) {
                 if (!unit.IsPartyOrPet()) return; // don't give extra feats to NPCs
-                if (!__result && Settings.toggleIgnorePrerequisiteStatValue || Settings.toggleIgnoreFeatRestrictions) {
+                if (!__result && Settings.toggleIgnorePrerequisiteStatValue) {
                     Mod.Debug($"PrerequisiteStat.MeetsInternal - {unit.CharacterName} - {__instance.GetCaptionInternal()} -{__result} -> {true} ");
                     __result = true;
                 }
@@ -584,7 +575,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        #if false
+#if false
         [HarmonyPatch(typeof(CharGenNamePhaseVM))]
         private static class CharGenNamePhaseVMPatch {
             [HarmonyPatch(nameof(CharGenFeatureSelectorPhaseVM.CheckIsCompleted))]
@@ -608,7 +599,7 @@ namespace ToyBox.BagOfPatches {
                 __result = true;
             }
         }
-        #endif
+#endif
 
 #if false
         [HarmonyPatch(typeof(ProgressionData), nameof(ProgressionData.CalculateLevelEntries))]

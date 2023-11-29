@@ -1,9 +1,9 @@
-﻿using System;
+﻿using ModKit;
+using ModKit.Utility;
+using System;
 using System.Linq;
 using UnityEngine;
-using ModKit;
 using static ModKit.UI;
-using ModKit.Utility;
 
 namespace ToyBox {
     public static class EnhancedCamera {
@@ -25,7 +25,7 @@ namespace ToyBox {
                        Label(("Note:".orange() + " For cutscenes and some situations the rotation keys are disabled so you have to hold down Mouse3 to drag in order to get rotation".green()).localize());
                    },
                    () => {
-                       if (Toggle("Enable Mouse3 Dragging To Aim The Camera".localize(), ref Settings.toggleCameraPitch,400.width())) {
+                       if (Toggle("Enable Mouse3 Dragging To Aim The Camera".localize(), ref Settings.toggleCameraPitch, 400.width())) {
                            Main.resetExtraCameraAngles = true;
                        }
                        153.space();
@@ -59,7 +59,6 @@ namespace ToyBox {
                        BindableActionButton(ResetAdditionalCameraAngles, true);
                    },
                    () => LogSlider("Field Of View".localize(), ref Settings.fovMultiplier, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
-                   () => LogSlider("FoV (Cut Scenes)".localize(), ref Settings.fovMultiplierCutScenes, 0.4f, 5.0f, 1, 2, "", AutoWidth()),
                    () => { }
                 );
         }

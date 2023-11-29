@@ -33,7 +33,6 @@ namespace ToyBox {
     internal static class Main {
         internal static Harmony HarmonyInstance;
         public static readonly LogChannel logger = LogChannelFactory.GetOrCreate("Respec");
-        private static string _modId;
         public static Settings Settings;
         public static NamedAction[] tabs = {
                     new NamedAction("Bag of Tricks", BagOfTricks.OnGUI),
@@ -76,7 +75,6 @@ namespace ToyBox {
 #if DEBUG
                 modEntry.OnUnload = OnUnload;
 #endif
-                _modId = modEntry.Info.Id;
 
                 Mod.OnLoad(modEntry);
                 UIHelpers.OnLoad();

@@ -97,20 +97,6 @@ namespace ToyBox {
 #if BUILD_CRUI
             ActionButton("Demo crUI", () => ModKit.crUI.Demo());
 #endif
-            using (HorizontalScope()) {
-                Toggle("Apply Bug Fixes".localize(), ref Settings.toggleBugFixes, 400.width());
-                using (VerticalScope()) {
-                    HelpLabel("ToyBox can patch some critical bugs in Rogue Trader Beta, including the following:".localize());
-                    using (HorizontalScope()) {
-                        25.space();
-                        using (VerticalScope()) {
-                            Label("- " + "Failure to load saves that reference custom portraits".localize().cyan() + "  -  " +
-                                "If you have a save that uses custom portraits and don't toggle this your game will crash when starting".localize().magenta());
-                        }
-                    }
-                }
-            }
-            Div(0, 25);
             if (Main.IsInGame) {
                 using (HorizontalScope()) {
                     Space(25);
@@ -223,8 +209,6 @@ namespace ToyBox {
                        Toggle("Dialog Conditions".localize(), ref Settings.previewDialogConditions);
                        25.space();
                        Toggle("Dialog Alignment".localize(), ref Settings.previewAlignmentRestrictedDialog);
-                       25.space();
-                       Toggle("Random Encounters".localize(), ref Settings.previewRandomEncounters);
                        BindableActionButton(PreviewDialogResults, true);
                    });
             Div(0, 25);
@@ -236,38 +220,12 @@ namespace ToyBox {
                        Label("Draws dialog choices that you have previously selected in smaller type".localize().green());
                    },
                    () => {
-                       Toggle("Expand Dialog To Include Remote Companions".localize().bold(), ref Settings.toggleRemoteCompanionDialog, 300.width());
-                       200.space();
-                       Label(("Experimental".orange() + " Allow remote companions to make comments on dialog you are having.").localize().green());
-                   },
-                   () => {
-                       if (Settings.toggleRemoteCompanionDialog) {
-                           50.space();
-                           Toggle("Include Former Companions".localize(), ref Settings.toggleExCompanionDialog, 300.width());
-                           150.space();
-                           Label("This also includes companions who left the party such as Wenduag if you picked Lann".localize().green());
-                       }
-                   },
-                   () => {
                        using (VerticalScope(300.width())) {
                            Toggle("Expand Answers For Conditional Responses".localize(), ref Settings.toggleShowAnswersForEachConditionalResponse, 300.width());
-                           if (Settings.toggleShowAnswersForEachConditionalResponse) {
-                               using (HorizontalScope()) {
-                                   50.space();
-                                   Toggle("Show Unavailable Responses".localize(), ref Settings.toggleShowAllAnswersForEachConditionalResponse, 250.width());
-                               }
-                           }
                        }
                        200.space();
                        Label("Some responses such as comments about your mythic powers will always choose the first one by default. This will show a copy of the answer and the condition for each possible response that an NPC might make to you based on".localize().green());
                    },
-#if DEBUG
-                   () => {
-                       Toggle("Randomize NPC Responses To Dialog Choices".localize(), ref Settings.toggleRandomizeCueSelections, 300.width());
-                       200.space();
-                       Label(("Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit".green() + "\nWarning:".yellow().bold() + " this will introduce randomness to NPC responses to you in general and may lead to surprising or even wild outcomes".orange()).localize());
-                   },
-#endif
                    () => Toggle("Disable Dialog Restrictions (SoulMark)".localize(), ref Settings.toggleDialogRestrictions),
 #if DEBUG
                    () => Toggle("Disable Dialog Restrictions (Everything, Experimental)".localize(), ref Settings.toggleDialogRestrictionsEverything),
@@ -287,7 +245,6 @@ namespace ToyBox {
                        Toggle("Mark Interesting NPCs".localize(), ref Settings.toggleShowInterestingNPCsOnLocalMap, 500.width());
                        HelpLabel("This will change the color of NPC names on the highlike makers and change the color map markers to indicate that they have interesting or conditional interactions".localize());
                    },
-                   () => Toggle("Highlight Copyable Scrolls".localize(), ref Settings.toggleHighlightCopyableScrolls),
                    () => {
                        Toggle("Auto load Last Save on launch".localize(), ref Settings.toggleAutomaticallyLoadLastSave, 500.width());
                        HelpLabel("Hold down shift during launch to bypass".localize());
@@ -297,7 +254,6 @@ namespace ToyBox {
                        HelpLabel("When loading a game this will go right into the game without having to 'Press any key to continue'".localize());
                    },
                    () => Toggle("Make game continue to play music on lost focus".localize(), ref Settings.toggleContinueAudioOnLostFocus),
-                   () => Toggle("Make tutorials not appear if disabled in settings".localize(), ref Settings.toggleForceTutorialsToHonorSettings),
                    () => Toggle("Refill consumables in belt slots if in inventory".localize(), ref Settings.togglAutoEquipConsumables),
                    () => {
                        var modifier = KeyBindings.GetBinding("InventoryUseModifier");
@@ -387,12 +343,7 @@ namespace ToyBox {
                    () => Toggle("Unlimited Actions During Turn".localize(), ref Settings.toggleUnlimitedActionsPerTurn),
                    () => Toggle("Infinite Charges On Items".localize(), ref Settings.toggleInfiniteItems),
                    () => Toggle("ignore Equipment Restrictions".localize(), ref Settings.toggleEquipmentRestrictions),
-                   () => Toggle("No Friendly Fire On AOEs".localize(), ref Settings.toggleNoFriendlyFireForAOE),
-                   () => Toggle("No Fog Of War".localize(), ref Settings.toggleNoFogOfWar),
                    () => Toggle("Restore Spells & Skills After Combat".localize(), ref Settings.toggleRestoreSpellsAbilitiesAfterCombat),
-                   //() => UI.Toggle("Recharge Items After Combat", ref settings.toggleRechargeItemsAfterCombat),
-                   //() => UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0),
-                   //() => UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0),
                    () => Toggle("Instant Rest After Combat".localize(), ref Settings.toggleInstantRestAfterCombat),
                 () => Toggle("Allow Equipment Change During Combat".localize(), ref Settings.toggleEquipItemsDuringCombat),
                 () => Toggle("Allow Item Use From Inventory During Combat".localize(), ref Settings.toggleUseItemsDuringCombat),
@@ -404,18 +355,7 @@ namespace ToyBox {
                 () => { }
                 );
             Div(153, 25);
-            HStack("", 1,
-                () => EnumGrid("Disable Attacks Of Opportunity".localize(), ref Settings.noAttacksOfOpportunitySelection, AutoWidth()),
-                    () => EnumGrid("Can Move Through".localize(), ref Settings.allowMovementThroughSelection, AutoWidth()),
-                    () => {
-                        Space(328); Label("This allows characters you control to move through the selected category of units during combat".localize().green(), AutoWidth());
-                    }
-#if false
-                () => { UI.Slider("Collision Radius Multiplier", ref settings.collisionRadiusMultiplier, 0f, 2f, 1f, 1, "", UI.AutoWidth()); },
-#endif
-                );
-            Div(0, 25);
-            HStack("Experience Multipliers".localize(), 1,
+            HStack("Experience Multipliers".localize() + " (Currently not implemented! If you're reading this it was probably forgotten)".red().bold(), 1,
                 () => LogSlider("All Experience".localize(), ref Settings.experienceMultiplier, 0f, 100f, 1, 1, "", AutoWidth()),
                 () => {
                     using (HorizontalScope()) {
@@ -462,6 +402,7 @@ namespace ToyBox {
                     if (units != null) {
                         foreach (var unit in units) {
                             // TODO: do we need this for RT?
+                            // TODO: who knows?
                             FogOfWarRevealerSettings revealer = unit.View?.FogOfWarRevealer;
                             if (revealer != null) {
                                 if (Settings.fowMultiplier == 1) {
@@ -477,33 +418,12 @@ namespace ToyBox {
                         }
                     }
                 },
-                () => LogSlider("Money Earned".localize(), ref Settings.moneyMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
-                () => LogSlider("Vendor Sell Price".localize(), ref Settings.vendorSellPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
-                () => LogSlider("Vendor Buy Price".localize(), ref Settings.vendorBuyPriceMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
-                () => Slider("Increase Carry Capacity".localize(), ref Settings.encumberanceMultiplier, 1, 100, 1, "", AutoWidth()),
-                () => Slider("Increase Carry Capacity (Party Only)".localize(), ref Settings.encumberanceMultiplierPartyOnly, 1, 100, 1, "", AutoWidth()),
-                () => LogSlider("Spontaneous Spells Per Day".localize(), ref Settings.spellsPerDayMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
-                () => LogSlider("Prepared Spellslots".localize(), ref Settings.memorizedSpellsMultiplier, 0f, 20, 1, 1, "", AutoWidth()),
                 () => {
                     LogSlider("Movement Speed".localize(), ref Settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", Width(600));
                     Space(25);
-                    Toggle("Whole Team Moves Same Speed".localize(), ref Settings.toggleMoveSpeedAsOne);
-                    Space(25);
                     Label("Adjusts the movement speed of your party in area maps".localize().green());
                 },
-                () => {
-                    LogSlider("Travel Speed".localize(), ref Settings.travelSpeedMultiplier, 0f, 20, 1, 1, "", Width(600));
-                    Space(25);
-                    Label("Adjusts the movement speed of your party on world maps".localize().green());
-                },
-                () => {
-                    LogSlider("Companion Cost".localize(), ref Settings.companionCostMultiplier, 0, 20, 1, 1, "", Width(600));
-                    Space(25);
-                    Label("Adjusts costs of hiring mercenaries at the Pathfinder vendor".localize().green());
-
-                },
-                () => LogSlider("Enemy HP Multiplier".localize(), ref Settings.enemyBaseHitPointsMultiplier, 0.1f, 20, 1, 1, "", AutoWidth()),
-                () => LogSlider("Buff Duration".localize(), ref Settings.buffDurationMultiplierValue, 0f, 9999, 1, 1, "", AutoWidth()),
+                () => LogSlider("Buff Duration".localize() + " (Currently not implemented! If you're reading this it was probably forgotten)".red().bold(), ref Settings.buffDurationMultiplierValue, 0f, 9999, 1, 1, "", AutoWidth()),
                 () => DisclosureToggle("Exceptions to Buff Duration Multiplier (Advanced; will cause blueprints to load)".localize(), ref showBuffDurationExceptions),
                 () => {
                     if (!showBuffDurationExceptions) return;
@@ -516,30 +436,6 @@ namespace ToyBox {
             Div(0, 25);
             DiceRollsGUI.OnGUI();
             Div(0, 25);
-            HStack("Summons".localize(), 1,
-                () => Toggle("Make Controllable".localize(), ref Settings.toggleMakeSummmonsControllable),
-                () => {
-                    using (VerticalScope()) {
-                        Div(0, 25);
-                        using (HorizontalScope()) {
-                            Label("Primary".localize().orange(), AutoWidth()); Space(215); Label("good for party".localize().green());
-                        }
-                        Space(25);
-                        EnumGrid("Modify Summons For".localize(), ref Settings.summonTweakTarget1, AutoWidth());
-                        LogSlider("Duration Multiplier".localize(), ref Settings.summonDurationMultiplier1, 0f, 20, 1, 2, "", AutoWidth());
-                        Slider("Level Increase/Decrease".localize(), ref Settings.summonLevelModifier1, -20f, +20f, 0f, 0, "", AutoWidth());
-                        Div(0, 25);
-                        using (HorizontalScope()) {
-                            Label("Secondary".localize().orange(), AutoWidth()); Space(215); Label("good for larger group or to reduce enemies".localize().green());
-                        }
-                        Space(25);
-                        EnumGrid("Modify Summons For".localize(), ref Settings.summonTweakTarget2, AutoWidth());
-                        LogSlider("Duration Multiplier".localize(), ref Settings.summonDurationMultiplier2, 0f, 20, 1, 2, "", AutoWidth());
-                        Slider("Level Increase/Decrease".localize(), ref Settings.summonLevelModifier2, -20f, +20f, 0f, 0, "", AutoWidth());
-                    }
-                },
-                () => { }
-             );
         }
     }
 }

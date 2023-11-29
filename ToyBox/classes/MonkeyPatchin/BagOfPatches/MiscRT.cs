@@ -56,19 +56,6 @@ namespace ToyBox.BagOfPatches {
         public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
-        [HarmonyPatch(typeof(PortraitData))]
-        public static class PortraitDataPatch {
-            [HarmonyPatch(nameof(PortraitData.OnDeserialized))]
-            [HarmonyPrefix]
-            private static bool OnDeserialized(PortraitData __instance, StreamingContext context) {
-                if (!Settings.toggleBugFixes) return true;
-                if (!__instance.IsCustom)
-                    __instance.InitHandles();
-                //__instance.EnsureImages();
-                return false;
-            }
-        }
-
         // Disables the lockout for reporting achievements
         [HarmonyPatch(typeof(AchievementEntity), nameof(AchievementEntity.IsDisabled), MethodType.Getter)]
         public static class AchievementEntity_IsDisabled_Patch {

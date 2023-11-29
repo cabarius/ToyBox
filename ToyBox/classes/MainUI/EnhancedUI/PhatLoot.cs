@@ -68,14 +68,6 @@ namespace ToyBox {
                        150.space();
                        Label("Allow Mass Loot to steal from living NPCs".localize().green());
                    },
-                   () => {
-                       Toggle("Allow Looting Of Locked Items".localize(), ref Settings.toggleOverrideLockedItems, 400.width());
-                       150.space();
-                       Label(("This allows you to loot items that are locked such as items carried by certain NPCs and items locked on your characters"
-                                 .green()
-                             + "\nWARNING: ".yellow().bold()
-                             + "This may affect story progression (e.g. your purple knife)".yellow()).localize());
-                   },
                    () => { }
                   );
             Div(0, 25);
@@ -125,7 +117,8 @@ namespace ToyBox {
                     if (Main.IsInGame) {
                         try {
                             areaName = Game.Instance.CurrentlyLoadedArea.AreaDisplayName;
-                        } catch { }
+                        }
+                        catch { }
                         var areaPrivateName = Game.Instance.CurrentlyLoadedArea.name;
                         if (areaPrivateName != areaName) areaName += $"\n({areaPrivateName})".yellow();
                     }
@@ -140,7 +133,6 @@ namespace ToyBox {
                     (text) => { },
                     () => { },
                     Width(300));
-                    Space(25); Toggle("Show Friendly".localize(), ref Settings.toggleLootChecklistFilterFriendlies);
                     Space(25); Toggle("Blueprint".localize(), ref Settings.toggleLootChecklistFilterBlueprint, AutoWidth());
                     Space(25); Toggle("Description".localize(), ref Settings.toggleLootChecklistFilterDescription, AutoWidth());
                 },
