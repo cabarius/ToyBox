@@ -1,12 +1,12 @@
 ﻿{
   "Id": "0ToyBox0",
-  "DisplayName": "ToyBox for RogueTrader Content Creator Beta",
+  "DisplayName": "ToyBox for RogueTrader",
   "Author": "Narria",
-  "Version": "1.5.7c",
+  "Version": "1.5.8a",
   "ManagerVersion": "0.23.0",
   "Requirements": [],
   "AssemblyName": "ToyBox.dll",
   "EntryMethod": "ToyBox.Main.Load",
-  "HomePage": "https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/8",
-  "Repository": "https://github.com/cabarius/ToyBox"
+  "HomePage": "https://github.com/xADDBx/ToyBox/tree/RT",
+  "Repository": "https://raw.githubusercontent.com/xADDBx/ToyBox/RT/ToyBox/ModPublishInfo/Repository.json"
 }

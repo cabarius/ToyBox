@@ -354,7 +354,7 @@ namespace ToyBox {
                 () => Toggle("Ignore Ability Requirement - Min Range".localize(), ref Settings.toggleIgnoreAbilityTargetTooClose),
                 () => { }
                 );
-            Div(153, 25);
+            Div(0, 25);
             HStack("Experience Multipliers".localize() + " (Currently not implemented! If you're reading this it was probably forgotten)".red().bold(), 1,
                 () => LogSlider("All Experience".localize(), ref Settings.experienceMultiplier, 0f, 100f, 1, 1, "", AutoWidth()),
                 () => {

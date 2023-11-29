@@ -532,10 +532,7 @@
       <Link>Localization\%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ModPublishInfo\*.*">
-      <Link>%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <None Include="ModPublishInfo\Info.json" Link="%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="zmisc\api.txt" />
     <None Include="zip-hash-sign.ps1" />
   </ItemGroup>
@@ -546,14 +543,13 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>echo "Rogue: $(TargetPath)" "&gt;$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\ToyBox.dll*"
-            xcopy /Y "$(TargetPath)" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\ToyBox.dll*"
-            xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\ToyBox.pdb*"
-            xcopy /Y "$(ProjectDir)\Info.json" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\Info.json*"
-            xcopy /Y "$(ProjectDir)\Repository.json" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\Repository.json*"
-            xcopy /E /Y "$(ProjectDir)Localization\RogueTrader\" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\Localization\"
-            cd "$(TargetDir)"
-            powershell.exe -ExecutionPolicy Unrestricted -f "$(ProjectDir)zip-hash-sign.ps1" Rogue
-        </PostBuildEvent>
+        xcopy /Y "$(TargetPath)" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\ToyBox.dll*"
+        xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\ToyBox.pdb*"
+        xcopy /Y "$(ProjectDir)\ModPublishInfo\Info.json" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\Info.json*"
+        xcopy /E /Y "$(ProjectDir)Localization\RogueTrader\" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\Localization\"
+        cd "$(TargetDir)"
+        powershell.exe -ExecutionPolicy Unrestricted -f "$(ProjectDir)zip-hash-sign.ps1" Rogue
+    </PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
