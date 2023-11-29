@@ -17,7 +17,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(BuffCollection))]
         public static class BuffCollection_Patch {
             private static bool isGoodBuff(BlueprintBuff blueprint) => !blueprint.Harmful && !settings.buffsToIgnoreForDurationMultiplier.Contains(blueprint.AssetGuidThreadSafe);
-            [HarmonyPatch(nameof(BuffCollection.Add))]
+            [HarmonyPatch(nameof(BuffCollection.Add), new Type[] { typeof(BlueprintBuff), typeof(MechanicEntity), typeof(MechanicsContext), typeof(BuffDuration) })]
             [HarmonyPostfix]
             public static void Add(BlueprintBuff blueprint, MechanicEntity caster, MechanicsContext parentContext, ref BuffDuration duration) {
                 try {
