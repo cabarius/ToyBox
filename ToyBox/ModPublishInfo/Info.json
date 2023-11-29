@@ -1,8 +1,8 @@
 ﻿{
-  "Id": "0ToyBox0",
+  "Id": "0ToyBoxRT",
   "DisplayName": "ToyBox for RogueTrader",
   "Author": "Narria",
-  "Version": "1.5.9",
+  "Version": "0.1.0",
   "ManagerVersion": "0.23.0",
   "Requirements": [],
   "AssemblyName": "ToyBox.dll",
