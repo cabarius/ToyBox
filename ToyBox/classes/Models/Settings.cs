@@ -250,6 +250,7 @@ namespace ToyBox {
         // Development
         public LogLevel loggingLevel = LogLevel.Info;
         public bool stripHtmlTagsFromNativeConsole = true;
+        public bool stripHtmlTagsFromUMMLogsTab = true;
         public bool toggleDevopmentMode = false;
         public bool toggleGuidsClipboard = true;
         public bool onlyShowLanguagesWithFiles = true;

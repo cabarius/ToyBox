@@ -51,9 +51,6 @@ namespace ToyBox {
                     Space(95 - 150);
                     Label("Lets you open up the area's mass loot screen to grab goodies whenever you want. Normally shown only when you exit the area".localize().green());
                 },
-#if DEBUG
-                () => Toggle("Show reasons you can not equip an item in tooltips".localize(), ref Settings.toggleShowCantEquipReasons),
-#endif
                 () => { }
             );
             Div(0, 25);

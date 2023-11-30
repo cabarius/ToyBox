@@ -72,7 +72,10 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 
-### ToyBox Rogue - Ver 0.1.0
+### ToyBox Rogue - Ver 0.1.1 built for Rogue Trader 1.0.39b
+* (***ADDB***) Fix Soul Mark Editor
+
+### ToyBox Rogue - Ver 0.1.0 built for Rogue Trader 1.0.39b
 * (***ADDB***) Remove ~250 unimplemented settings (and UI Labels/Toggles in relation to them)
 * (***ADDB***) Maybe fix experience multiplier
 * (***ADDB***) Maybe fix BuffDuration multiplier

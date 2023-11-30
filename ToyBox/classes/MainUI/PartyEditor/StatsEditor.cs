@@ -1,11 +1,14 @@
 using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Root;
+using Kingmaker.Blueprints.Root.Strings;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Enums;
+using Kingmaker.PubSubSystem;
+using Kingmaker.UI.MVVM.VM.Tooltip.Templates;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Alignments;
 using Kingmaker.UnitLogic.Parts;
@@ -18,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToyBox.classes.Infrastructure;
 using UnityEngine;
+using UnityEngine.Profiling;
 using static ModKit.UI;
 
 namespace ToyBox {
@@ -219,61 +223,42 @@ namespace ToyBox {
                 100.space();
                 Label("Soul Marks".localize(), Width(200));
                 using (VerticalScope()) {
-                    var names = Enum.GetNames(typeof(SoulMarkDirection));
-                    var index = 0;
-                    foreach (var name in names) {
-                        if (name == "None") continue;
-                        var soulMarkDirection = (SoulMarkDirection)index;
-                        var soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, soulMarkDirection);
-                        using (HorizontalScope()) {
-                            Label(name.localize().orange(), 200.width());
-                            var oldRank = soulMark?.GetRank() - 1 ?? 0;
-                            ValueAdjuster(
-                                "Rank".localize(), () => oldRank,
-                                v => {
-                                    var change = v - oldRank;
-                                    if (Math.Abs(change) > 0) {
-                                        var soulMarkShift = new SoulMarkShift {
-                                            Direction = soulMarkDirection,
-                                            Value = change
-                                        };
-                                        new BlueprintAnswer {
-                                            SoulMarkShift = soulMarkShift
-                                        }.ApplyShiftDialog();
-
-                                    }
-                                }, 1, 0, 120);
+                    foreach (SoulMarkDirection dir in Enum.GetValues(typeof(SoulMarkDirection))) {
+                        if (dir == SoulMarkDirection.None || dir == SoulMarkDirection.Reason) continue;
+                        SoulMark soulMark = null;
+                        try {
+                            soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, dir);
                         }
-                        index++;
+                        catch (Exception ex) {
+                            Mod.Error(ex);
+                            continue;
+                        }
+                        using (HorizontalScope()) {
+                            Label(dir.ToString().localize().orange(), 200.width());
+                            ActionButton(" < ",
+                                         () => modifySoulmark(dir, soulMark, ch, soulMark.Rank - 1, soulMark.Rank - 2),
+                                         GUI.skin.box,
+                                         AutoWidth());
+                            Space(20);
+                            var val = soulMark.Rank - 1;
+                            Label($"{val}".orange().bold(), Width(50f));
+                            ActionButton(" > ",
+                                         () => modifySoulmark(dir, soulMark, ch, soulMark.Rank - 1, soulMark.Rank),
+                                         GUI.skin.box,
+                                         AutoWidth());
+                            Space(25);
+                            val = soulMark.Rank - 1;
+                            ActionIntTextField(ref val, (v) => {
+                                if (v > 0) {
+                                    modifySoulmark(dir, soulMark, ch, soulMark.Rank - 1, v);
+                                }
+                            },
+                                Width(75));
+                        }
                     }
                 }
             }
-            using (HorizontalScope()) {
-                528.space();
-                //                AlignmentGrid(alignment, (a) => ch.Descriptor().Alignment.Set(a));
-            }
             Div(100, 20, 755);
-#if false
-                                    var soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, (SoulMarkDirection)index);
-                        using (HorizontalScope()) {
-                            Label(name.orange(), 200.width());
-                            if (soulMark == null) continue;
-                            ValueAdjuster(
-                                "Rank", soulMark.GetRank,
-                                v => {
-                                    var oldRank = soulMark.Rank;
-                                    if (v > oldRank) {
-                                        while (soulMark.GetRank() < v)
-                                            soulMark.AddRank();
-                                    }
-                                    else if (v < oldRank) {
-                                        while (soulMark.GetRank() > v)
-                                            soulMark.RemoveRank();
-
-                                    }
-                                }, 1, 1, 5);
-                        }
-#endif
             if (ch != null && ch.HashKey() != null) {
                 using (HorizontalScope()) {
                     Space(100);
@@ -362,6 +347,30 @@ namespace ToyBox {
                 }
             }
             return todo;
+        }
+
+        private static void modifySoulmark(SoulMarkDirection dir, SoulMark soulMark, UnitEntityData ch, int oldRank, int v) {
+            var change = v - oldRank;
+            if (change > 0) {
+                var soulMarkShift = new SoulMarkShift() { CheckByRank = false, Direction = dir, Value = change };
+                new BlueprintAnswer() { SoulMarkShift = soulMarkShift }.ApplyShiftDialog();
+            }
+            else if (change < 0) {
+                var soulMarkShift = new SoulMarkShift() { CheckByRank = false, Direction = dir, Value = change };
+                var provider = new BlueprintAnswer() { SoulMarkShift = soulMarkShift };
+                var source = provider as BlueprintScriptableObject;
+                if (source != null) {
+                    EntityFactSource entityFactSource = new EntityFactSource(source, new int?(change));
+                    if (!soulMark.Sources.ToList().HasItem(entityFactSource)) {
+                        soulMark.AddSource(source, change);
+                        soulMark.RemoveRank(-change);
+                    }
+                }
+                Game.Instance.DialogController.SoulMarkShifts.Add(provider.SoulMarkShift);
+                EventBus.RaiseEvent<ISoulMarkShiftHandler>(delegate (ISoulMarkShiftHandler h) {
+                    h.HandleSoulMarkShift(provider);
+                }, true);
+            }
         }
     }
 }

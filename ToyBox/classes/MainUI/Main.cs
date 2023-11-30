@@ -74,6 +74,7 @@ namespace ToyBox {
             try {
 #if DEBUG
                 modEntry.OnUnload = OnUnload;
+                _modId = modEntry.Info.Id;
 #endif
 
                 Mod.OnLoad(modEntry);
@@ -112,6 +113,7 @@ namespace ToyBox {
             return true;
         }
 #if DEBUG
+        internal static string _modId;
         private static bool OnUnload(UnityModManager.ModEntry modEntry) {
             foreach (var obj in Objects) {
                 UnityEngine.Object.DestroyImmediate(obj);
