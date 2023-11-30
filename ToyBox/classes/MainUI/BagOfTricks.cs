@@ -253,7 +253,6 @@ namespace ToyBox {
                        Toggle("Don't wait for keypress when loading saves".localize(), ref Settings.toggleSkipAnyKeyToContinueWhenLoadingSaves, 500.width());
                        HelpLabel("When loading a game this will go right into the game without having to 'Press any key to continue'".localize());
                    },
-                   () => Toggle("Make game continue to play music on lost focus".localize(), ref Settings.toggleContinueAudioOnLostFocus),
                    () => Toggle("Refill consumables in belt slots if in inventory".localize(), ref Settings.togglAutoEquipConsumables),
                    () => {
                        var modifier = KeyBindings.GetBinding("InventoryUseModifier");

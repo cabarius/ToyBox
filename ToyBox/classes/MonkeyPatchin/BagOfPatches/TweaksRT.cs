@@ -112,22 +112,6 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-        [HarmonyPatch(typeof(AudioServiceDrivingBehaviour), nameof(AudioServiceDrivingBehaviour.OnApplicationFocus))]
-        public static class AudioServiceDrivingBehaviourPatch {
-            [HarmonyPrefix]
-            private static bool OnApplicationFocus() {
-                return !Settings.toggleContinueAudioOnLostFocus;
-            }
-        }
-        [HarmonyPatch(typeof(SoundState), nameof(SoundState.OnApplicationFocusChanged))]
-        public static class SoundStateOnApplicationFocusChangedPatch {
-            [HarmonyPrefix]
-            private static bool OnApplicationFocusChanged() {
-                return !Settings.toggleContinueAudioOnLostFocus;
-            }
-        }
-
-
         [HarmonyPatch(typeof(GameHistoryLog), nameof(GameHistoryLog.HandlePartyCombatStateChanged))]
         private static class GameHistoryLogHandlePartyCombatStateChangedPatch {
             private static void Postfix(ref bool inCombat) {

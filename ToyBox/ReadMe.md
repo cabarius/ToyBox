@@ -73,9 +73,10 @@
 
 
 ### ToyBox Rogue - Ver 0.1.0
-* (***ADDB***) Remove unimplemented stuff; clean some up; do stuff
+* (***ADDB***) Remove ~250 unimplemented settings (and UI Labels/Toggles in relation to them)
 * (***ADDB***) Maybe fix experience multiplier
 * (***ADDB***) Maybe fix BuffDuration multiplier
+* (***ADDB***) Remove Continue Audio on Lost Focus since the game natively supports this
 
 ### ToyBox Rogue < Ver 0.1.0
 * See [here](https://raw.githubusercontent.com/cabarius/ToyBox/main/ToyBox/ReadMe.md)
