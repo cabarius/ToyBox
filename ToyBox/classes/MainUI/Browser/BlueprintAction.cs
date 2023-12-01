@@ -29,9 +29,9 @@ using System.Collections.Generic;
 using System.Linq;
 namespace ToyBox {
     public abstract class BlueprintAction {
-        public delegate void Perform(SimpleBlueprint bp, UnitEntityData? ch = null, int count = 1, int listValue = 0);
+        public delegate void Perform(SimpleBlueprint bp, BaseUnitEntity? ch = null, int count = 1, int listValue = 0);
 
-        public delegate bool CanPerform(SimpleBlueprint bp, UnitEntityData? ch = null, int listValue = 0);
+        public delegate bool CanPerform(SimpleBlueprint bp, BaseUnitEntity? ch = null, int listValue = 0);
 
         private static Dictionary<Type, BlueprintAction[]> actionsForType;
 
@@ -87,9 +87,9 @@ namespace ToyBox {
     }
 
     public class BlueprintAction<BPType> : BlueprintAction where BPType : SimpleBlueprint {
-        public new delegate void Perform(BPType bp, UnitEntityData ch, int count = 1, int listValue = 0);
+        public new delegate void Perform(BPType bp, BaseUnitEntity ch, int count = 1, int listValue = 0);
 
-        public new delegate bool CanPerform(BPType bp, UnitEntityData ch, int listValue = 0);
+        public new delegate bool CanPerform(BPType bp, BaseUnitEntity ch, int listValue = 0);
 
         public BlueprintAction(string? name, Perform action, CanPerform? canPerform = null, bool isRepeatable = false) : base(name, isRepeatable) {
             this.action = (bp, ch, n, index) => action((BPType)bp, ch, n, index);

@@ -60,40 +60,25 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(AchievementEntity), nameof(AchievementEntity.IsDisabled), MethodType.Getter)]
         public static class AchievementEntity_IsDisabled_Patch {
             private static void Postfix(ref bool __result, AchievementEntity __instance) {
-                //modLogger.Log("AchievementEntity.IsDisabled");
-
-                int num;
-                if (__instance.Data.OnlyMainCampaign) {
-                    var blueprintAreaPreset = Game.Instance.Player.StartPreset.Or(null);
-                    if ((blueprintAreaPreset != null ? blueprintAreaPreset.DlcCampaign != 0 ? 1 : 0 : 1) != 0) {
-                        num = 1;
-                        goto label_6;
-                    }
+                if (!Settings.toggleAllowAchievementsDuringModdedGame) return;
+                if (!__instance.Data.OnlyMainCampaign && Game.Instance.Player.Campaign && !Game.Instance.Player.Campaign.IsMainGameContent) {
+                    __result = true;
+                    return;
                 }
-
-                if (!__instance.Data.OnlyMainCampaign && __instance.Data.SpecificDlc != DlcType.None) {
-                    var dlcCampaign = Game.Instance.Player.StartPreset.Or(null)?.DlcCampaign;
-                    var specificDlc = __instance.Data.SpecificDlc;
-                    num = !((dlcCampaign.GetValueOrDefault() == specificDlc) & dlcCampaign.HasValue) ? 1 : 0;
-                }
-                else {
-                    num = 0;
-                }
-
-            label_6:
-                __result = num != 0;
+                BlueprintCampaignReference specificCampaign = __instance.Data.SpecificCampaign;
+                BlueprintCampaign blueprintCampaign = ((specificCampaign != null) ? specificCampaign.Get() : null);
+                __result = (!__instance.Data.OnlyMainCampaign && blueprintCampaign != null && Game.Instance.Player.Campaign != blueprintCampaign);
             }
         }
 
         // Removes the flag that taints the save file of a user who mods their game
         [HarmonyPatch(typeof(Player), nameof(Player.ModsUser), MethodType.Getter)]
         public static class Player_ModsUser_Patch {
-            public static bool Prefix(ref bool __result) {
+            public static void Postfix(ref bool __result) {
                 if (Settings.toggleAllowAchievementsDuringModdedGame) {
                     __result = false;
-                    return false;
+                    return;
                 }
-                return true;
             }
         }
 
@@ -228,7 +213,7 @@ namespace ToyBox.BagOfPatches {
                 Settings.ClearCachedPerSave();
                 PartyEditor.lastScaleSize = new();
                 foreach (var ID in Main.Settings.perSave.characterModelSizeMultiplier.Keys) {
-                    foreach (UnitEntityData cha in Game.Instance.State.AllUnits.Where((u) => u.CharacterName.Equals(ID))) {
+                    foreach (BaseUnitEntity cha in Game.Instance.State.AllUnits.Where((u) => u.CharacterName.Equals(ID))) {
                         float scale = Main.Settings.perSave.characterModelSizeMultiplier.GetValueOrDefault(ID, 1);
                         cha.View.gameObject.transform.localScale = new Vector3(scale, scale, scale);
                         PartyEditor.lastScaleSize[cha.HashKey()] = scale;

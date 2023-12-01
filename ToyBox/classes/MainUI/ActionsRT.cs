@@ -107,7 +107,7 @@ namespace ToyBox {
                 unitEntityData.View.UpdateHighlight(false);
             }
         }
-        public static void resetClassLevel(this UnitEntityData ch) {
+        public static void resetClassLevel(this BaseUnitEntity ch) {
             // TODO: make this work...
 #if false
             var level = ch.Descriptor().Progression.MaxCharacterLevel;

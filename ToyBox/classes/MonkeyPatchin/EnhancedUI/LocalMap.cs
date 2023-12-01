@@ -1,6 +1,12 @@
 ﻿using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Blueprints.Area;
+using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap;
+using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap.Common.Markers;
+using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap.PC;
+using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap;
+using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap.Markers;
+using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap.Utils;
 using Kingmaker.Controllers;
 using Kingmaker.Controllers.Clicks.Handlers;
 using Kingmaker.EntitySystem.Entities;
@@ -9,25 +15,19 @@ using Kingmaker.UnitLogic.FactLogic;
 using Kingmaker.UnitLogic.Interaction;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker.Utility;
+using Kingmaker.View;
 using Kingmaker.View.MapObjects;
 using Kingmaker.Visual.LocalMap;
 using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kingmaker.View;
 using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
-using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap;
-using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap.Common.Markers;
-using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap.PC;
-using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap;
-using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap.Utils;
-using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap.Markers;
 
 namespace ToyBox.BagOfPatches {
     internal static class LocalMapPatches {
@@ -48,15 +48,15 @@ namespace ToyBox.BagOfPatches {
                 foreach (var marker in LocalMapModel.Markers)
                     if (LocalMapModel.IsInCurrentArea(marker.GetPosition()))
                         __instance.MarkersVm.Add(new LocalMapCommonMarkerVM(marker));
-                IEnumerable<UnitEntityData> first = Game.Instance.Player.PartyAndPets;
+                IEnumerable<BaseUnitEntity> first = Game.Instance.Player.PartyAndPets;
                 if (Game.Instance.Player.CapitalPartyMode)
                     first = first.Concat(Game.Instance.Player.RemoteCompanions.Where(u => !u.IsCustomCompanion()));
                 foreach (var unit in first)
-                    if (unit.View != null 
-                        && unit.View.enabled 
+                    if (unit.View != null
+                        && unit.View.enabled
                         && !unit
                             .LifeState
-                            .IsHiddenBecauseDead 
+                            .IsHiddenBecauseDead
                         && LocalMapModel.IsInCurrentArea(unit.Position)
                         ) {
                         __instance.MarkersVm.Add(new LocalMapCharacterMarkerVM(unit));
@@ -97,7 +97,7 @@ namespace ToyBox.BagOfPatches {
             }
 
             // Helper Function - Not a Patch
-            private static void UpdateMarker(LocalMapMarkerPCView markerView, UnitEntityData unit) {
+            private static void UpdateMarker(LocalMapMarkerPCView markerView, BaseUnitEntity unit) {
                 var count = unit.InterestingnessCoefficent();
                 //Mod.Debug($"{unit.CharacterName.orange()} -> unit interestingness: {count}");
                 //var attentionMark = markerView.transform.Find("ToyBoxAttentionMark")?.gameObject;
@@ -109,7 +109,7 @@ namespace ToyBox.BagOfPatches {
                     markImage.color = new Color(1, 1f, 0);
                 }
                 else {
-//                    attentionMark?.SetActive(false);
+                    //                    attentionMark?.SetActive(false);
                     markImage.color = new Color(1, 1, 1);
                 }
             }
@@ -128,7 +128,7 @@ namespace ToyBox.BagOfPatches {
                 if (!Settings.toggleShowInterestingNPCsOnLocalMap || __instance is null) return;
             }
         }
-        #if false
+#if false
         [HarmonyPatch(typeof(LocalMapMarkerPart))]
         public static class LocalMapMarkerPartPatch {
             [HarmonyPatch(nameof(LocalMapMarkerPart.OnTurnOn))]
@@ -153,8 +153,8 @@ namespace ToyBox.BagOfPatches {
                 //Mod.Error($"Marker Add");
             }
         }
-        #endif
-        #if false
+#endif
+#if false
         [HarmonyPatch(typeof(EntityVisibilityForPlayerController))]
         public static class AddLocalMapMarkerRuntimePatch {
             [HarmonyPatch(nameof(EntityVisibilityForPlayerController.IsVisible), new Type[] { typeof(UnitEntityData)})]
@@ -175,11 +175,11 @@ namespace ToyBox.BagOfPatches {
                 return true;
             }
         }
-        #endif
+#endif
 
 
 #if false
-                        #if false
+#if false
                         var mapBlockRotation = mapBlock.localEulerAngles;
                         var frameRotation = frame.localEulerAngles;
                         var frameBlockRotation = frameBlock.localEulerAngles;
@@ -192,7 +192,7 @@ namespace ToyBox.BagOfPatches {
                         //mapBlock.Rotate(new Vector3());
 //                        mapBlock.localEulerAngles = mapBlockRotation;
                         Mod.Log($"frameRotation: {mapBlockRotation}");
-                        #endif
+#endif
 
             // some experimental code to implement map rotation
                     ) {

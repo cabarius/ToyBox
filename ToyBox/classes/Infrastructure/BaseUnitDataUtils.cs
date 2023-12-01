@@ -1,31 +1,31 @@
 ﻿// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT Licenseusing Kingmaker;
-using System.Collections.Generic;
-using System.Linq;
 using Kingmaker;
+using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Facts;
+using Kingmaker.Blueprints.Items.Components;
+using Kingmaker.Blueprints.Items.Equipment;
+using Kingmaker.Blueprints.Root.Strings;
 using Kingmaker.Cheats;
+using Kingmaker.Controllers.Combat;
 using Kingmaker.Designers;
+using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameModes;
+using Kingmaker.Items;
+using Kingmaker.UI.Common;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Mechanics;
-using Kingmaker.Utility;
 using Kingmaker.UnitLogic.Parts;
-using Kingmaker.ElementsSystem;
+using Kingmaker.Utility;
 using ModKit;
-using Kingmaker.Blueprints.Classes;
-using Kingmaker.Items;
-using Kingmaker.Controllers.Combat;
-using Utilities = Kingmaker.Cheats.Utilities;
-using Kingmaker.Blueprints.Items.Components;
-using Kingmaker.Blueprints;
 using ModKit.Utility;
-using Kingmaker.Blueprints.Items.Equipment;
-using Kingmaker.Blueprints.Root.Strings;
-using Kingmaker.UI.Common;
-using UnityEngine;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using Utilities = Kingmaker.Cheats.Utilities;
 
 namespace ToyBox {
     public enum UnitSelectType {
@@ -37,37 +37,37 @@ namespace ToyBox {
         Everyone,
     }
 
-    public static class UnitEntityDataUtils {
+    public static class BaseUnitDataUtils {
         public static Settings settings => Main.Settings;
-        public static float GetMaxSpeed(List<UnitEntityData> data) => Shodan.GetMaxSpeed(data);
-        public static bool CheckUnitEntityData(UnitEntityData unitEntityData, UnitSelectType selectType) {
-            if (unitEntityData == null) return false;
+        public static float GetMaxSpeed(List<BaseUnitEntity> data) => Shodan.GetMaxSpeed(data);
+        public static bool CheckUnitEntityData(BaseUnitEntity baseUnitEntity, UnitSelectType selectType) {
+            if (baseUnitEntity == null) return false;
             switch (selectType) {
                 case UnitSelectType.Everyone:
                     return true;
                 case UnitSelectType.Party:
-                    if (unitEntityData.IsPlayerFaction) {
+                    if (baseUnitEntity.IsPlayerFaction) {
                         return true;
                     }
 
                     return false;
                 case UnitSelectType.You:
-                    if (unitEntityData.IsMainCharacter) {
+                    if (baseUnitEntity.IsMainCharacter) {
                         return true;
                     }
                     return false;
                 case UnitSelectType.Friendly:
-                    return !unitEntityData.IsEnemy();
+                    return !baseUnitEntity.IsEnemy();
                 case UnitSelectType.Enemies:
-                    return unitEntityData.IsEnemy();
+                    return baseUnitEntity.IsEnemy();
                 default:
                     return false;
             }
         }
 
-        public static void Kill(UnitEntityData unit) => unit.Health.Damage = unit.Stats.GetStat(StatType.HitPoints) + unit.Stats.GetStat(StatType.TemporaryHitPoints);
+        public static void Kill(BaseUnitEntity unit) => unit.Health.Damage = unit.Stats.GetStat(StatType.HitPoints) + unit.Stats.GetStat(StatType.TemporaryHitPoints);
 
-        public static void Charm(UnitEntityData unit) {
+        public static void Charm(BaseUnitEntity unit) {
             if (unit != null) {
                 // TODO: can we still do this?
                 // unit.SetFaction() = Game.Instance.BlueprintRoot.PlayerFaction;
@@ -75,11 +75,11 @@ namespace ToyBox {
             else
                 Mod.Warn("Unit is null!");
         }
-        public static void AddToParty(UnitEntityData unit) {
+        public static void AddToParty(BaseUnitEntity unit) {
             Charm(unit);
             Game.Instance.Player.AddCompanion(unit);
         }
-        public static void AddCompanion(UnitEntityData unit) {
+        public static void AddCompanion(BaseUnitEntity unit) {
             var currentMode = Game.Instance.CurrentMode;
             Game.Instance.Player.AddCompanion(unit);
             if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
@@ -94,7 +94,7 @@ namespace ToyBox {
                 }
             }
         }
-        public static void RecruitCompanion(UnitEntityData unit) {
+        public static void RecruitCompanion(BaseUnitEntity unit) {
             var currentMode = Game.Instance.CurrentMode;
             unit = GameHelper.RecruitNPC(unit, unit.Blueprint);
             // this line worries me but the dev said I should do it
@@ -136,7 +136,7 @@ namespace ToyBox {
                            );
         }
 
-        public static void RemoveCompanion(UnitEntityData unit) {
+        public static void RemoveCompanion(BaseUnitEntity unit) {
             _ = Game.Instance.CurrentMode;
             Game.Instance.Player.RemoveCompanion(unit);
         }

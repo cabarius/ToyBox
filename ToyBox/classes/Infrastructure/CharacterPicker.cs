@@ -2,50 +2,59 @@
 using Kingmaker;
 using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.Mechanics.Entities;
 using ModKit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using static ModKit.UI;
 
 namespace ToyBox {
     public class CharacterPicker {
-        public static NamedFunc<List<UnitEntityData>>[] PartyFilterChoices = null;
+        public static NamedFunc<List<BaseUnitEntity>>[] PartyFilterChoices = null;
         private static readonly Player partyFilterPlayer = null;
         public static float nearbyRange = 25;
-
-        public static NamedFunc<List<UnitEntityData>>[] GetPartyFilterChoices() {
+        public static IEnumerable<BaseUnitEntity> GetTargetsAround(Vector3 point, int radius, bool checkLOS = true, bool includeDead = false) {
+            foreach (AbstractUnitEntity abstractUnitEntity in Game.Instance.State.AllUnits.OfType<BaseUnitEntity>()) {
+                BaseUnitEntity baseUnitEntity = (BaseUnitEntity)abstractUnitEntity;
+                if ((!baseUnitEntity.LifeState.IsDead || includeDead) && !baseUnitEntity.Features.IsUntargetable && baseUnitEntity.IsUnitInRangeCells(point, radius, checkLOS)) {
+                    yield return baseUnitEntity;
+                }
+            }
+            yield break;
+        }
+        public static NamedFunc<List<BaseUnitEntity>>[] GetPartyFilterChoices() {
             if (partyFilterPlayer != Game.Instance.Player) PartyFilterChoices = null;
             if (Game.Instance.Player != null && PartyFilterChoices == null) {
-                PartyFilterChoices = new NamedFunc<List<UnitEntityData>>[] {
-                    new NamedFunc<List<UnitEntityData>>("Party".localize(), () => Game.Instance.Player.Party),
-                    new NamedFunc<List<UnitEntityData>>("Party & Pets".localize(), () => Game.Instance.Player.m_PartyAndPets),
-                    new NamedFunc<List<UnitEntityData>>("All".localize(), () => Game.Instance.Player.AllCharactersAndStarships.ToList()),
-                    new NamedFunc<List<UnitEntityData>>("Active".localize(), () => Game.Instance.Player.ActiveCompanions),
-                    new NamedFunc<List<UnitEntityData>>("Remote".localize(), () => Game.Instance.Player.m_RemoteCompanions),
-                    new NamedFunc<List<UnitEntityData>>("Custom".localize(), PartyUtils.GetCustomCompanions),
-                    new NamedFunc<List<UnitEntityData>>("Pets".localize(), PartyUtils.GetPets),
-                    new NamedFunc<List<UnitEntityData>>("Starships".localize(), () => Game.Instance.Player.AllStarships.ToList()),
+                PartyFilterChoices = new NamedFunc<List<BaseUnitEntity>>[] {
+                    new NamedFunc<List<BaseUnitEntity>>("Party".localize(), () => Game.Instance.Player.Party),
+                    new NamedFunc<List<BaseUnitEntity>>("Party & Pets".localize(), () => Game.Instance.Player.m_PartyAndPets),
+                    new NamedFunc<List<BaseUnitEntity>>("All".localize(), () => Game.Instance.Player.AllCharactersAndStarships.ToList()),
+                    new NamedFunc<List<BaseUnitEntity>>("Active".localize(), () => Game.Instance.Player.ActiveCompanions),
+                    new NamedFunc<List<BaseUnitEntity>>("Remote".localize(), () => Game.Instance.Player.m_RemoteCompanions),
+                    new NamedFunc<List<BaseUnitEntity>>("Custom".localize(), PartyUtils.GetCustomCompanions),
+                    new NamedFunc<List<BaseUnitEntity>>("Pets".localize(), PartyUtils.GetPets),
+                    new NamedFunc<List<BaseUnitEntity>>("Starships".localize(), () => Game.Instance.Player.AllStarships.ToList()),
                     //new NamedFunc<List<UnitEntityData>>("Familiars", Game.Instance.Player.Party.SelectMany(ch => ch.Familiars),
-                    new NamedFunc<List<UnitEntityData>>("Nearby".localize(), () => {
+                    new NamedFunc<List<BaseUnitEntity>>("Nearby".localize(), () => {
                         var player = GameHelper.GetPlayerCharacter();
-                        return player == null
-                                   ? new List<UnitEntityData> ()
-                                   : GameHelper.GetTargetsAround(GameHelper.GetPlayerCharacter().Position, (int)nearbyRange , false, false).ToList();
+                        return (player == null) ? new() : GetTargetsAround(player.Position, (int)nearbyRange , false, false).ToList();
                     }),
-                    new NamedFunc<List<UnitEntityData>>("Friendly".localize(), () => Shodan.AllBaseUnits.Where((u) => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
-                    new NamedFunc<List<UnitEntityData>>("Enemies".localize(), () => Shodan.AllBaseUnits.Where((u) => u != null && u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
-                    new NamedFunc<List<UnitEntityData>>("All Units".localize(), () => Shodan.AllBaseUnits.ToList()),
+                    new NamedFunc<List<BaseUnitEntity>>("Friendly".localize(), () => Shodan.AllBaseUnits.Where((u) => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
+                    new NamedFunc<List<BaseUnitEntity>>("Enemies".localize(), () => Shodan.AllBaseUnits.Where((u) => u != null && u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
+                    new NamedFunc<List<BaseUnitEntity>>("All Units".localize(), () => Shodan.AllBaseUnits.ToList()),
                };
             }
             return PartyFilterChoices;
         }
-        public static List<UnitEntityData> GetCharacterList() {
+        public static List<BaseUnitEntity> GetCharacterList() {
             var partyFilterChoices = GetPartyFilterChoices();
             return partyFilterChoices?[Main.Settings.selectedPartyFilter].func();
         }
 
         private static int _selectedIndex = 0;
-        public static UnitEntityData GetSelectedCharacter() {
+        public static BaseUnitEntity GetSelectedCharacter() {
             var characters = GetCharacterList();
             if (characters == null || characters.Count == 0) {
                 return Game.Instance.Player.MainCharacterEntity;
@@ -55,7 +64,7 @@ namespace ToyBox {
         }
         public static void ResetGUI() => _selectedIndex = 0;
 
-        public static NamedFunc<List<UnitEntityData>> OnFilterPickerGUI() {
+        public static NamedFunc<List<BaseUnitEntity>> OnFilterPickerGUI() {
             var filterChoices = GetPartyFilterChoices();
             if (filterChoices == null) { return null; }
 

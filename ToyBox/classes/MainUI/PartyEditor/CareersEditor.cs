@@ -22,7 +22,7 @@ using Alignment = Kingmaker.Enums.Alignment;
 
 namespace ToyBox {
     public partial class PartyEditor {
-        public static void OnClassesGUI(UnitEntityData ch, List<(BlueprintCareerPath path, int level)> careerPaths, UnitEntityData selectedCharacter) {
+        public static void OnClassesGUI(BaseUnitEntity ch, List<(BlueprintCareerPath path, int level)> careerPaths, BaseUnitEntity selectedCharacter) {
             using (HorizontalScope()) {
             }
             Div(100, 20);

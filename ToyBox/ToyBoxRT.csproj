@@ -488,7 +488,7 @@
     <Compile Include="classes\MainUI\Playground.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\Accessors.cs" />
     <Compile Include="classes\Infrastructure\Borrowed\PartyUtils.cs" />
-    <Compile Include="classes\Infrastructure\UnitEntityDataUtils.cs" />
+    <Compile Include="classes\Infrastructure\BaseUnitDataUtils.cs" />
     <Compile Include="classes\MainUI\Browser\BlueprintListUI.cs" />
     <Compile Include="classes\Infrastructure\Blueprints\BlueprintLoader.cs" />
     <Compile Include="classes\MainUI\ActionButtons.cs" />
@@ -508,6 +508,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Clipboard+Guids.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Combat\ActionsRT.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\DevelopmentRT.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Dialog.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\DiceRollsRT.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\LevelUpPatchesRT.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Limits\Infinites.cs" />
@@ -516,6 +517,7 @@
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Misc.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\MovementRT.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Multipliers.cs" />
+    <Compile Include="classes\MonkeyPatchin\BagOfPatches\Romance.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\Tweaks.cs" />
     <Compile Include="classes\MonkeyPatchin\BagOfPatches\TweaksRT.cs" />
     <Compile Include="classes\MonkeyPatchin\EnhancedUI\LocalMap.cs" />

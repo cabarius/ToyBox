@@ -120,7 +120,7 @@ namespace ToyBox {
                                         AutoWidth());
                        },
                        () => {
-                           var exp = ((UnitEntityData)mainChar).Progression.Experience;
+                           var exp = ((BaseUnitEntity)mainChar).Progression.Experience;
                            Label("Experience".localize().cyan(), Width(150));
                            Label(exp.ToString().orange().bold(), Width(200));
                            ActionButton("Gain ".localize() + $"{increment}", () => { Game.Instance.Player.GainPartyExperience(increment); }, AutoWidth());
@@ -139,7 +139,6 @@ namespace ToyBox {
                    () => BindableActionButton(RemoveBuffs, true),
                    () => BindableActionButton(RemoveDeathsDoor, true),
                    () => BindableActionButton(KillAllEnemies, true),
-                   //() => UI.BindableActionButton(SummonZoo),
                    () => BindableActionButton(LobotomizeAllEnemies, true),
                    () => { },
                    () => {
@@ -215,9 +214,32 @@ namespace ToyBox {
             HStack("Dialog".localize(),
                    1,
                    () => {
+                       Toggle(("TODO (if you're reading this then it isn't implemented yet): ".red().bold() + "♥♥ ".red() + "Love is Free".bold() + " ♥♥".red()).localize(), ref Settings.toggleAllowAnyGenderRomance, 300.width());
+                       25.space();
+                       Label(("Allow ".green() + "any gender".color(RGBA.purple) + " " + "for any ".green() + "R".color(RGBA.red) + "o".orange() + "m".yellow() + "a".green() + "n".cyan() + "c".color(RGBA.blue) + "e".color(RGBA.purple)).localize());
+                   },
+                   () => {
+                       Toggle("TODO (if you're reading this then it isn't implemented yet): ".red().bold() + "Jealousy Begone!".localize().bold(), ref Settings.toggleMultipleRomance, 300.width());
+                       25.space();
+                       Label(("Allow ".green() + "multiple".color(RGBA.purple) + " romances at the same time".green()).localize());
+                   },
+                   () => {
                        Toggle("Previously Chosen Dialog Is Smaller ".localize(), ref Settings.toggleMakePreviousAnswersMoreClear, 300.width());
                        200.space();
                        Label("Draws dialog choices that you have previously selected in smaller type".localize().green());
+                   },
+                   () => {
+                       Toggle("Experimental!".red().bold() + "Expand Dialog To Include Remote Companions".localize().bold(), ref Settings.toggleRemoteCompanionDialog, 300.width());
+                       200.space();
+                       Label(" Allow remote companions to make comments on dialog you are having.".localize().green());
+                   },
+                   () => {
+                       if (Settings.toggleRemoteCompanionDialog) {
+                           50.space();
+                           Toggle("Experimental!".red().bold() + "Include Former Companions".localize(), ref Settings.toggleExCompanionDialog, 300.width());
+                           150.space();
+                           Label("This also includes companions who left the party".localize().green());
+                       }
                    },
                    () => {
                        using (VerticalScope(300.width())) {
@@ -239,7 +261,6 @@ namespace ToyBox {
                        Toggle("Allow Achievements While Using Mods".localize(), ref Settings.toggleAllowAchievementsDuringModdedGame, 500.width());
                        Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".localize().orange());
                    },
-                   // () => { if (Toggle("Expanded Party View", ref settings.toggleExpandedPartyView)) PartyVM_Patches.Repatch(),
                    () => Toggle("Object Highlight Toggle Mode".localize(), ref Settings.highlightObjectsToggle),
                    () => {
                        Toggle("Mark Interesting NPCs".localize(), ref Settings.toggleShowInterestingNPCsOnLocalMap, 500.width());
@@ -406,7 +427,7 @@ namespace ToyBox {
             HStack("Other Multipliers".localize(), 1,
                 () => {
                     LogSlider("Fog of War Range".localize(), ref Settings.fowMultiplier, 0f, 100f, 1, 1, "", AutoWidth());
-                    List<UnitEntityData> units = Game.Instance?.Player?.m_PartyAndPets;
+                    List<BaseUnitEntity> units = Game.Instance?.Player?.m_PartyAndPets;
                     if (units != null) {
                         foreach (var unit in units) {
                             // TODO: do we need this for RT?

@@ -26,8 +26,8 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPrefix]
             private static void OnTriggerPrefix(RulebookEventContext context) {
                 if (context.Current.Initiator is BaseUnitEntity unit) {
-                    forceCrit = UnitEntityDataUtils.CheckUnitEntityData(unit, settings.allHitsCritical);
-                    forceHit = UnitEntityDataUtils.CheckUnitEntityData(unit, settings.allAttacksHit);
+                    forceCrit = BaseUnitDataUtils.CheckUnitEntityData(unit, settings.allHitsCritical);
+                    forceHit = BaseUnitDataUtils.CheckUnitEntityData(unit, settings.allAttacksHit);
                     if (forceCrit || forceHit) {
                         changePolicy = true;
                     }
@@ -60,13 +60,13 @@ namespace ToyBox.BagOfPatches {
             private static void Roll(RuleRollDice __instance) {
                 if (Rulebook.CurrentContext.Current is RuleRollChance chanceRoll) {
                     if (chanceRoll.RollTypeValue == RollType.Skill) {
-                        if (UnitEntityDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake1)) {
+                        if (BaseUnitDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake1)) {
                             __instance.m_Result = 1;
                         }
-                        else if (UnitEntityDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake25)) {
+                        else if (BaseUnitDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake25)) {
                             __instance.m_Result = 25;
                         }
-                        else if (UnitEntityDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake50)) {
+                        else if (BaseUnitDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake50)) {
                             __instance.m_Result = 50;
                         }
                     }
@@ -83,30 +83,30 @@ namespace ToyBox.BagOfPatches {
                 var initiator = __instance.InitiatorUnit;
                 var result = __instance.m_Result;
                 if (initiator == null) return;
-                if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll1)
-                   || (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll1OutOfCombat) && !initiator.IsInCombat)) {
+                if (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll1)
+                   || (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll1OutOfCombat) && !initiator.IsInCombat)) {
                     result = 1;
                 }
-                else if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll50)) {
+                else if (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll50)) {
                     result = 50;
                 }
-                else if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll100)) {
+                else if (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll100)) {
                     result = 100;
                 }
                 else {
                     var min = 1;
                     var max = 101;
-                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.rollWithAdvantage)) {
+                    if (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.rollWithAdvantage)) {
                         result = Math.Max(result, PFStatefulRandom.RuleSystem.Range(min, max));
                     }
-                    else if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.rollWithDisadvantage)) {
+                    else if (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.rollWithDisadvantage)) {
                         result = Math.Min(result, PFStatefulRandom.RuleSystem.Range(min, max));
                     }
-                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.neverRoll1) && result == 1) {
+                    if (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.neverRoll1) && result == 1) {
                         min = 2;
                         result = PFStatefulRandom.RuleSystem.Range(min, max);
                     }
-                    if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.neverRoll100) && result == 100) {
+                    if (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.neverRoll100) && result == 100) {
                         max = 100;
                         result = UnityEngine.Random.Range(min, max);
                     }
@@ -118,13 +118,13 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPostfix]
         private static void GetDice(ref RuleRollD10 __result) {
             if (Rulebook.CurrentContext.Current is RuleRollInitiative initiativeEvent) {
-                if (UnitEntityDataUtils.CheckUnitEntityData(initiativeEvent.InitiatorUnit, settings.roll1Initiative)) {
+                if (BaseUnitDataUtils.CheckUnitEntityData(initiativeEvent.InitiatorUnit, settings.roll1Initiative)) {
                     __result.m_Result = 1;
                 }
-                else if (UnitEntityDataUtils.CheckUnitEntityData(initiativeEvent.InitiatorUnit, settings.roll5Initiative)) {
+                else if (BaseUnitDataUtils.CheckUnitEntityData(initiativeEvent.InitiatorUnit, settings.roll5Initiative)) {
                     __result.m_Result = 5;
                 }
-                else if (UnitEntityDataUtils.CheckUnitEntityData(initiativeEvent.InitiatorUnit, settings.roll10Initiative)) {
+                else if (BaseUnitDataUtils.CheckUnitEntityData(initiativeEvent.InitiatorUnit, settings.roll10Initiative)) {
                     __result.m_Result = 10;
                 }
             }

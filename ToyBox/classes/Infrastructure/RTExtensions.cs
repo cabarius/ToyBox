@@ -22,14 +22,14 @@ using Alignment = Kingmaker.Enums.Alignment;
 
 namespace ToyBox {
     public static class RTExtensions {
-        public static string HashKey(this UnitEntityData ch) => ch.CharacterName;  // + ch.UniqueId; }
+        public static string HashKey(this BaseUnitEntity ch) => ch.CharacterName;  // + ch.UniqueId; }
         public static string HashKey(this MechanicEntity entity) =>
-            entity is UnitEntityData ch ? ch.CharacterName : entity.Name;
+            entity is BaseUnitEntity ch ? ch.CharacterName : entity.Name;
         public static string HashKey(this BlueprintCharacterClass cl) => cl.NameSafe();
         public static string HashKey(this BlueprintArchetype arch) => arch.NameSafe();
-        public static UnitEntityData GetCurrentCharacter() {
+        public static BaseUnitEntity GetCurrentCharacter() {
             var firstSelectedUnit = Game.Instance.SelectionCharacter.FirstSelectedUnit;
-            return (object)firstSelectedUnit != null ? firstSelectedUnit : (UnitEntityData)Game.Instance.Player.MainCharacterEntity;
+            return (object)firstSelectedUnit != null ? firstSelectedUnit : (BaseUnitEntity)Game.Instance.Player.MainCharacterEntity;
         }
     }
 }

@@ -1,19 +1,19 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Kingmaker;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Weapons;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.RuleSystem;
 using Kingmaker.Utility;
 using ModKit;
-using static ModKit.UI;
-using Kingmaker.Blueprints.Items;
 using ModKit.DataViewer;
 using ModKit.Utility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
 namespace ToyBox {
     public class BlueprintListUI {
@@ -27,7 +27,7 @@ namespace ToyBox {
         public static int[] ParamSelected = new int[1000];
         public static Dictionary<BlueprintFeatureSelection, string[]> selectionBPValuesNames = new() { };
 
-        public static List<Action> OnGUI(UnitEntityData unit,
+        public static List<Action> OnGUI(BaseUnitEntity unit,
             IEnumerable<SimpleBlueprint> blueprints,
             float indent = 0, float remainingWidth = 0,
             Func<string, string?>? titleFormatter = null,
@@ -43,7 +43,7 @@ namespace ToyBox {
                 foreach (var blueprint in simpleBlueprints) {
                     var actions = blueprint.GetActions();
                     if (actions.Any(a => a.isRepeatable)) hasRepeatableAction = true;
-                    
+
                     // FIXME - perf bottleneck 
                     var actionCount = actions.Sum(action => action.canPerform(blueprint, unit) ? 1 : 0);
                     maxActions = Math.Max(actionCount, maxActions);
@@ -206,7 +206,7 @@ namespace ToyBox {
                         using (HorizontalScope(Width(remWidth))) {
                             ReflectionTreeView.DetailToggle("", blueprint, blueprint, 0);
                             Space(-17);
-                            if (Settings.showAssetIDs) { 
+                            if (Settings.showAssetIDs) {
                                 ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), rarityButtonStyle);
                                 ClipboardLabel(blueprint.AssetGuid.ToString(), ExpandWidth(false));
                             }

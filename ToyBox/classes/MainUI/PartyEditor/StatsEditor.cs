@@ -114,7 +114,7 @@ namespace ToyBox {
                 }
             }
         }
-        public static List<Action> OnStatsGUI(UnitEntityData ch) {
+        public static List<Action> OnStatsGUI(BaseUnitEntity ch) {
             List<Action> todo = new();
             using (HorizontalScope()) {
                 100.space();
@@ -349,7 +349,7 @@ namespace ToyBox {
             return todo;
         }
 
-        private static void modifySoulmark(SoulMarkDirection dir, SoulMark soulMark, UnitEntityData ch, int oldRank, int v) {
+        private static void modifySoulmark(SoulMarkDirection dir, SoulMark soulMark, BaseUnitEntity ch, int oldRank, int v) {
             var change = v - oldRank;
             if (change > 0) {
                 var soulMarkShift = new SoulMarkShift() { CheckByRank = false, Direction = dir, Value = change };

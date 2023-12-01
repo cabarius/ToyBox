@@ -21,7 +21,6 @@ global using static Kingmaker.Utility.MassLootHelper;
 global using static ModKit.UI;
 global using UnitOvertipView = Kingmaker.Code.UI.MVVM.View.Overtips.Unit.OvertipUnitView;
 global using EntityOvertipVM = Kingmaker.Code.UI.MVVM.VM.Overtips.Unit.OvertipEntityUnitVM;
-global using UnitEntityData = Kingmaker.EntitySystem.Entities.BaseUnitEntity;
 global using UnitDescriptor = Kingmaker.EntitySystem.Entities.MechanicEntity;
 global using BlueprintFeatureSelection = Kingmaker.UnitLogic.Levelup.Obsolete.Blueprints.Selection.BlueprintFeatureSelection_Obsolete;
 global using UnitProgressionData = Kingmaker.UnitLogic.PartUnitProgression;
@@ -36,7 +35,11 @@ using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.Cheats;
+using Kingmaker.Code.UI.MVVM.View.ServiceWindows.CharacterInfo;
+using Kingmaker.Code.UI.MVVM.VM.Retrain;
+using Kingmaker.Controllers;
 using Kingmaker.Designers;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.Designers.EventConditionActionSystem.Conditions;
 using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
@@ -45,6 +48,7 @@ using Kingmaker.GameCommands;
 using Kingmaker.Localization;
 using Kingmaker.Localization;
 using Kingmaker.Mechanics.Entities;
+using Kingmaker.PubSubSystem;
 using Kingmaker.UI;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Levelup.Components;
@@ -65,15 +69,15 @@ namespace ToyBox {
         // General Stuff
         public static string StringValue(this LocalizedString locStr) => locStr.Text;
         public static bool IsNullOrEmpty(this string str) => str == null || str.Length == 0;
-        public static UnitEntityData Descriptor(this UnitEntityData entity) => entity;
+        public static BaseUnitEntity Descriptor(this BaseUnitEntity entity) => entity;
         public static float GetCost(this BlueprintItem item) => item.ProfitFactorCost;
         public static Etude GetFact(this EtudesTree tree, BlueprintEtude blueprint) => tree.RawFacts.FirstItem(i => i.Blueprint == blueprint);
 
         // Hacks to get around ambiguity in Description due to te ILootable interface in BaseUnitEntity
-        public static Gender? GetCustomGender(this UnitEntityData unit) {
+        public static Gender? GetCustomGender(this BaseUnitEntity unit) {
             return unit.Description.CustomGender;
         }
-        public static void SetCustomGender(this UnitEntityData unit, Gender gender) {
+        public static void SetCustomGender(this BaseUnitEntity unit, Gender gender) {
             unit.Description.CustomGender = gender;
         }
         public static bool CanPlay(this BlueprintEtude etudeBP) {
@@ -91,36 +95,36 @@ namespace ToyBox {
         public static Dictionary<string, object> GetInGameSettingsList() => Game.Instance?.State?.InGameSettings?.List;
 
         // Unit Entity Utils
-        public static UnitEntityData MainCharacter => Game.Instance.Player.MainCharacterEntity;
+        public static BaseUnitEntity MainCharacter => Game.Instance.Player.MainCharacterEntity;
         public static EntityPool<AbstractUnitEntity>? AllUnits => Game.Instance?.State?.AllUnits;
-        public static EntityPool<UnitEntityData>? AllBaseUnits => Game.Instance?.State?.AllBaseUnits;
-        public static List<UnitEntityData> SelectedUnits => UIAccess.SelectionManager.SelectedUnits.ToList();
-        public static ReactiveCollection<UnitEntityData> SelectedUnitsReactive() => UIAccess.SelectionManager.SelectedUnits;
-        public static bool IsEnemy(this UnitEntityData unit) {
+        public static EntityPool<BaseUnitEntity>? AllBaseUnits => Game.Instance?.State?.AllBaseUnits;
+        public static List<BaseUnitEntity> SelectedUnits => UIAccess.SelectionManager.SelectedUnits.ToList();
+        public static ReactiveCollection<BaseUnitEntity> SelectedUnitsReactive() => UIAccess.SelectionManager.SelectedUnits;
+        public static bool IsEnemy(this BaseUnitEntity unit) {
             PartFaction factionOptional = unit.GetFactionOptional();
             return factionOptional != null && factionOptional.IsPlayerEnemy;
         }
-        public static bool IsPlayerFaction(this UnitEntityData unit) {
+        public static bool IsPlayerFaction(this BaseUnitEntity unit) {
             PartFaction factionOptional = unit.GetFactionOptional();
             return factionOptional != null && factionOptional.IsPlayer;
         }
-        public static void KillUnit(UnitEntityData unit) => CheatsCombat.KillUnit(unit);
+        public static void KillUnit(BaseUnitEntity unit) => CheatsCombat.KillUnit(unit);
         public static bool ToyBoxIsPartyOrPet(this MechanicEntity entity) => Game.Instance.Player.PartyAndPets.Contains(entity);
         public static bool HasBonusForLevel(this BlueprintStatProgression xpTable, int level) => level >= 0 && level < xpTable.Bonuses.Length;
-        public static float GetMaxSpeed(List<UnitEntityData> data) => data.Select(u => u.OwnerEntity.Movable.ModifiedSpeedMps).Max();
+        public static float GetMaxSpeed(List<BaseUnitEntity> data) => data.Select(u => u.OwnerEntity.Movable.ModifiedSpeedMps).Max();
 
         public static void EnterToArea(BlueprintAreaEnterPoint enterPoint) => Game.Instance.LoadArea(enterPoint, AutoSaveMode.None, null);
 
-        // disabled for now in beta
         public static bool CanRespec(this BaseUnitEntity ch) {
-            if (ch == null)
-                return false;
-            var component = ch.OriginalBlueprint.GetComponent<CharacterLevelLimit>();
-            var levelLimit = component != null ? component.LevelLimit : 0;
-            return !ch.LifeState.IsDead && !ch.IsPet && ch.Progression.CharacterLevel > levelLimit;
+            return RespecCompanion.CanRespec(ch);
         }
         public static void DoRespec(this BaseUnitEntity ch) {
-            Game.Instance.Player.RespecCompanion(ch);
+            ch.Progression.Respec();
+            EventBus.RaiseEvent<INewServiceWindowUIHandler>(delegate (INewServiceWindowUIHandler h) {
+                h.HandleOpenCharacterInfoPage(CharInfoPageType.LevelProgression);
+            }, true);
+            SelectionCharacterController selectionCharacter = Game.Instance.SelectionCharacter;
+            selectionCharacter.SetSelected(ch, true, true);
         }
     }
 }

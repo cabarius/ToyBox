@@ -74,6 +74,8 @@
 
 ### ToyBox Rogue - Ver 0.1.1 built for Rogue Trader 1.0.39b
 * (***ADDB***) Fix Soul Mark Editor
+* (***ADDB***) Fix some other stuff like Navigator Resources and Respec
+* (***ADDB***) Maybe Re-Add Remote Dialog options (buggy; report if you encounter anything!)
 
 ### ToyBox Rogue - Ver 0.1.0 built for Rogue Trader 1.0.39b
 * (***ADDB***) Remove ~250 unimplemented settings (and UI Labels/Toggles in relation to them)

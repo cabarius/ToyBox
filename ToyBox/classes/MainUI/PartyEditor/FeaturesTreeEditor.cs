@@ -13,7 +13,7 @@ using UnityEngine.SceneManagement;
 
 namespace ToyBox {
     public class FeaturesTreeEditor {
-        private UnitEntityData _selectedCharacter = null;
+        private BaseUnitEntity _selectedCharacter = null;
         private FeaturesTree _featuresTree;
 
         private GUIStyle _buttonStyle;
@@ -22,7 +22,7 @@ namespace ToyBox {
 
         public int Priority => 500;
 
-        public void OnGUI(UnitEntityData character, bool refresh) {
+        public void OnGUI(BaseUnitEntity character, bool refresh) {
             if (!Main.IsInGame) return;
             var activeScene = SceneManager.GetActiveScene().name;
             if (Game.Instance?.Player == null || activeScene == "MainMenu" || activeScene == "Start") {

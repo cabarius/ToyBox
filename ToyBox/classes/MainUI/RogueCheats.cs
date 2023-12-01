@@ -67,9 +67,9 @@ namespace ToyBox {
                                     IntTextField(ref navigatorInsightAdjustment, null, MinWidth(200), AutoWidth());
                                     navigatorInsightAdjustment = Math.Max(0, navigatorInsightAdjustment);
                                     10.space();
-                                    ActionButton("Add".localize(), () => { CheatsGlobalMap.AddNavigatorResource(navigatorInsightAdjustment); NavigatorResourceVM.Instance?.SetCurrentValue(); });
+                                    ActionButton("Add".localize(), () => { CheatsGlobalMap.AddNavigatorResource(navigatorInsightAdjustment); SectorMapBottomHudVM.Instance?.SetCurrentValue(); });
                                     10.space();
-                                    ActionButton("Remove".localize(), () => { CheatsGlobalMap.AddNavigatorResource(-navigatorInsightAdjustment); NavigatorResourceVM.Instance?.SetCurrentValue(); });
+                                    ActionButton("Remove".localize(), () => { CheatsGlobalMap.AddNavigatorResource(-navigatorInsightAdjustment); SectorMapBottomHudVM.Instance?.SetCurrentValue(); });
                                 }
                             }
                         }

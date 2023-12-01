@@ -50,13 +50,13 @@ namespace ToyBox {
         private static readonly FeaturesTreeEditor treeEditor = new();
         private static readonly CollectionChangedSubscriber collectionChangedSubscriber = new();
 
-        private static readonly Dictionary<UnitEntityData, Browser<BlueprintFeature, Feature>> FeatureBrowserDict = new();
-        private static readonly Dictionary<UnitEntityData, Browser<BlueprintBuff, Buff>> BuffBrowserDict = new();
-        private static readonly Dictionary<UnitEntityData, Browser<BlueprintMechanicEntityFact, MechanicEntityFact>> AbilityBrowserDict = new();
+        private static readonly Dictionary<BaseUnitEntity, Browser<BlueprintFeature, Feature>> FeatureBrowserDict = new();
+        private static readonly Dictionary<BaseUnitEntity, Browser<BlueprintBuff, Buff>> BuffBrowserDict = new();
+        private static readonly Dictionary<BaseUnitEntity, Browser<BlueprintMechanicEntityFact, MechanicEntityFact>> AbilityBrowserDict = new();
         public static void BlueprintRowGUI<Item, Definition>(Browser<Definition, Item> browser,
                                                              Item feature,
                                                              Definition blueprint,
-                                                             UnitEntityData ch,
+                                                             BaseUnitEntity ch,
                                                              List<Action> todo
                 ) where Definition : BlueprintScriptableObject, IUIDataProvider {
             var remainingWidth = ummWidth;
@@ -137,12 +137,12 @@ namespace ToyBox {
                 }
             }
         }
-        public static void BlueprintDetailGUI<Item, Definition, k, v>(Definition blueprint, Item feature, UnitEntityData ch, Browser<k, v> browser)
+        public static void BlueprintDetailGUI<Item, Definition, k, v>(Definition blueprint, Item feature, BaseUnitEntity ch, Browser<k, v> browser)
             where Item : MechanicEntityFact
             where Definition : BlueprintMechanicEntityFact {
             // TODO: RT
         }
-        public static List<Action> OnGUI<Item, Definition>(UnitEntityData ch, Browser<Definition, Item> browser, List<Item> fact, string name)
+        public static List<Action> OnGUI<Item, Definition>(BaseUnitEntity ch, Browser<Definition, Item> browser, List<Item> fact, string name)
             where Item : MechanicEntityFact
             where Definition : BlueprintMechanicEntityFact {
             bool updateTree = false;
@@ -189,7 +189,7 @@ namespace ToyBox {
             }
             return todo;
         }
-        public static List<Action> OnGUI(UnitEntityData ch, List<Feature> feature) {
+        public static List<Action> OnGUI(BaseUnitEntity ch, List<Feature> feature) {
             var featureBrowser = FeatureBrowserDict.GetValueOrDefault(ch, null);
             if (featureBrowser == null) {
                 featureBrowser = new Browser<BlueprintFeature, Feature>(Mod.ModKitSettings.searchAsYouType, true) { };
@@ -197,7 +197,7 @@ namespace ToyBox {
             }
             return OnGUI(ch, featureBrowser, feature, "Features");
         }
-        public static List<Action> OnGUI(UnitEntityData ch, List<Buff> buff) {
+        public static List<Action> OnGUI(BaseUnitEntity ch, List<Buff> buff) {
             var buffBrowser = BuffBrowserDict.GetValueOrDefault(ch, null);
             if (buffBrowser == null) {
                 buffBrowser = new Browser<BlueprintBuff, Buff>(Mod.ModKitSettings.searchAsYouType, true);
@@ -205,7 +205,7 @@ namespace ToyBox {
             }
             return OnGUI(ch, buffBrowser, buff, "Buffs");
         }
-        public static List<Action> OnGUI(UnitEntityData ch, List<Ability> ability, List<ActivatableAbility> activatable) {
+        public static List<Action> OnGUI(BaseUnitEntity ch, List<Ability> ability, List<ActivatableAbility> activatable) {
             var abilityBrowser = AbilityBrowserDict.GetValueOrDefault(ch, null);
             var combined = new List<MechanicEntityFact>();
             if (abilityBrowser == null) {

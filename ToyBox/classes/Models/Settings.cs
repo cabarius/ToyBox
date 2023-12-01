@@ -223,6 +223,10 @@ namespace ToyBox {
         public bool previewDialogResults = false;
         public bool previewDialogConditions = false;
         public bool previewAlignmentRestrictedDialog = false;
+        public bool toggleAllowAnyGenderRomance = false;
+        public bool toggleMultipleRomance = false;
+        public bool toggleRemoteCompanionDialog = false;
+        public bool toggleExCompanionDialog = false;
         public bool toggleShowAnswersForEachConditionalResponse = false;
         public bool toggleMakePreviousAnswersMoreClear = false;
 

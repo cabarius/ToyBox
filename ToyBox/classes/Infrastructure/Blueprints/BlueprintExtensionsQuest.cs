@@ -1,53 +1,53 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using HarmonyLib;
+using Kingmaker;
 using Kingmaker.AreaLogic.Etudes;
+using Kingmaker.AreaLogic.QuestSystem;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Ecnchantments;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
+using Kingmaker.Designers.EventConditionActionSystem.Conditions;
+using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.ElementsSystem;
+using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UI;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
+using Kingmaker.UnitLogic.Interaction;
 using Kingmaker.UnitLogic.Mechanics;
+using Kingmaker.UnitLogic.Parts;
 using Kingmaker.Utility;
+using Kingmaker.View.MapObjects;
 using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Kingmaker.AreaLogic.QuestSystem;
-using Kingmaker.Designers.EventConditionActionSystem.Conditions;
-using Kingmaker.UnitLogic.Parts;
 using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
-using Kingmaker.UnitLogic.Interaction;
 using static ToyBox.BlueprintExtensions;
-using Kingmaker.Designers.EventConditionActionSystem.Actions;
-using Kingmaker;
-using Kingmaker.EntitySystem;
-using Kingmaker.View.MapObjects;
-using Kingmaker.DialogSystem.Blueprints;
 namespace ToyBox {
 
     public static partial class BlueprintExtensions {
         public class IntrestingnessEntry {
-            public UnitEntityData unit { get; set; }
+            public BaseUnitEntity unit { get; set; }
             public object source { get; set; }
             public ConditionsChecker checker { get; set; }
             public List<Element>? elements { get; set; }
             public bool HasConditions => checker?.Conditions.Length > 0;
             public bool HasElements => elements?.Count > 0;
-            public IntrestingnessEntry(UnitEntityData unit, object source, ConditionsChecker checker, List<Element>? elements = null) {
+            public IntrestingnessEntry(BaseUnitEntity unit, object source, ConditionsChecker checker, List<Element>? elements = null) {
                 this.unit = unit;
                 this.source = source;
                 this.checker = checker;
                 this.elements = elements;
             }
         }
-        public static bool IsActive(this IntrestingnessEntry entry) => 
+        public static bool IsActive(this IntrestingnessEntry entry) =>
             (entry.checker?.IsActive() ?? false)
             || (entry?.elements.Any(element => element.IsActive()) ?? false)
             || (entry?.elements?.Count > 0 && entry.source is ActionsHolder) // Kludge until we get more clever about analyzing dialog state.  This lets Lathimas show up as active
@@ -73,9 +73,9 @@ namespace ToyBox {
                                                                    || element is Conditional
                                                                    ;
         public static int InterestingnessCoefficent(this MechanicEntity entity)
-            => entity is UnitEntityData unit ? unit.InterestingnessCoefficent() : 0;
-        public static int InterestingnessCoefficent(this UnitEntityData unit) => unit.GetUnitInteractionConditions().Count(entry => entry.IsActive());
-        public static List<BlueprintDialog> GetDialog(this UnitEntityData unit) {
+            => entity is BaseUnitEntity unit ? unit.InterestingnessCoefficent() : 0;
+        public static int InterestingnessCoefficent(this BaseUnitEntity unit) => unit.GetUnitInteractionConditions().Count(entry => entry.IsActive());
+        public static List<BlueprintDialog> GetDialog(this BaseUnitEntity unit) {
             var dialogs = unit.Parts.m_Parts
                                          .OfType<UnitPartInteractions>()
                                          .SelectMany(p => p.m_Interactions)
@@ -85,7 +85,7 @@ namespace ToyBox {
                                          .Select(sid => sid.Dialog).ToList();
             return dialogs;
         }
-        public static IEnumerable<IntrestingnessEntry> GetUnitInteractionConditions(this UnitEntityData unit) {
+        public static IEnumerable<IntrestingnessEntry> GetUnitInteractionConditions(this BaseUnitEntity unit) {
             var spawnInterations = unit.Parts.m_Parts
                                .OfType<UnitPartInteractions>()
                                .SelectMany(p => p.m_Interactions)
@@ -93,7 +93,7 @@ namespace ToyBox {
                                .Select(w => w.Source);
             var result = new HashSet<IntrestingnessEntry>();
             var elements = new HashSet<IntrestingnessEntry>();
-            
+
             // dialog
             var dialogInteractions = spawnInterations.OfType<SpawnerInteractionDialog>().ToList();
             // dialog interation conditions
@@ -116,7 +116,7 @@ namespace ToyBox {
                                                           .Where(cueRef => cueRef.Get() != null)
                                                           .Select(cueRef => new IntrestingnessEntry(unit, cueRef.Get(), cueRef.Get().Conditions)));
             result.UnionWith(dialogCueConditions.ToHashSet());
-            
+
             // actions
             var actionInteractions = spawnInterations.OfType<SpawnerInteractionActions>();
             // action interaction conditions
@@ -129,7 +129,7 @@ namespace ToyBox {
                                    .Where(ai => ai.Actions?.Get() != null)
                                    .SelectMany(ai => ai.Actions.Get().Actions.Actions
                                                    .Where(a => a is Conditional)
-                                                   .Select(a =>  new IntrestingnessEntry(unit, ai.Actions.Get(), (a as Conditional).ConditionsChecker)));
+                                                   .Select(a => new IntrestingnessEntry(unit, ai.Actions.Get(), (a as Conditional).ConditionsChecker)));
             result.Union(actionConditions.ToHashSet());
             // action elements
             var actionElements = actionInteractions

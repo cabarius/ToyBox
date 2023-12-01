@@ -150,7 +150,7 @@ namespace ToyBox {
                     (current, skillCheck)
                         => current
                            + string.Format(checkFormat,
-                                           UIUtility.PackKeys(UIUtility.EntityLinkType.SkillcheckDC, skillCheck.Type),
+                                           UIUtility.PackKeys(EntityLink.GetTag(EntityLink.Type.SkillcheckDC), skillCheck.Type),
                                            LocalizedTexts.Instance.Stats.GetText(skillCheck.Type),
                                            skillCheck.DC));
 #if FALSE

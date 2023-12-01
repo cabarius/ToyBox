@@ -34,12 +34,12 @@ namespace ToyBox {
 
         private static ToggleChoice selectedToggle = ToggleChoice.None;
         private static int editingCharacterIndex = 0;
-        private static UnitEntityData charToAdd = null;
-        private static UnitEntityData charToRecruit = null;
-        private static UnitEntityData charToRemove = null;
-        private static UnitEntityData charToUnrecruit = null;
+        private static BaseUnitEntity charToAdd = null;
+        private static BaseUnitEntity charToRecruit = null;
+        private static BaseUnitEntity charToRemove = null;
+        private static BaseUnitEntity charToUnrecruit = null;
         private static bool editMultiClass = false;
-        private static UnitEntityData multiclassEditCharacter = null;
+        private static BaseUnitEntity multiclassEditCharacter = null;
         private static int respecableCount = 0;
         private static int recruitableCount = 0;
         private static int selectedSpellbook = 0;
@@ -47,10 +47,10 @@ namespace ToyBox {
         public static int SelectedNewSpellLvl = 0;
         private static (string, string) nameEditState = (null, null);
         private static bool editSpellbooks = false;
-        private static UnitEntityData spellbookEditCharacter = null;
+        private static BaseUnitEntity spellbookEditCharacter = null;
         private static readonly Dictionary<string, int> statEditorStorage = new();
         public static Dictionary<string, Spellbook> SelectedSpellbook = new();
-        private static UnitEntityData GetEditCharacter() {
+        private static BaseUnitEntity GetEditCharacter() {
             var characterList = CharacterPicker.GetCharacterList();
             if (characterList == null || characterList.Count == 0) return null;
             if (editingCharacterIndex >= characterList.Count) editingCharacterIndex = 0;
@@ -68,7 +68,7 @@ namespace ToyBox {
         // This bit of kludge is added in order to tell whether our generic actions are being accessed from this screen or the Search n' Pick
         public static bool IsOnPartyEditor() => Main.Settings.selectedTab == 3;
 
-        public static void ActionsGUI(UnitEntityData ch) {
+        public static void ActionsGUI(BaseUnitEntity ch) {
             var player = Game.Instance.Player;
             Space(25);
             var buttonCount = 0;
@@ -299,9 +299,9 @@ namespace ToyBox {
             Space(25);
             foreach (var action in todo)
                 action();
-            if (charToAdd != null) { UnitEntityDataUtils.AddCompanion(charToAdd); }
-            if (charToRecruit != null) { UnitEntityDataUtils.RecruitCompanion(charToRecruit); }
-            if (charToRemove != null) { UnitEntityDataUtils.RemoveCompanion(charToRemove); }
+            if (charToAdd != null) { BaseUnitDataUtils.AddCompanion(charToAdd); }
+            if (charToRecruit != null) { BaseUnitDataUtils.RecruitCompanion(charToRecruit); }
+            if (charToRemove != null) { BaseUnitDataUtils.RemoveCompanion(charToRemove); }
             if (charToUnrecruit != null) {
                 charToUnrecruit.GetCompanionOptional()?.SetState(CompanionState.None); charToUnrecruit.Remove<UnitPartCompanion>();
             }

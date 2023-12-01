@@ -29,7 +29,7 @@ namespace ToyBox {
     public static partial class Actions {
         public static Settings Settings => Main.Settings;
         public static void KillAll() {
-            foreach (UnitEntityData unit in Shodan.AllUnits) {
+            foreach (BaseUnitEntity unit in Shodan.AllUnits) {
                 if (unit.CombatState.IsInCombat && Shodan.IsEnemy(unit)) {
                     Shodan.KillUnit(unit);
                 }
