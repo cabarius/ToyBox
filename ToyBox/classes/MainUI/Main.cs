@@ -165,7 +165,7 @@ namespace ToyBox {
             if (!Enabled) return;
             IsModGUIShown = true;
             if (!IsInGame) {
-                Label(("Warning: ".magenta().bold() + $"This is an experimental preview of ToyBox ({"Sh0dan".cyan()}) for Rogue Trader Beta.".orange() + " Save early and often.\r\n".yellow().bold() + "Note:".magenta().bold() + " Not all features are functional at this time. The ToyBox team is working hard to get as much working as fast as possible".orange()).localize());
+                Label(("Warning: ".magenta().bold() + $"This is an experimental preview of ToyBox for Rogue Trader.".orange() + " Save early and often.\r\n".yellow().bold() + "Note:".magenta().bold() + " Not all features are functional at this time. If you notice a feature doesn't work please report that on GitHub or in the modding channels on the Owlcat Discord.".orange()).localize());
             }
             if (!IsInGame) {
                 Label("ToyBox has limited functionality from the main menu".localize().yellow().bold());
