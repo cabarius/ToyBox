@@ -19,38 +19,62 @@ namespace ToyBox.BagOfPatches {
         // Any Gender Any Romance Overrides
         // These modify the PcFemale/PcMale conditions for specific Owner blueprints 
         internal static readonly Dictionary<string, bool> PcFemaleOverrides = new() {
-            #region Wrath
-            /*
-            // Lann
-            { "2e7f66de32ccad14bbb17855b0d125fb", true },   // Etude    LannKTC_WarCamp_LannAndFeelings
-            { "d9baf40d38ceaf248bd5306f0e344bdb", true },   // Etude    LannRomance
-            { "15fbf08c47b9cf34d8d535765e9a143a", true },   // Answer   Answer_0052
-            { "2942d51c334b42748822ea2c48093a72", true },   // Answer   AnswersList_0201
-            { "c68fad6a2d296f54f825eb1557153923", true },   // Dialog   WorldwoundEdge_GMBE
-            // Sosiel 
-            { "1071445514a15ec42a057a987886a0b5", false },  // Cue      Cue_0019
-            { "8abf3aa7d2244f048abdcfbc48721eff", false },  // Cue      Cue_0030
-            { "54fea9d1c9e0b69429bec08fb49a40d2", false },  // Cue      Cue_0235
-            // Camellia 
-            { "0144dcae4dc708744850d81254f28ec4", false },  // Cue      Cue_0067_NoGiefSex
-            { "7fec7b3b23df5f9498083f096b09f055", false }   // Answer   Answer_0057
+            // World\Dialogs\Companions\Romances\Heinrix\StartingEvent\Answer_0004
+            { "5457755c30ac417d9279fd740b90f549", true },
+            // World\Dialogs\Companions\Romances\Heinrix\StartingEvent\Answer_0023
+            { "8d6b7c53af134494a64a4de789759fb9", true },
+            // World\Dialogs\Companions\Romances\Heinrix\StartingEvent\Answer_11
+            { "4b4b769261f04a8cb5726e111c3f7081", true },
+            // World\Dialogs\Companions\Romances\Heinrix\StartingEvent\Answer_2
+            { "cf1d7205cf854709b038db477db48ac9", true },
+            // World\Dialogs\Companions\Romances\Heinrix\StartingEvent\Check_0011
+            { "d2c500fbc1b5450c8663d453a33b0eee", true }
+            /* Dialog Blueprints which contain the PcMale override but seem unrelated to romance
+            // World\Dialogs\Ch1\BridgeAndCabinet\Briefing\Answer_15
+            { "02e0bc30b5a146708dd62d68ac7490bd", true },
+            // World\Dialogs\Companions\CompanionDialogues\Interrogator\Cue_10
+            { "2df6bd21ad5a45a9b1c5142d51d647dc", true },
+            // World\Dialogs\Companions\CompanionDialogues\Navigator\Cue_45
+            { "0739ef639d774629a27d396cd733cfd4", true },
+            // World\Dialogs\Companions\CompanionDialogues\Navigator\Cue_67
+            { "ea42722c44c84835b7363db2fc09b23b", true },
+            // World\Dialogs\Companions\CompanionDialogues\Ulfar\Cue_47
+            { "41897fd7a52249d3a53691fbcfcc9c19", true },
+            // World\Dialogs\Companions\CompanionDialogues\Ulfar\Cue_89
+            { "c5efaa0ace544ca7a81d439e7cfc6ae5", true },
             */
-            #endregion
         };
         internal static readonly Dictionary<string, bool> PcMaleOverrides = new() {
-            #region Wrath
-            /*
-            // Sosiel 
-            { "5170dd15fdfd0094aa561e4f331c269f", true },   // Cue      Cue_0018
-            { "7364becdf5cc4b94dba30a9fe7c3b790", true },   // Cue      Cue_0234
-            { "e166872fc2989f548af1b3e2ba8f7156", true },   // Cue      Cue_0029
-            // Camellia
-            { "55c0fe80d141ecf40b49c7ad12746afb", true },   // Cue      Cue_0016
-            { "789ffa9876fd92f439d4b975b16be283", true },   // Cue      Cue_0066_GiefSex
-            { "f263d6ed04831f240bf2a8dce2b5ce33", true },   // Answer   Answer_0052
-            { "a96fc116bb7af94488b6da41161a47c7", true },   // Answer   Answer_0060 
+            // World\Dialogs\Companions\Romances\Cassia\StartingEvent\Answer_0017
+            { "85b651edb4f74381bbe762999273c6ec", true },
+            // World\Dialogs\Companions\Romances\Cassia\StartingEvent\Answer_10
+            { "56bbf1612e05489ba44bb4a52718e222", true },
+            // World\Dialogs\Companions\Romances\Cassia\StartingEvent\Answer_5
+            { "eb76f93740824d16b1e1f54b82de21e0", true },
+            // World\Dialogs\Companions\Romances\Cassia\StartingEvent\Answer_8
+            { "c292b399f4344a639ccb4df9ba66329e", true },
+            // World\Dialogs\Companions\Romances\Cassia\StartingEvent\CassFirstTimeBlushing_a
+            { "95b0ba7d08e34f6c895b2fbeb53ea404", true }
+            /* Dialog Blueprints which contain the PcMale override but seem unrelated to romance
+            // World\Dialogs\Ch3\Chasm\PitCassia\Answer_11
+            { "c051d0c9f2ba4c23bff1d1e6f2cfe13d", true },
+            // World\Dialogs\Ch3\Chasm\PitCassia\Answer_12
+            { "3d24df76aacf4e2db047cf47ef3474d5", true },
+            // World\Dialogs\Ch3\Chasm\PitCassia\Answer_19
+            { "b3601cd9e84d43dbb4078bf77c89d728", true },
+            // World\Dialogs\Ch3\Chasm\PitCassia\Answer_6
+            { "17b34e1ae36443408805af3a3c2866f7", true },
+            // World\Dialogs\Ch3\Chasm\PitCassia\Cue_29
+            { "7f71e0b93dd9420d87151fc3e7114865", true },
+            // World\Dialogs\Companions\CompanionDialogues\Navigator\Cue_24
+            { "a903589840ba4ab683d6e6b9f985d458", true },
+            // World\Dialogs\Companions\CompanionDialogues\Navigator\Cue_47
+            { "588a3c2e96c6403ca2c7104949b066e4", true },
+            // Dialogs\Companions\CompanionQuests\Navigator\Navigator_Q1\CassiaSeriousTalk\Answer_8
+            { "966f0cc2defa42bd836950aa1ebcde72", true },
+            // World\Dialogs\Companions\CompanionQuests\Navigator\Navigator_Q2\Cassia_Q2_BE\Cue_0037
+            { "bf7813b4ee3d49cdbc6305f454479db3", true },
             */
-            #endregion
         };
 
         // Path Romance Overrides
@@ -104,11 +128,8 @@ namespace ToyBox.BagOfPatches {
             #endregion
         };
         internal static readonly Dictionary<string, bool> FlagInRangeOverrides = new() {
-            #region Wrath
-            /*
-            { "4799a25da39295b43a6eefcd2cb2b4a7", false },  // Etude    KTC_Jealousy
-            */
-            #endregion
+            // RomanceCount Flag, as conditioned in Jealousy_event Blueprint, Activated by Jealousy_preparation
+            { "f36a831bd2b548c8a85c76914f75072f", false }
         };
 
 

@@ -213,13 +213,14 @@ namespace ToyBox {
             Div(0, 25);
             HStack("Dialog".localize(),
                    1,
+                   () => Label($"{"Experimental! ".red().bold()} means that this feature is still pretty untested. if you encounter any bugs and/or problems please report on Discord or GitHub."),
                    () => {
-                       Toggle(("TODO (if you're reading this then it isn't implemented yet): ".red().bold() + "♥♥ ".red() + "Love is Free".bold() + " ♥♥".red()).localize(), ref Settings.toggleAllowAnyGenderRomance, 300.width());
+                       Toggle(("Experimental! ".red().bold() + "♥♥ ".red() + "Love is Free".bold() + " ♥♥".red()).localize(), ref Settings.toggleAllowAnyGenderRomance, 300.width());
                        25.space();
                        Label(("Allow ".green() + "any gender".color(RGBA.purple) + " " + "for any ".green() + "R".color(RGBA.red) + "o".orange() + "m".yellow() + "a".green() + "n".cyan() + "c".color(RGBA.blue) + "e".color(RGBA.purple)).localize());
                    },
                    () => {
-                       Toggle("TODO (if you're reading this then it isn't implemented yet): ".red().bold() + "Jealousy Begone!".localize().bold(), ref Settings.toggleMultipleRomance, 300.width());
+                       Toggle("Experimental! ".red().bold() + "Jealousy Begone!".localize().bold(), ref Settings.toggleMultipleRomance, 300.width());
                        25.space();
                        Label(("Allow ".green() + "multiple".color(RGBA.purple) + " romances at the same time".green()).localize());
                    },
@@ -229,14 +230,14 @@ namespace ToyBox {
                        Label("Draws dialog choices that you have previously selected in smaller type".localize().green());
                    },
                    () => {
-                       Toggle("Experimental!".red().bold() + "Expand Dialog To Include Remote Companions".localize().bold(), ref Settings.toggleRemoteCompanionDialog, 300.width());
+                       Toggle("Experimental! ".red().bold() + "Expand Dialog To Include Remote Companions".localize(), ref Settings.toggleRemoteCompanionDialog, 300.width());
                        200.space();
                        Label(" Allow remote companions to make comments on dialog you are having.".localize().green());
                    },
                    () => {
                        if (Settings.toggleRemoteCompanionDialog) {
                            50.space();
-                           Toggle("Experimental!".red().bold() + "Include Former Companions".localize(), ref Settings.toggleExCompanionDialog, 300.width());
+                           Toggle("Experimental! ".red().bold() + "Include Former Companions".localize(), ref Settings.toggleExCompanionDialog, 300.width());
                            150.space();
                            Label("This also includes companions who left the party".localize().green());
                        }

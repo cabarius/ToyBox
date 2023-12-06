@@ -1,91 +1,41 @@
 // borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
 using DG.Tweening;
 using HarmonyLib;
-using JetBrains.Annotations;
 using Kingmaker;
-using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.Area;
-using Kingmaker.Blueprints.Items.Armors;
-using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Root.Strings;
 using Kingmaker.Cargo;
 using Kingmaker.Cheats;
 using Kingmaker.Code.UI.MVVM.View.LoadingScreen;
-using Kingmaker.Code.UI.MVVM.View.LoadingScreen;
 using Kingmaker.Code.UI.MVVM.View.MainMenu.PC;
-using Kingmaker.Code.UI.MVVM.VM.LoadingScreen;
-using Kingmaker.Code.UI.MVVM.VM.LoadingScreen;
-using Kingmaker.Code.UI.MVVM.VM.MainMenu;
 using Kingmaker.Code.UI.MVVM.VM.MessageBox;
 using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.Inventory;
 using Kingmaker.Code.UI.MVVM.VM.ShipCustomization;
 using Kingmaker.Code.UI.MVVM.VM.Slots;
 using Kingmaker.Code.UI.MVVM.VM.WarningNotification;
-using Kingmaker.Controllers;
 using Kingmaker.Controllers.Combat;
 using Kingmaker.Controllers.MapObjects;
-using Kingmaker.Controllers.Rest;
 using Kingmaker.Designers;
-using Kingmaker.Designers;
-using Kingmaker.Designers.EventConditionActionSystem.Actions;
-using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
-using Kingmaker.EntitySystem.Stats;
-using Kingmaker.Enums;
 using Kingmaker.GameCommands;
-using Kingmaker.Globalmap;
-using Kingmaker.Globalmap;
 using Kingmaker.Items;
 using Kingmaker.Items.Slots;
 using Kingmaker.Networking;
-using Kingmaker.Networking;
-using Kingmaker.Pathfinding;
 using Kingmaker.Pathfinding;
 using Kingmaker.PubSubSystem;
-using Kingmaker.RuleSystem.Rules;
-using Kingmaker.Tutorial;
-using Kingmaker.UI;
 using Kingmaker.UI;
 using Kingmaker.UI.Common;
-using Kingmaker.UI.Common;
-using Kingmaker.UI.Legacy.LoadingScreen;
-using Kingmaker.UI.PathRenderer;
-using Kingmaker.UI.PathRenderer;
 using Kingmaker.UI.Sound;
-using Kingmaker.UI.Sound;
-using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
-using Kingmaker.UnitLogic.Abilities.Blueprints;
-using Kingmaker.UnitLogic.Abilities.Components.CasterCheckers;
-using Kingmaker.UnitLogic.Abilities.Components.TargetCheckers;
-using Kingmaker.UnitLogic.ActivatableAbilities;
-using Kingmaker.UnitLogic.Mechanics.Actions;
-using Kingmaker.UnitLogic.Parts;
 using Kingmaker.Utility;
 using Kingmaker.View.Covers;
-using Kingmaker.View.Covers;
-using Kingmaker.View.MapObjects;
-using Kingmaker.Visual.Sound;
 using ModKit;
-using Owlcat.Runtime.Core;
-using Owlcat.Runtime.UI;
-using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
 using System;
-using System.Collections;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using ToyBox;
 using UniRx;
 using UnityEngine;
 using Warhammer.SpaceCombat.Blueprints;
-using static Kingmaker.Sound.AkAudioService;
 using static Kingmaker.UnitLogic.Abilities.AbilityData;
-using static Kingmaker.Utility.MassLootHelper;
-using Object = UnityEngine.Object;
 
 namespace ToyBox.BagOfPatches {
     internal static partial class Tweaks {
@@ -298,7 +248,7 @@ namespace ToyBox.BagOfPatches {
                 CargoEntity cargoEntity2 = ((group2 != null) ? group2.MechanicCollection.Owner : null) as CargoEntity;
                 if ((from.Group != to.Group && cargoEntity != null) || cargoEntity2 != null) {
                     int num;
-                    if (cargoEntity != null && !cargoEntity.CanTransferFrom(from.ItemEntity)) {
+                    if (cargoEntity != null && !cargoEntity.CanTransferFromCargo(from.ItemEntity)) {
                         if (cargoEntity.Blueprint.Integral) {
                             PFLog.Default.Log("Cannot transfer items from this cargo cause Integral true");
                             return false;

@@ -53,7 +53,7 @@ namespace ToyBox {
             var globalMap = BlueprintRoot.Instance.SectorMapArea;
             var areaEnterPoint = globalMap.SectorMapEnterPoint;
             //var areaEnterPoint = globalMap.All.FindOrDefault(i => i.Get().GlobalMapEnterPoint != null)?.Get().GlobalMapEnterPoint;
-            Game.Instance.LoadArea(globalMap, areaEnterPoint, AutoSaveMode.None, callback: callback ?? (() => { }));
+            Game.LoadArea(globalMap, areaEnterPoint, AutoSaveMode.None, callback: callback ?? (() => { }));
         }
 #if false
         public static void To(this BlueprintSectorMapPoint mapPoint) {
