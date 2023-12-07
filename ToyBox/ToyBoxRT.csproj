@@ -37,12 +37,6 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <Target Name="Publicise" AfterTargets="Clean">
-    <ItemGroup>
-      <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\Code.dll" />
-    </ItemGroup>
-    <Publicise InputAssemblies="@(PubliciseInputAssemblies)" OutputPath="$(SolutionDir)lib/" PubliciseCompilerGenerated="true" />
-  </Target>
   <ItemGroup>
     <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\Code.dll" />
     <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\RogueTrader.GameCore.dll" />
@@ -54,7 +48,13 @@
     <MakeDir Directories="$(SolutionDir)lib/RT" />
     <Publicise InputAssemblies="@(PubliciseInputAssemblies)" OutputPath="$(SolutionDir)lib/RT/" PubliciseCompilerGenerated="true" />
   </Target>
+  <!--
+  <Target Name="PublishToSteamWorkshop" AfterTargets="Build">
+    <PublishToWorkshop PathToManifest="$(MSBuildThisFileDirectory)\ModDetails\OwlcatModificationManifest.json" ImageDir="$(MSBuildThisFileDirectory)\ModDetails\" BuildDir="$(TargetDir)" GameAppId="2186680" />
+  </Target>
+  !-->
   <ItemGroup>
+    <PackageReference Include="PublishToWorkshop" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" Version="1.0.9" PrivateAssets="all" />
     <PackageReference Include="Aze.Publicise.MSBuild.Task" Version="1.0.0" />
     <Reference Include="0Harmony">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\0Harmony.dll</HintPath>
@@ -535,7 +535,8 @@
       <Link>Localization\%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="ModPublishInfo\Info.json" Link="%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="ModDetails\Info.json" Link="%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="ModDetails\OwlcatModificationManifest.json" Link="%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="zmisc\api.txt" />
     <None Include="zip-hash-sign.ps1" />
   </ItemGroup>
@@ -548,7 +549,7 @@
     <PostBuildEvent>echo "Rogue: $(TargetPath)" "&gt;$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\ToyBox.dll*"
         xcopy /Y "$(TargetPath)" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\ToyBox.dll*"
         xcopy /Y "$(TargetDir)$(TargetName).pdb" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\ToyBox.pdb*"
-        xcopy /Y "$(ProjectDir)\ModPublishInfo\Info.json" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\Info.json*"
+        xcopy /Y "$(TargetDir)Info.json" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\Info.json*"
         xcopy /E /Y "$(ProjectDir)Localization\RogueTrader\" "$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\0ToyBox0\Localization\"
         cd "$(TargetDir)"
         powershell.exe -ExecutionPolicy Unrestricted -f "$(ProjectDir)zip-hash-sign.ps1" Rogue

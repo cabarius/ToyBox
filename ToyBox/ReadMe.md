@@ -72,7 +72,8 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 
-### ToyBox Rogue - Ver 1.5.8a built for Rogue Trader 1.0.60
+### ToyBox Rogue - Ver 1.5.8b built for Rogue Trader 1.0.60
+* (***ADDB***) Fix Stats Editor for Abelard (and any other companion with missing base soul marks).
 * (***ADDB***) Allow Respec From Zero for Companions and RT. See Level Up Category.
 * (***ADDB***) Fixed weird behaviour when changing stats using the Textfield.
 * (***ADDB***) Fixed Search 'n Pick - missing key update if collation happens too fast

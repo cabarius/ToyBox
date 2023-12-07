@@ -222,12 +222,18 @@ namespace ToyBox {
             using (HorizontalScope()) {
                 100.space();
                 Label("Soul Marks".localize(), Width(200));
+                // TODO: Actually implement this for companions.
                 using (VerticalScope()) {
                     foreach (SoulMarkDirection dir in Enum.GetValues(typeof(SoulMarkDirection))) {
                         if (dir == SoulMarkDirection.None || dir == SoulMarkDirection.Reason) continue;
                         SoulMark soulMark = null;
                         try {
                             soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, dir);
+                            if (soulMark == null) {
+                                var f = Shodan.MainCharacter.Blueprint.m_AddFacts.Select(f => f.Get()).OfType<BlueprintSoulMark>().Where(f => f == SoulMarkShiftExtension.GetBaseSoulMarkFor(dir)).First();
+                                ch.AddFact(f);
+                                soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, dir);
+                            }
                         }
                         catch (Exception ex) {
                             Mod.Error(ex);
