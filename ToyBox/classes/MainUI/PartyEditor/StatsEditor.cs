@@ -229,11 +229,12 @@ namespace ToyBox {
                         SoulMark soulMark = null;
                         try {
                             soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, dir);
-                            if (soulMark == null) {
-                                var f = Shodan.MainCharacter.Blueprint.m_AddFacts.Select(f => f.Get()).OfType<BlueprintSoulMark>().Where(f => f == SoulMarkShiftExtension.GetBaseSoulMarkFor(dir)).First();
-                                ch.AddFact(f);
-                                soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, dir);
-                            }
+                            if (soulMark == null) continue;
+                            /*{        
+                            var f = Shodan.MainCharacter.Blueprint.m_AddFacts.Select(f => f.Get()).OfType<BlueprintSoulMark>().Where(f => f == SoulMarkShiftExtension.GetBaseSoulMarkFor(dir)).First();
+                            ch.AddFact(f);
+                            soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, dir);
+                            }*/
                         }
                         catch (Exception ex) {
                             Mod.Error(ex);
