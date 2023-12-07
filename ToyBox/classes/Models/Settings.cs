@@ -163,6 +163,7 @@ namespace ToyBox {
         public bool toggleIgnorePrerequisiteStatValue = false;
         public bool toggleIgnorePrerequisiteClassLevel = false;
         public bool toggleFeaturesIgnorePrerequisites = false;
+        public bool toggleSetDefaultRespecLevelZero = false;
 
         // Multipliers
         public float experienceMultiplier = 1;

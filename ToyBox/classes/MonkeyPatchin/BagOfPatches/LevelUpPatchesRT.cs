@@ -9,6 +9,7 @@ using Kingmaker.Blueprints.Root;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.UnitLogic;
+using Kingmaker.UnitLogic.Progression.Paths;
 using Kingmaker.UnitLogic.Progression.Prerequisites;
 using ModKit;
 using System;
@@ -25,7 +26,52 @@ namespace ToyBox.BagOfPatches {
         public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
+        [HarmonyPatch(typeof(UnitProgressionData))]
+        public static class UnitProgressionData_Patch {
+            public static int getMaybeZero(UnitProgressionData _instance) {
+                if (Settings.toggleSetDefaultRespecLevelZero) {
+                    return 0;
+                }
+                else {
+                    var tmp = _instance.Owner.Blueprint.GetDefaultLevel();
+                    return tmp;
+                }
+            }
+            public static ValueTuple<BlueprintCareerPath, int> maybeGetNextCareer(UnitProgressionData _instance) {
+                ValueTuple<BlueprintCareerPath, int> ret;
+                try {
+                    ret = _instance.AllCareerPaths.Last<ValueTuple<BlueprintCareerPath, int>>();
+                }
+                catch (InvalidOperationException) {
+                    ret = new(null, 1);
+                }
+                return ret;
 
+            }
+            [HarmonyPatch(nameof(UnitProgressionData.Respec))]
+            [HarmonyTranspiler]
+            public static IEnumerable<CodeInstruction> Respec(IEnumerable<CodeInstruction> instructions) {
+                bool shouldSkipNextInstruction = false;
+                foreach (var instruction in instructions) {
+                    if (shouldSkipNextInstruction) {
+                        shouldSkipNextInstruction = false;
+                        continue;
+                    }
+                    if (instruction.Calls(AccessTools.Method(typeof(BlueprintUnit), nameof(BlueprintUnit.GetDefaultLevel)))) {
+                        yield return new CodeInstruction(OpCodes.Pop);
+                        yield return new CodeInstruction(OpCodes.Ldarg_0);
+                        instruction.opcode = OpCodes.Call;
+                        instruction.operand = AccessTools.Method(typeof(UnitProgressionData_Patch), nameof(UnitProgressionData_Patch.getMaybeZero));
+                    }
+                    else if (instruction.Calls(AccessTools.PropertyGetter(typeof(UnitProgressionData), nameof(UnitProgressionData.AllCareerPaths)))) {
+                        instruction.operand = AccessTools.Method(typeof(UnitProgressionData_Patch), nameof(UnitProgressionData_Patch.maybeGetNextCareer));
+                        shouldSkipNextInstruction = true;
+                    }
+                    yield return instruction;
+                }
+
+            }
+        }
         [HarmonyPatch(typeof(PrerequisiteLevel), nameof(PrerequisiteLevel.MeetsInternal))]
         public static class PrerequisiteLevelPatch {
             [HarmonyPostfix]

@@ -72,12 +72,8 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 
-### ToyBox Rogue - Ver 0.1.1 built for Rogue Trader 1.0.39b
-
-### ToyBox Rogue - Ver 0.1.0 built for Rogue Trader 1.0.39b
-
-### ToyBox Rogue - Ver 1.5.8 built for Rogue Trader 1.0.60
-**ToyBox Rogue - Ver 1.5.8 -** ***Sh0dan*** **Preview Version 1.5.7a** built for 0.2.1ah
+### ToyBox Rogue - Ver 1.5.8a built for Rogue Trader 1.0.60
+* (***ADDB***) Allow Respec From Zero for Companions and RT. See Level Up Category.
 * (***ADDB***) Fixed weird behaviour when changing stats using the Textfield.
 * (***ADDB***) Fixed Search 'n Pick - missing key update if collation happens too fast
 * (***ADDB***) Remove ~250 unimplemented settings (and UI Labels/Toggles in relation to them)
@@ -88,7 +84,7 @@
 * (***ADDB***) Fix some other stuff like Navigator Resources and Respec
 * (***ADDB***) Maybe Re-Add Remote Dialog options (buggy; report if you encounter anything!)
 * (***ADDB***) Maybe Re-Add Bi + Poly Romance options (buddy; report if you encounter anything!)
-### ToyBox Wrath - Ver 1.5.8 (built for 2.2.0as)
+### ToyBox Wrath - Ver 1.5.8b (built for 2.2.0as)
 * (***ADDB***) Ride everything now really allows riding everything. Looks ridiculous but still.
 * (***ADDB***) Fixed weird behaviour when changing stats using the Textfield.
 * (***ADDB***) Prevent mod from being unable to load when localization files are missing.
