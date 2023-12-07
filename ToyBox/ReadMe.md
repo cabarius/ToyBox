@@ -72,7 +72,8 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 
-### ToyBox Rogue - Ver 1.5.8b built for Rogue Trader 1.0.60
+### ToyBox Rogue - Ver 1.5.8c built for Rogue Trader 1.0.62
+* (***ADDB***) Experimental Fix for issue where leaving a unit from another region selected in Search 'n Pick would crash the mod because that unit was already disposed.
 * (***ADDB***) Fix Stats Editor for Abelard (and any other companion with missing base soul marks).
 * (***ADDB***) Allow Respec From Zero for Companions and RT. See Level Up Category.
 * (***ADDB***) Fixed weird behaviour when changing stats using the Textfield.

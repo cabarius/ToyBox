@@ -156,6 +156,7 @@ namespace ToyBox {
 
         public static void RedoLayout() {
             if (bps == null) return;
+            if (selectedUnit.IsDisposed) selectedUnit = null;
             foreach (var blueprint in bps) {
                 var actions = blueprint.GetActions();
                 if (actions.Any(a => a.isRepeatable)) hasRepeatableAction = true;
