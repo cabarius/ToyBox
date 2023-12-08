@@ -74,7 +74,7 @@
 
 ### ToyBox Rogue - Ver 1.5.8c built for Rogue Trader 1.0.62
 * (***ADDB***) The Level Up preview no longer displays wrong numbers when doing a level up.
-* (***ADDB***) Rewrote object highlight system because people don't turn it off before combat. I might implement it better in the future but for now it'll just stay activated until the game forces disabling; after which you have to reenable.
+* (***ADDB***) Rewrote object highlight system because people don't turn it off before combat.
 * (***ADDB***) Experimental Fix for issue where leaving a unit from another region selected in Search 'n Pick would crash the mod because that unit was already disposed.
 * (***ADDB***) Fix Stats Editor for Abelard (and any other companion with missing base soul marks).
 * (***ADDB***) Allow Respec From Zero for Companions and RT. See Level Up Category.
