@@ -53,7 +53,7 @@
     <PublishToWorkshop PathToManifest="$(MSBuildThisFileDirectory)\ModDetails\OwlcatModificationManifest.json" ImageDir="$(MSBuildThisFileDirectory)\ModDetails\" BuildDir="$(TargetDir)" GameAppId="2186680" />
   </Target>
   !-->
-  <ItemGroup>
+    <ItemGroup>
     <PackageReference Include="PublishToWorkshop" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" Version="1.0.9" PrivateAssets="all" />
     <PackageReference Include="Aze.Publicise.MSBuild.Task" Version="1.0.0" />
     <Reference Include="0Harmony">
@@ -66,6 +66,10 @@
     </Reference>
     <Reference Include="AstarPathfindingProject">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\AstarPathfindingProject.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Utility.GameConsts">
+      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Utility.GameConsts.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BuildMode">

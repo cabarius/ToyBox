@@ -48,7 +48,7 @@ namespace ToyBox {
         private static (string, string) nameEditState = (null, null);
         private static bool editSpellbooks = false;
         private static BaseUnitEntity spellbookEditCharacter = null;
-        private static readonly Dictionary<string, int> statEditorStorage = new();
+        internal static readonly Dictionary<string, int> statEditorStorage = new();
         public static Dictionary<string, Spellbook> SelectedSpellbook = new();
         private static BaseUnitEntity GetEditCharacter() {
             var characterList = CharacterPicker.GetCharacterList();

@@ -1,3 +1,4 @@
+using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Root;
@@ -6,11 +7,13 @@ using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
+using Kingmaker.EntitySystem.Stats.Base;
 using Kingmaker.Enums;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UI.MVVM.VM.Tooltip.Templates;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Alignments;
+using Kingmaker.UnitLogic.Levelup;
 using Kingmaker.UnitLogic.Parts;
 using Kingmaker.Visual.LightSelector;
 using ModKit;
@@ -18,6 +21,7 @@ using ModKit.Utility;
 using Owlcat.Runtime.Core.Physics.PositionBasedDynamics.Bodies;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using ToyBox.classes.Infrastructure;
 using UnityEngine;
@@ -323,7 +327,6 @@ namespace ToyBox {
                         ActionButton(" < ",
                                      () => {
                                          modifiableValue.BaseValue -= 1;
-                                         modifiableValue.UpdateValue();
                                          storedValue = modifiableValue.ModifiedValue;
                                      },
                                      GUI.skin.box,
@@ -334,7 +337,6 @@ namespace ToyBox {
                         ActionButton(" > ",
                                      () => {
                                          modifiableValue.BaseValue += 1;
-                                         modifiableValue.UpdateValue();
                                          storedValue = modifiableValue.ModifiedValue;
                                      },
                                      GUI.skin.box,
@@ -344,7 +346,6 @@ namespace ToyBox {
 
                             modifiableValue.BaseValue += v - modifiableValue.ModifiedValue;
                             storedValue = modifiableValue.ModifiedValue;
-                            modifiableValue.UpdateValue();
                         }, Width(75));
                         statEditorStorage[key] = storedValue;
                     }

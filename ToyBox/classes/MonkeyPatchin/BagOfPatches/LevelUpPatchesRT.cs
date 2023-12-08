@@ -9,15 +9,18 @@ using Kingmaker.Blueprints.Root;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.UnitLogic;
+using Kingmaker.UnitLogic.Levelup;
 using Kingmaker.UnitLogic.Progression.Paths;
 using Kingmaker.UnitLogic.Progression.Prerequisites;
 using ModKit;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using ToyBox;
+using ToyBox.classes.Infrastructure;
 using UnityEngine;
 //using ToyBox.Multiclass;
 
@@ -102,6 +105,30 @@ namespace ToyBox.BagOfPatches {
                 if (!__result && Settings.toggleIgnorePrerequisiteStatValue) {
                     Mod.Debug($"PrerequisiteStat.MeetsInternal - {unit.CharacterName} - {__instance.GetCaptionInternal()} -{__result} -> {true} ");
                     __result = true;
+                }
+            }
+        }
+        // This is needed because when leveling up, Owlcode creates a copy of the BlueprintUnit and applies all feats for the Preview.
+        // When we change stats the BaseValue is modified. That one is taken from the Blueprint in the Preview so our modifications aren't correctly saved there.
+        // This messes up stat previews. The internal stat changes still work, but coloring and +- would be off in a level up preview. This patch fixes that.
+        [HarmonyPatch(typeof(UnitHelper))]
+        public static class UnitHelper_Patch {
+            [HarmonyPatch(nameof(UnitHelper.CreatePreview))]
+            [HarmonyPostfix]
+            public static void UnitHelper_CreatePreview(BaseUnitEntity _this, bool createView, ref BaseUnitEntity __result) {
+                if (new StackTrace().ToString().Contains($"{typeof(LevelUpManager).FullName}.{nameof(LevelUpManager.RecalculatePreview)}")) {
+                    foreach (var obj in HumanFriendlyStats.StatTypes) {
+                        try {
+                            var modifiableValue = _this.Stats.GetStatOptional(obj);
+                            var modifiableValue2 = __result.Stats.GetStatOptional(obj);
+                            if (modifiableValue.BaseValue != modifiableValue2.BaseValue) {
+                                modifiableValue2.BaseValue = modifiableValue.BaseValue;
+                            }
+                        }
+                        catch (NullReferenceException ex) {
+
+                        }
+                    }
                 }
             }
         }

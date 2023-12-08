@@ -212,6 +212,7 @@ namespace ToyBox.BagOfPatches {
                 Mod.Debug("Player_OnAreaLoaded_Patch");
                 Settings.ClearCachedPerSave();
                 PartyEditor.lastScaleSize = new();
+                PartyEditor.statEditorStorage.Clear();
                 foreach (var ID in Main.Settings.perSave.characterModelSizeMultiplier.Keys) {
                     foreach (BaseUnitEntity cha in Game.Instance.State.AllUnits.Where((u) => u.CharacterName.Equals(ID))) {
                         float scale = Main.Settings.perSave.characterModelSizeMultiplier.GetValueOrDefault(ID, 1);
