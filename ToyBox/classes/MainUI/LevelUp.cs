@@ -15,7 +15,7 @@ namespace ToyBox {
             HStack("Create & Level Up".localize(), 1,
                 () => { },
                 () => {
-                    Toggle("Experimental! ".red().bold() + "Respec from Level 0".localize(), ref Settings.toggleSetDefaultRespecLevelZero, 300.width());
+                    Toggle("Respec from Level 0".localize(), ref Settings.toggleSetDefaultRespecLevelZero, 300.width());
                     Label("This allows rechosing the first arcehtype. Also makes Companion respec start from level 0.".green().localize());
                 },
                 () => Toggle("Ignore Talent Prerequisites".localize(), ref Settings.toggleFeaturesIgnorePrerequisites),

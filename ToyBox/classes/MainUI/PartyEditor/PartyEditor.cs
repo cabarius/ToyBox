@@ -290,11 +290,7 @@ namespace ToyBox {
             }
             if (respecableCount > 0) {
                 Label($"{respecableCount} " + ("character(s) can be ".orange().bold() + "Respecced".cyan() + ". Pressing Respec will close the mod window and take you to character level up".green()).localize());
-                Label(("WARNING".yellow().bold() + " The Respec UI is ".orange() + "Non Interruptable".yellow().bold() + " please save before using".orange()).localize());
-            }
-            if (recruitableCount > 0 || respecableCount > 0) {
-                Label(("WARNING".yellow().bold() + " these features are ".orange() + "EXPERIMENTAL".yellow().bold() + " and uses unreleased and likely buggy code.".orange()).localize());
-                Label(("BACK UP".yellow().bold() + " before playing with this feature.You will lose your mythic ranks but you can restore them in this Party Editor.".orange()).localize());
+                Toggle("Respec from Level 0".localize(), ref Settings.toggleSetDefaultRespecLevelZero, 300.width());
             }
             Space(25);
             foreach (var action in todo)
