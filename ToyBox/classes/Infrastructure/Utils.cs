@@ -97,11 +97,11 @@ namespace ToyBox {
                 return result;
             }
             catch (DirectoryNotFoundException) {
-                Mod.Error("Unable to load localization directory.");
+                Mod.Warn("Unable to load localization directory.");
                 return new();
             }
             catch (FileNotFoundException) {
-                Mod.Error("Unable to load localization file.");
+                Mod.Warn("Unable to load Etude localization file.");
                 return new();
             }
         }

@@ -250,9 +250,11 @@ namespace ToyBox {
                        Label("Some responses such as comments about your mythic powers will always choose the first one by default. This will show a copy of the answer and the condition for each possible response that an NPC might make to you based on".localize().green());
                    },
                    () => Toggle("Disable Dialog Restrictions (SoulMark)".localize(), ref Settings.toggleDialogRestrictions),
-#if DEBUG
-                   () => Toggle("Disable Dialog Restrictions (Everything, Experimental)".localize(), ref Settings.toggleDialogRestrictionsEverything),
-#endif
+                   () => {
+                       if (Settings.toggleRiskyToggles) {
+                           Toggle("Disable Dialog Restrictions (Everything, Experimental)".localize(), ref Settings.toggleDialogRestrictionsEverything);
+                           }
+                       },
                    () => { }
                 );
             Div(0, 25);

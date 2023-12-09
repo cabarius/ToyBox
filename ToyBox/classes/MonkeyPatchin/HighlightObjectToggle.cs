@@ -36,11 +36,11 @@ namespace ToyBox.classes.MonkeyPatchin {
             [HarmonyPrefix]
             private static bool OnCallbackByBinding(KeyboardAccess.Binding binding) {
                 if (!Main.Settings.highlightObjectsToggle) return true;
-                if (Game.Instance.Player.IsInCombat) return true;
+                if (Game.Instance?.Player?.IsInCombat ?? false) return true;
                 if (binding.Name.StartsWith(UISettingsRoot.Instance.UIKeybindGeneralSettings.HighlightObjects.name)) {
                     if (binding.Name.EndsWith(UIConsts.SuffixOn) && binding.InputMatched() && !justChanged) {
                         justChanged = true;
-                        InteractionHighlightController.Instance.Highlight(!InteractionHighlightController.Instance.IsHighlighting);
+                        InteractionHighlightController.Instance?.Highlight(!InteractionHighlightController.Instance?.IsHighlighting ?? false);
                         Task.Run(() => {
                             Thread.Sleep(250);
                             justChanged = false;

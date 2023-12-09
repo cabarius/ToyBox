@@ -72,7 +72,11 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 
-### ToyBox Rogue - Ver 1.5.8c built for Rogue Trader 1.0.62
+### ToyBox Rogue - Ver 1.5.8d built for Rogue Trader 1.0.62
+* (***ADDB***) Added workaround for people who use Ignore Talent Prequisite in Character Creation.
+* (***ADDB***) Maybe fix some broken dice tweaks?
+* (***ADDB***) Added Show Risky Toggles option which hides a Show All Dialog Answers (Ignore Everything) options.
+* (***ADDB***) Removed log spam because of missing Etude Comment Translation
 * (***ADDB***) The Level Up preview no longer displays wrong numbers when doing a level up.
 * (***ADDB***) Rewrote object highlight system because people don't turn it off before combat.
 * (***ADDB***) Experimental Fix for issue where leaving a unit from another region selected in Search 'n Pick would crash the mod because that unit was already disposed.

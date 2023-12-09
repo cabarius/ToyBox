@@ -8,6 +8,7 @@ using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Stats;
+using Kingmaker.UI.MVVM.VM.CharGen.Phases.BackgroundBase;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Levelup;
 using Kingmaker.UnitLogic.Progression.Paths;
@@ -92,8 +93,10 @@ namespace ToyBox.BagOfPatches {
             public static void MeetsInternal(PrerequisiteFact __instance, BaseUnitEntity unit, ref bool __result) {
                 if (!unit.IsPartyOrPet()) return; // don't give extra feats to NPCs
                 if (!__result && Settings.toggleFeaturesIgnorePrerequisites) {
-                    Mod.Debug($"PrerequisiteFact.MeetsInternal - {unit.CharacterName} - {__instance.GetCaptionInternal()} -{__result} -> {true} ");
-                    __result = true;
+                    if (!new StackTrace().ToString().Contains("Kingmaker.UI.MVVM.VM.CharGen")) {
+                        Mod.Log($"PrerequisiteFact.MeetsInternal - {unit.CharacterName} - {__instance.GetCaptionInternal()} -{__result} -> {true} (Not: {__instance.Not}");
+                        __result = true;
+                    }
                 }
             }
         }
