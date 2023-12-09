@@ -72,7 +72,9 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 
-### ToyBox Rogue - Ver 1.5.8e built for Rogue Trader 1.0.62
+### ToyBox Rogue - Ver 1.5.8g built for Rogue Trader 1.0.62
+* (***ADDB***) I accidentally broke Search 'n Pick in one of the last patches I think.
+* (***ADDB***) Add QoL option to disable end turn keybind.
 * (***ADDB***) KillAll could fail in some fights which crashed the mod (Invalid Cast Exception); that's fixed.
 * (***ADDB***) Since someonee requested it; changed PCMale and PCFemale overrides (Love is Free) to now also work for stuff that isn't explicitly a romance dialog (e.g. during private companion dialogs).
 * (***ADDB***) Disabled Expand Answers For Conditional Responses because it was actually broken and I don't have time to look at that whole system.

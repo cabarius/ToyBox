@@ -335,6 +335,7 @@ namespace ToyBox {
                            Div(0, 25, 1280);
                        }
                    },
+                   () => Toggle("Disable end turn HotKey".localize(), ref Settings.disableEndTurnHotkey, 500.width()),
                    () => { }
                 );
 

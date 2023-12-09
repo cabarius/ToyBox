@@ -41,14 +41,17 @@ using ModKit;
 using Owlcat.Runtime.UniRx;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Runtime.Serialization;
 using UniRx;
 //using ToyBox.Multiclass;
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityEngine;
 using static ModKit.UI;
+using static ToyBox.BagOfPatches.LevelUp;
 using Utilities = Kingmaker.Cheats.Utilities;
 
 namespace ToyBox.BagOfPatches {
@@ -80,6 +83,12 @@ namespace ToyBox.BagOfPatches {
                     return;
                 }
             }
+        }
+        [HarmonyPatch(typeof(Game))]
+        public static class Game_Patch {
+            [HarmonyPatch(nameof(Game.EndTurnBind))]
+            [HarmonyPrefix]
+            public static bool EndTurnBind() => !Settings.disableEndTurnHotkey;
         }
 
         [HarmonyPatch(typeof(Kingmaker.Items.Slots.ItemSlot), nameof(Kingmaker.Items.Slots.ItemSlot.RemoveItem), new Type[] { typeof(bool), typeof(bool) })]

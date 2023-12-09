@@ -141,6 +141,7 @@ namespace ToyBox {
         public bool disableTraps = false;
         public bool togglekillOnEngage = false;
         public bool disableWarpRandomEncounter = false;
+        public bool disableEndTurnHotkey = false;
 
         // Loot 
         public bool toggleColorLootByRarity = false;
