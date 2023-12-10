@@ -49,9 +49,9 @@
     <Publicise InputAssemblies="@(PubliciseInputAssemblies)" OutputPath="$(SolutionDir)lib/RT/" PubliciseCompilerGenerated="true" />
   </Target>
     <!--
-  <Target Name="PublishToSteamWorkshop" AfterTargets="Build">
-    <PublishToWorkshop PathToManifest="$(MSBuildThisFileDirectory)\ModDetails\OwlcatModificationManifest.json" ImageDir="$(MSBuildThisFileDirectory)\ModDetails\" BuildDir="$(TargetDir)" GameAppId="2186680" />
-  </Target>
+    <Target Name="PublishToSteamWorkshop" AfterTargets="Build">
+        <PublishToWorkshop PathToManifest="$(MSBuildThisFileDirectory)\ModDetails\OwlcatModificationManifest.json" ImageDir="$(MSBuildThisFileDirectory)\ModDetails\" BuildDir="$(TargetDir)" GameAppId="2186680" />
+    </Target>
     !-->
     <ItemGroup>
     <PackageReference Include="PublishToWorkshop" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" Version="1.0.9" PrivateAssets="all" />
@@ -82,6 +82,14 @@
     </Reference>
     <Reference Include="Cinemachine">
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Cinemachine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AK.Wwise.Unity.API">
+      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Ak.Wwise.Unity.API.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Utility.DotNetExtensions">
+      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Utility.DotNetExtensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Code">

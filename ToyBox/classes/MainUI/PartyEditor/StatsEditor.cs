@@ -10,22 +10,28 @@ using Kingmaker.EntitySystem.Stats;
 using Kingmaker.EntitySystem.Stats.Base;
 using Kingmaker.Enums;
 using Kingmaker.PubSubSystem;
+using Kingmaker.Sound.Base;
+using Kingmaker.UI.Common;
 using Kingmaker.UI.MVVM.VM.Tooltip.Templates;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Alignments;
 using Kingmaker.UnitLogic.Levelup;
 using Kingmaker.UnitLogic.Parts;
+using Kingmaker.Utility.Random;
 using Kingmaker.Visual.LightSelector;
+using Kingmaker.Visual.Sound;
 using ModKit;
 using ModKit.Utility;
 using Owlcat.Runtime.Core.Physics.PositionBasedDynamics.Bodies;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using ToyBox.classes.Infrastructure;
 using UnityEngine;
 using UnityEngine.Profiling;
+using static Kingmaker.Visual.Sound.UnitAsksComponent;
 using static ModKit.UI;
 
 namespace ToyBox {
@@ -41,9 +47,12 @@ namespace ToyBox {
         private static int _increase = 1;
         private static Browser<string, string> portraitBrowser;
         private static Browser<BlueprintPortrait, BlueprintPortrait> blueprintPortraitBrowser;
+        private static Browser<BlueprintUnitAsksList, BlueprintUnitAsksList> blueprintVoiceBrowser;
         private static bool listCustomPortraits = false;
+        private static bool listCustomVoices = false;
         private static bool listBlueprintPortraits = false;
-        private static List<BlueprintPortrait> blueprintBps = null;
+        private static List<BlueprintPortrait> blueprintPortraitBps = null;
+        private static List<BlueprintUnitAsksList> blueprintVoiceBps = null;
         private static string newPortraitName = "";
         private static BlueprintPortrait newBlueprintPortrait = null;
         private static bool unknownID = false;
@@ -193,16 +202,16 @@ namespace ToyBox {
                                 }
                             }));
                         }
-                        if (Event.current.type == EventType.Layout && blueprintBps == null) {
-                            blueprintBps = BlueprintLoader.Shared.GetBlueprints<BlueprintPortrait>();
+                        if (Event.current.type == EventType.Layout && blueprintPortraitBps == null) {
+                            blueprintPortraitBps = BlueprintLoader.Shared.GetBlueprints<BlueprintPortrait>();
                         }
-                        if (blueprintBps != null) {
+                        if (blueprintPortraitBps != null) {
                             if (blueprintPortraitBrowser == null) {
                                 blueprintPortraitBrowser = new(true, true, false, true);
                                 blueprintPortraitBrowser.SearchLimit = 18;
                                 blueprintPortraitBrowser.DisplayShowAllGUI = false;
                             }
-                            blueprintPortraitBrowser.OnGUI(blueprintBps, () => blueprintBps, ID => ID, ID => BlueprintExtensions.GetSearchKey(ID), ID => new[] { BlueprintExtensions.GetSortKey(ID) }, null, null, null, 0, true, true, 100, 300, "", false, null,
+                            blueprintPortraitBrowser.OnGUI(blueprintPortraitBps, () => blueprintPortraitBps, ID => ID, ID => BlueprintExtensions.GetSearchKey(ID), ID => new[] { BlueprintExtensions.GetSortKey(ID) }, null, null, null, 0, true, true, 100, 300, "", false, null,
                                 (definitions, _currentDict) => {
                                     var count = definitions.Count;
                                     using (VerticalScope()) {
@@ -217,6 +226,53 @@ namespace ToyBox {
                                         }
                                     }
                                 });
+                        }
+                    }
+                    DisclosureToggle("Show Blueprint Voice Picker".localize(), ref listCustomVoices);
+                    if (listCustomVoices) {
+                        if (!(ch.IsCustomCompanion() || ch.IsMainCharacter)) {
+                            Label("You're about to change the voice of a non-custom character. That's untested.".localize().red().bold());
+                        } else if (!BlueprintExtensions.GetTitle(ch.Asks.List).StartsWith("RT")) {
+                            Label("You're have given a custom character a non-default voice. That's untested.".localize().red().bold());
+                        }
+                        if (Event.current.type == EventType.Layout && blueprintVoiceBps == null) {
+                            blueprintVoiceBps = BlueprintLoader.Shared.GetBlueprints<BlueprintUnitAsksList>();//?.Where(v => BlueprintExtensions.GetTitle(v).StartsWith("RT")).ToList();
+                        }
+                        if (blueprintVoiceBps != null) {
+                            if (blueprintVoiceBrowser == null) {
+                                blueprintVoiceBrowser = new(true, true);
+                                blueprintVoiceBrowser.SearchLimit = 18;
+                                blueprintVoiceBrowser.DisplayShowAllGUI = false;
+                            }
+                            blueprintVoiceBrowser.OnGUI(blueprintVoiceBps, () => blueprintVoiceBps, ID => ID, ID => BlueprintExtensions.GetSearchKey(ID), ID => new[] { BlueprintExtensions.GetSortKey(ID) }, null,
+                            (definition, _currentDict) => {
+                                bool isCurrentVoice = definition == ch.Asks.List;
+                                if (isCurrentVoice) {
+                                    Label(BlueprintExtensions.GetTitle(definition).green(), 500.width());
+                                    ActionButton("Play Example".localize(), () => {
+                                        new BarkWrapper(definition.GetComponent<UnitAsksComponent>().PartyMemberUnconscious, ch.View.Asks).Schedule();
+                                    }, 150.width());
+                                }
+                                else {
+                                    Label(BlueprintExtensions.GetTitle(definition), 500.width());
+                                    Space(150);
+                                }
+                                Space(200);
+                                if (isCurrentVoice) {
+                                    Label("This is the current voice!".localize());
+                                }
+                                else {
+                                    ActionButton("Change Voice".localize(), () => {
+                                        if (definition != null) {
+                                            todo.Add(() => {
+                                                ch.Asks.SetCustom(definition);
+                                                ch.View.UpdateAsks();
+                                            });
+                                            Mod.Debug($"Changed voice of {ch.CharacterName} to {BlueprintExtensions.GetTitle(definition)}");
+                                        }
+                                    });
+                                }
+                            });
                         }
                     }
                 }
