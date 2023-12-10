@@ -233,18 +233,20 @@ namespace ToyBox {
                         if (!(ch.IsCustomCompanion() || ch.IsMainCharacter)) {
                             Label("You're about to change the voice of a non-custom character. That's untested.".localize().red().bold());
                         } else if (!BlueprintExtensions.GetTitle(ch.Asks.List).StartsWith("RT")) {
-                            Label("You're have given a custom character a non-default voice. That's untested.".localize().red().bold());
+                            Label("You have given a custom character a non-default voice. That's untested.".localize().red().bold());
+                        }
+                        if (blueprintVoiceBrowser?.ShowAll ?? false) {
+                            Label("Giving characters voices besides the default ones is untested.".localize().red().bold());
                         }
                         if (Event.current.type == EventType.Layout && blueprintVoiceBps == null) {
-                            blueprintVoiceBps = BlueprintLoader.Shared.GetBlueprints<BlueprintUnitAsksList>();//?.Where(v => BlueprintExtensions.GetTitle(v).StartsWith("RT")).ToList();
+                            blueprintVoiceBps = BlueprintLoader.Shared.GetBlueprints<BlueprintUnitAsksList>();
                         }
                         if (blueprintVoiceBps != null) {
                             if (blueprintVoiceBrowser == null) {
                                 blueprintVoiceBrowser = new(true, true);
                                 blueprintVoiceBrowser.SearchLimit = 18;
-                                blueprintVoiceBrowser.DisplayShowAllGUI = false;
                             }
-                            blueprintVoiceBrowser.OnGUI(blueprintVoiceBps, () => blueprintVoiceBps, ID => ID, ID => BlueprintExtensions.GetSearchKey(ID), ID => new[] { BlueprintExtensions.GetSortKey(ID) }, null,
+                            blueprintVoiceBrowser.OnGUI(blueprintVoiceBps.Where(v => BlueprintExtensions.GetTitle(v).StartsWith("RT")).ToList(), () => blueprintVoiceBps, ID => ID, ID => BlueprintExtensions.GetSearchKey(ID), ID => new[] { BlueprintExtensions.GetSortKey(ID) }, null,
                             (definition, _currentDict) => {
                                 bool isCurrentVoice = definition == ch.Asks.List;
                                 if (isCurrentVoice) {
