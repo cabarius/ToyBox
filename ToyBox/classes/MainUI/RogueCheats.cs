@@ -26,6 +26,10 @@ namespace ToyBox {
                 }
                 factionsToPick = tmp.ToArray();
             }
+            if (Game.Instance?.Player == null) {
+                Label("Load a save to find options like modifying Faction Reputation, Scrap and more.".localize());
+                return;
+            }
             var selected = TypePicker("Faction Selector".localize().bold(), ref selectedFaction, factionsToPick, true);
             15.space();
             var faction = selected.func();

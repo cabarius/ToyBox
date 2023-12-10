@@ -136,6 +136,17 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        [HarmonyPatch(typeof(BlueprintUnit))]
+        public static class BlueprintUnit_Patch {
+            [HarmonyPatch(nameof(BlueprintUnit.CreateEntity))]
+            [HarmonyPostfix]
+            public static void CreateEntity(BaseUnitEntity __result) {
+                if (new StackTrace().ToString().Contains($"{typeof(LevelUpManager).FullName}.{nameof(LevelUpManager.RecalculatePreview)}")) {
+                    __result.Progression.Respec();
+                }
+            }
+        }
+
 #if false
         [HarmonyPatch(typeof(UnitProgressionData))]
         private static class UnitProgressionData_LegendaryHero_Patch {
