@@ -27,29 +27,29 @@ namespace ToyBox {
         public static Settings Settings => Main.Settings;
 
         // cheats combat
-        private const string? RestAll = "Rest All";
-        private const string? RestSelected = "Rest Selected";
-        private const string? Empowered = "Empowered";
-        private const string? FullBuffPlease = "Common Buffs";
-        private const string? GoddesBuffs = "Buff Like A Goddess";
-        private const string? RemoveBuffs = "Remove Buffs";
-        private const string? RemoveDeathsDoor = "Remove Deaths Door";
-        private const string? KillAllEnemies = "Kill All Enemies";
+        private const string RestAll = "Rest All";
+        private const string RestSelected = "Rest Selected";
+        private const string Empowered = "Empowered";
+        private const string FullBuffPlease = "Common Buffs";
+        private const string GoddesBuffs = "Buff Like A Goddess";
+        private const string RemoveBuffs = "Remove Buffs";
+        private const string RemoveDeathsDoor = "Remove Deaths Door";
+        private const string KillAllEnemies = "Kill All Enemies";
         //private const string SummonZoo = "Summon Zoo"
-        private const string? LobotomizeAllEnemies = "Lobotomize Enemies";
-        private const string? ToggleMurderHobo = "Toggle Murder Hobo";
+        private const string LobotomizeAllEnemies = "Lobotomize Enemies";
+        private const string ToggleMurderHobo = "Toggle Murder Hobo";
 
         // cheats common
-        private const string? TeleportPartyToYou = "Teleport Party To You";
-        private const string? GoToGlobalMap = "Go To Global Map";
-        private const string? RerollPerception = "Reroll Perception";
-        private const string? RerollInteractionSkillChecks = "Reset Interactables";
-        private const string? ChangeParty = "Change Party";
-        private const string? ChangWeather = "Change Weather";
+        private const string TeleportPartyToYou = "Teleport Party To You";
+        private const string GoToGlobalMap = "Go To Global Map";
+        private const string RerollPerception = "Reroll Perception";
+        private const string RerollInteractionSkillChecks = "Reset Interactables";
+        private const string ChangeParty = "Change Party";
+        private const string ChangWeather = "Change Weather";
 
         // other
-        private const string? TimeScaleMultToggle = "Main/Alt Timescale";
-        private const string? PreviewDialogResults = "Preview Results";
+        private const string TimeScaleMultToggle = "Main/Alt Timescale";
+        private const string PreviewDialogResults = "Preview Results";
 
 
         //For buffs exceptions
@@ -215,12 +215,12 @@ namespace ToyBox {
                    1,
                    () => Label($"{"Experimental! ".red().bold()} means that this feature is still pretty untested. if you encounter any bugs and/or problems please report on Discord or GitHub."),
                    () => {
-                       Toggle(("Experimental! ".red().bold() + "♥♥ ".red() + "Love is Free".bold() + " ♥♥".red()).localize(), ref Settings.toggleAllowAnyGenderRomance, 300.width());
+                       Toggle(("♥♥ ".red() + "Love is Free".bold() + " ♥♥".red()).localize(), ref Settings.toggleAllowAnyGenderRomance, 300.width());
                        25.space();
                        Label(("Allow ".green() + "any gender".color(RGBA.purple) + " " + "for any ".green() + "R".color(RGBA.red) + "o".orange() + "m".yellow() + "a".green() + "n".cyan() + "c".color(RGBA.blue) + "e".color(RGBA.purple)).localize());
                    },
                    () => {
-                       Toggle("Experimental! ".red().bold() + "Jealousy Begone!".localize().bold(), ref Settings.toggleMultipleRomance, 300.width());
+                       Toggle("Jealousy Begone!".localize().bold(), ref Settings.toggleMultipleRomance, 300.width());
                        25.space();
                        Label(("Allow ".green() + "multiple".color(RGBA.purple) + " romances at the same time".green()).localize());
                    },

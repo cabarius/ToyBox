@@ -72,7 +72,9 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 
-### ToyBox Rogue - Ver 1.5.8k built for Rogue Trader 1.0.62
+### ToyBox Rogue - Ver 1.5.8n built for Rogue Trader 1.0.62
+* (***ADDB***) Fix Jealousy Begone (someone reached the part of the game where the jealous dialog can be triggered and noticed it still triggered; with that save I was able to fix it).
+* (***ADDB***) Fix Highlight Objects not revealing everything when the corresponding options are enaabled.
 * (***ADDB***) Add Voice to StatEditor.
 * (***ADDB***) Leveling up respecced from 0 companions now displays the picked/unpicked feats correctly.
 * (***ADDB***) Maybe fix some broken dice tweaks that broke while trying to fix some broken dice tweaks?

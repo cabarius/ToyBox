@@ -127,7 +127,7 @@ namespace ToyBox.BagOfPatches {
         };
         internal static readonly Dictionary<string, bool> FlagInRangeOverrides = new() {
             // RomanceCount Flag, as conditioned in Jealousy_event Blueprint, Activated by Jealousy_preparation
-            { "f36a831bd2b548c8a85c76914f75072f", false }
+            { "cbb219fcb46948fba48a8bed94663e5d", false }
         };
 
 

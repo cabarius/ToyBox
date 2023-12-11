@@ -1,31 +1,17 @@
-﻿// Copyright (c) 2018 fireundubh <fireundubh@gmail.com>
-// This code is licensed under MIT license (see LICENSE for details)
-// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-using HarmonyLib;
+﻿using HarmonyLib;
 using Kingmaker;
-using Kingmaker.Code.UI.MVVM.View.SurfaceCombat.Console;
 using Kingmaker.Controllers.MapObjects;
-using Kingmaker.Designers.EventConditionActionSystem.Conditions;
-using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameModes;
-using Kingmaker.PubSubSystem;
 using Kingmaker.UI.InputSystems;
 using Kingmaker.UI.Models.SettingsUI;
 using Kingmaker.Utility.GameConst;
-using Kingmaker.View;
 using Kingmaker.View.MapObjects;
-using Kingmaker.View.MapObjects.SriptZones;
-using Kingmaker.View.MapObjects.Traps;
 using ModKit;
-using Owlcat.Runtime.Visual.Highlighting;
-using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.Highlighting;
-using Rewired;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace ToyBox.classes.MonkeyPatchin {
     public class HighlightObjectToggle {
@@ -131,18 +117,20 @@ namespace ToyBox.classes.MonkeyPatchin {
             [HarmonyPostfix]
             private static void UpdateHighlight(MapObjectView __instance, ref bool __result) {
                 if (__instance == null) return;
-                bool flag = __instance.Highlighted || __instance.m_ForcedHighlightOnReveal || (__instance.GlobalHighlighting && (!__instance.Data.IsInFogOfWar || Main.Settings.highlightHiddenObjectsInFog));
+                bool flag = __instance.Highlighted || __instance.m_ForcedHighlightOnReveal || ((__instance.GlobalHighlighting || Main.Settings.highlightHiddenObjects) && (!__instance.Data.IsInFogOfWar || Main.Settings.highlightHiddenObjectsInFog));
                 if (Game.Instance.TurnController.TurnBasedModeActive) {
                     if (__instance.Data.Parts.GetAll<InteractionPart>().Any((InteractionPart i) => i is InteractionLootPart)) {
                         flag = false;
                     }
                 }
-                if (!flag || !__instance.HighlightOnHover || (!__instance.Data.IsRevealed && !Main.Settings.highlightHiddenObjects) || !__instance.Data.IsAwarenessCheckPassed) {
+                if (!flag || (!__instance.HighlightOnHover && !Main.Settings.highlightHiddenObjects) || ((!__instance.Data.IsRevealed || !__instance.Data.IsAwarenessCheckPassed) && !Main.Settings.highlightHiddenObjects)) {
                     __result = __instance.Data.Parts.GetAll<InteractionPart>().Any((InteractionPart i) => i.HasVisibleTrap());
                 }
                 else {
                     __result = true;
                 }
+                if (__instance != null)
+                Mod.Trace($"Checking highlighting for {__instance.name}: Result:{__result}; flag:{flag}; Highlighted:{__instance.Highlighted} - ForcedHighlightOnReveal:{__instance.m_ForcedHighlightOnReveal} - GlobalHighlighting:{__instance.GlobalHighlighting} - IsInFogOfWar:{__instance.Data.IsInFogOfWar} - HighlightOnHover:{__instance.HighlightOnHover} - IsRevealed:{__instance.Data.IsRevealed} - AwarenessCheckPassed:{__instance.Data.IsAwarenessCheckPassed}");
             }
         }
     }

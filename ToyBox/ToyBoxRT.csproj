@@ -48,11 +48,9 @@
     <MakeDir Directories="$(SolutionDir)lib/RT" />
     <Publicise InputAssemblies="@(PubliciseInputAssemblies)" OutputPath="$(SolutionDir)lib/RT/" PubliciseCompilerGenerated="true" />
   </Target>
-    <!--
-    <Target Name="PublishToSteamWorkshop" AfterTargets="Build">
+	<Target Name="PublishToSteamWorkshop" AfterTargets="Publish">
         <PublishToWorkshop PathToManifest="$(MSBuildThisFileDirectory)\ModDetails\OwlcatModificationManifest.json" ImageDir="$(MSBuildThisFileDirectory)\ModDetails\" BuildDir="$(TargetDir)" GameAppId="2186680" />
     </Target>
-    !-->
     <ItemGroup>
     <PackageReference Include="PublishToWorkshop" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" Version="1.0.9" PrivateAssets="all" />
     <PackageReference Include="Aze.Publicise.MSBuild.Task" Version="1.0.0" />

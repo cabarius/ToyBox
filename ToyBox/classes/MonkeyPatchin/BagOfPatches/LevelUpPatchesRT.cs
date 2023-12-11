@@ -135,7 +135,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-
+        // In addition to the above; the preview unit would also have the feats that the unit should have. That prevents picking them on level up. This patch basically respecs the Preview to prevent that.
         [HarmonyPatch(typeof(BlueprintUnit))]
         public static class BlueprintUnit_Patch {
             [HarmonyPatch(nameof(BlueprintUnit.CreateEntity))]
