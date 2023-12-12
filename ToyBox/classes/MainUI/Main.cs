@@ -61,6 +61,7 @@ namespace ToyBox {
         private static bool _resetRequested = false;
         private static DateTime _resetRequestTime = DateTime.Now;
         public static bool resetExtraCameraAngles = false;
+        internal static string path;
         public static void SetNeedsResetGameUI() {
             _resetRequested = true;
             _resetRequestTime = DateTime.Now;
@@ -78,6 +79,7 @@ namespace ToyBox {
 #endif
 
                 Mod.OnLoad(modEntry);
+                path = modEntry.Path;
                 UIHelpers.OnLoad();
                 LoadSettings(modEntry);
                 SettingsDefaults.InitializeDefaultDamageTypes();

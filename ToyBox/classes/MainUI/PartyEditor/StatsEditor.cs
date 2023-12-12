@@ -27,12 +27,15 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using ToyBox.classes.Infrastructure;
 using UnityEngine;
 using UnityEngine.Profiling;
 using static Kingmaker.Visual.Sound.UnitAsksComponent;
 using static ModKit.UI;
+using static UnityModManagerNet.UnityModManager;
 
 namespace ToyBox {
     public partial class PartyEditor {
@@ -65,18 +68,26 @@ namespace ToyBox {
             blueprintPortraitBrowser = null;
             CustomPortraitsManager.Instance.Cleanup();
         }
-        public static void OnPortraitGUI(string customID, float scaling = 0.5f, bool isButton = true, int targetWidth = 0) {
-            PortraitData portraitData = null;
-            bool loaded = true;
-            if (!_portraitsByID.TryGetValue(customID, out portraitData)) {
-                portraitData = new PortraitData(customID);
-                if (portraitData.DirectoryExists()) {
-                    _portraitsByID[customID] = CustomPortraitsManager.CreatePortraitData(customID);
-                }
-                else {
-                    loaded = false;
+        public static PortraitData LoadCustomPortrait(string customID, out bool loaded) {
+            try {
+                PortraitData portraitData;
+                loaded = true;
+                if (!_portraitsByID.TryGetValue(customID, out portraitData)) {
+                    portraitData = new PortraitData(customID);
+                    if (portraitData.DirectoryExists()) {
+                        _portraitsByID[customID] = CustomPortraitsManager.CreatePortraitData(customID);
+                        return _portraitsByID[customID];
+                    }
                 }
             }
+            catch (Exception e) {
+                Mod.Log(e.ToString());
+            }
+            loaded = false;
+            return null;
+        }
+        public static void OnPortraitGUI(string customID, float scaling = 0.5f, bool isButton = true, int targetWidth = 0) {
+            PortraitData portraitData = LoadCustomPortrait(customID, out var loaded);
             if (loaded) {
                 var sprite = portraitData.FullLengthPortrait;
                 int w, h;
@@ -123,6 +134,24 @@ namespace ToyBox {
                     else {
                         GUILayout.Label(sprite.texture, rarityStyle, w.width(), h.height());
                     }
+                    ActionButton("Save as png".localize(), () => {
+                        try {
+                            var portraitDir = new DirectoryInfo(Path.Combine(Main.path, "Portraits", portrait.name));
+                            if (!portraitDir.Exists) {
+                                portraitDir.Create();
+                            }
+                            var outFile = new FileInfo(Path.Combine(portraitDir.FullName, BlueprintRoot.Instance.CharGenRoot.PortraitSmallName + BlueprintRoot.Instance.CharGenRoot.PortraitsFormat));
+                            portrait.SmallPortrait.texture.SaveTextureToFile(outFile.FullName, -1, -1, UnityExtensions.SaveTextureFileFormat.PNG, 100, false);
+                            outFile = new FileInfo(Path.Combine(portraitDir.FullName, BlueprintRoot.Instance.CharGenRoot.PortraitMediumName + BlueprintRoot.Instance.CharGenRoot.PortraitsFormat));
+                            portrait.HalfLengthPortrait.texture.SaveTextureToFile(outFile.FullName, -1, -1, UnityExtensions.SaveTextureFileFormat.PNG, 100, false);
+                            outFile = new FileInfo(Path.Combine(portraitDir.FullName, BlueprintRoot.Instance.CharGenRoot.PortraitBigName + BlueprintRoot.Instance.CharGenRoot.PortraitsFormat));
+                            portrait.FullLengthPortrait.texture.SaveTextureToFile(outFile.FullName, -1, -1, UnityExtensions.SaveTextureFileFormat.PNG, 100, false);
+                            Process.Start(portraitDir.FullName);
+                        }
+                        catch (Exception ex) {
+                            Mod.Error(ex.ToString());
+                        }
+                    });
                     Label(BlueprintExtensions.GetTitle(portrait), MinWidth(200), AutoWidth());
                 }
             }

@@ -1,16 +1,61 @@
-# About
-Toy Box is a cute and playful mod with 500+ cheats, tweaks and quality of life improvements for Pathfinder: WoTR.
+# ToyBox
 
-It was created in the spirit of Bag of Tricks & Cheat Menu but with a little different focus, It offers a powerful and convenient way to edit:
-- the party composition
-- stats
-- search and add to party members:
-  - Feats
-  - Features
-  - Items
-  - etc.
+### Install & Setup (Rogue)
 
-Download: [nexusmods.com](https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/8)
+1. Download the ToyBox mod file and unzip
+1. If the folder is not already named 0ToyBox0 please rename it to that
+1. Launch the game at least once.
+1. **Please note that the game comes with its own built in Unity Mod Manager so you do not need to install another one**
+1. Navigate to %userprofile%\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
+1. An example path is C:\Users\PC\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
+1. Copy 0ToyBox0 into the UnityModManagerFolder
+1. Launch Rogue Trader and you may need to hit ctrl+F10 to see the mod manager window
+1. Load a save or start a new game to get the most out of of the mod
+
+### Install & Setup (Wrath)
+
+1. Install the Unity Mod Manager﻿﻿.
+1. Install the mod using the Unity Mod Manager﻿ or extract the archive to your game's mod folder (e.g. '
+   \Steam\steamapps\common\Pathfinder Second Adventure\Mods').
+1. Start the game and load a save or start a new save (the mod's functions can't accessed from the main menu).
+1. Open the Unity Mod Manager﻿ by pressing CTRL + F10.
+1. Adjust the settings in the mod's menu
+1. Important this mod is designed to be run at 1920x1080 or higher.
+1. Please set your resolution to at least 1920x1080
+1. Go to Settings tab on Unity Mod Manager to set your screen width to at least 1920 wide
+
+* Warning: This is an early version of ToyBox for Rogue Trader. Save early and often.
+* Note: Not all features are functional at this time. The ToyBox team is working hard to get as much working as fast as
+  possible
+
+### Usage
+
+* **Bag of Tricks**: this is a collection of quality of life, quick cheats, settings, multipliers, etc from the awesome
+  Kingmaker mod of the same name plus a bag or two of new tricks ^_^
+* **Level Up & Multiclass**: a variety of character creation, level up, unlock mythic paths plus support for multiple
+  classes per level up and gestalt gameplay
+* **Party Editor**: lets you edit almost any aspect of your character. Make sure you explore all the different
+  disclosure toggles. You can edit classes, stats, facts (feats and more), buffs, abilities, spells and spellbooks as
+  well as the composition of your party
+* **Loot Coloring & Checklist**: this lets you enable a loot grading and coloring system similar to Borderlands or
+  Diablo. It also gives you a screen where view all the items in an area that you have not looted yet.
+  Enchantment: allows you to add or remove enchantments from the items in your inventory
+* **Search 'n Pick**: this lets you search through all the available resources (items, feats, abilities, spells and many
+  more) and manipulate your game state in an almost limitless set of ways. You can add/remove items, feats, abilities,
+  etc. You can spawn any unit. You can start/unstart/complete etudes, quests, etc. You can teleport to any area in the
+  game. It is almost unimaginable how much you can do in here so keep digging!
+* **Etudes**: this is a new and exciting feature that allows you to see for the first time the structure and some basic
+  relationships of Etudes and other Elements that control the progression of your game story. Etudes are hierarchical in
+  structure and additionally contain a set of Elements that can both conditions to check and actions to execute when the
+  etude is started. As you browe you will notice there is a disclosure triangle next to the name which will show the
+  children of the Etude. Etudes that have Elements will offer a second disclosure triangle next to the status that will
+  show them to you.
+  WARNING: this tool can both miraculously fix your broken progression or it can break it even further. Save and back up
+  your save before using. Remember that "with great power comes great responsibility"
+* **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
+  skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
+
+Find it on Nexus: [nexusmods.com](https://www.nexusmods.com/warhammer40kroguetrader/mods/1)
 
 There are preview builds available on the official [Owlcat Discord](https://discord.gg/Owlcat) pinned in the [#mod-user-general](https://discord.com/channels/645948717400064030/815735034514112512) channel
 

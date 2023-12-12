@@ -1,21 +1,5 @@
 # ToyBox
 
-### Now with 500+ Cheats, Tweaks and Quality of Life Improvements
-
-* **Bag of Tricks**: 142 (or 173 depending on how you count)
-* **Level Up & Multiclass**: 57
-* **Party Editor**: 67
-* **Loot Checklist**: 4
-* **Enchantment**: 20 ways to view add, remove enchantments from your favorite items
-* **Search 'n Pick**: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
-* **Crusade**: 38
-* **Armies**: 22
-* **Events/Decrees**: 9
-* **Etudes**: 6225 x 3 (start, unstart, complete)
-* **Quest Resolution**: 4
-
-**Please backup early and backup often.**
-
 ### Install & Setup (Wrath)
 
 1. Install the Unity Mod Manager﻿﻿.
@@ -40,7 +24,7 @@
 1. Launch Rogue Trader and you may need to hit ctrl+F10 to see the mod manager window
 1. Load a save or start a new game to get the most out of of the mod
 
-* Warning: This is an experimental preview of ToyBox for Rogue Trader Prelease. Save early and often.
+* Warning: This is an experimental preview of ToyBox for Rogue Trader. Save early and often.
 * Note: Not all features are functional at this time. The ToyBox team is working hard to get as much working as fast as
   possible
 
@@ -72,7 +56,8 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 
-### ToyBox Rogue - Ver 1.5.8n built for Rogue Trader 1.0.62
+### ToyBox Rogue - Ver 1.5.8o built for Rogue Trader 1.0.62
+* (***ADDB***) Added option to dump/extract built-in portraits.
 * (***ADDB***) Fix Jealousy Begone (someone reached the part of the game where the jealous dialog can be triggered and noticed it still triggered; with that save I was able to fix it).
 * (***ADDB***) Fix Highlight Objects not revealing everything when the corresponding options are enaabled.
 * (***ADDB***) Add Voice to StatEditor.

@@ -42,6 +42,7 @@
     <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\RogueTrader.GameCore.dll" />
     <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\Owlcat.Runtime.UI.dll" />
     <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\LocalizationShared.dll" />
+    <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\UnityEngine.CoreModule.dll" />
     <PubliciseInputAssemblies Include="$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\UnityModManager.dll" />
   </ItemGroup>
   <Target Name="Publicise" AfterTargets="BeforeBuild;Clean" Inputs="@(PubliciseInputAssemblies)" Outputs="$(SolutionDir)lib\%(PubliciseInputAssemblies.FileName)_public.dll;$(SolutionDir)lib\RT\%(PubliciseInputAssemblies.FileName)_public.hash">
@@ -389,7 +390,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\lib\RT\UnityEngine.CoreModule_public.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule">
