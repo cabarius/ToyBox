@@ -34,7 +34,7 @@ namespace ToyBox.BagOfPatches {
         public static class UnitProgressionData_Patch {
             public static int getMaybeZero(UnitProgressionData _instance) {
                 if (Settings.toggleSetDefaultRespecLevelZero) {
-                    return 0;
+                    return int.MinValue;
                 }
                 else {
                     var tmp = _instance.Owner.Blueprint.GetDefaultLevel();
@@ -46,9 +46,10 @@ namespace ToyBox.BagOfPatches {
                 try {
                     ret = _instance.AllCareerPaths.Last<ValueTuple<BlueprintCareerPath, int>>();
                 }
-                catch (InvalidOperationException) {
+                catch (Exception ex) {
                     ret = new(null, 1);
                 }
+                Mod.Debug($"Respec Career returned: {ret}");
                 return ret;
 
             }
@@ -141,8 +142,10 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch(nameof(BlueprintUnit.CreateEntity))]
             [HarmonyPostfix]
             public static void CreateEntity(BaseUnitEntity __result) {
-                if (new StackTrace().ToString().Contains($"{typeof(LevelUpManager).FullName}.{nameof(LevelUpManager.RecalculatePreview)}")) {
-                    __result.Progression.Respec();
+                if (Settings.toggleSetDefaultRespecLevelZero) {
+                    if (new StackTrace().ToString().Contains($"{typeof(LevelUpManager).FullName}.{nameof(LevelUpManager.RecalculatePreview)}")) {
+                        __result.Progression.Respec();
+                    }
                 }
             }
         }

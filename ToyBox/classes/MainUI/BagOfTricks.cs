@@ -352,6 +352,7 @@ namespace ToyBox {
             EnhancedCamera.OnGUI();
             Div(0, 25);
             HStack("Cheats".localize(), 1,
+                   () => Toggle("Prevent Psychic Phenomena", ref Settings.toggleNoPsychicPhenomena),
                    () => {
                        Toggle("Prevent Traps from triggering".localize(), ref Settings.disableTraps, 500.width());
                        Label("Enterint a Trap Zone while having Traps disabled will prevent that Trap from triggering even if you deactivate this option in the future".localize().green());

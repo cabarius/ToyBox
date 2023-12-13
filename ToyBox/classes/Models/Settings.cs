@@ -119,6 +119,7 @@ namespace ToyBox {
         public float AdjustedFovMultiplier => Math.Max(fovMultiplier, toggleZoomableLocalMaps ? 1.25f : 0.4f);
 
         // Tweaks
+        public bool toggleNoPsychicPhenomena = false;
         public bool toggleInfiniteAbilities = false;
         public bool toggleInfiniteSpellCasts = false;
         public bool toggleUnlimitedActionsPerTurn = false;

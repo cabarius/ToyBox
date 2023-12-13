@@ -26,6 +26,7 @@ using Kingmaker.GameModes;
 using Kingmaker.Items;
 using Kingmaker.Modding;
 using Kingmaker.RuleSystem;
+using Kingmaker.RuleSystem.Rules;
 using Kingmaker.Settings;
 using Kingmaker.Stores.DlcInterfaces;
 //using Kingmaker.UI._ConsoleUI.Models;
@@ -58,6 +59,12 @@ namespace ToyBox.BagOfPatches {
     internal static partial class Misc {
         public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
+        [HarmonyPatch(typeof(RuleCalculatePsychicPhenomenaEffect))]
+        public static class RuleCalculatePsychicPhenomenaEffect_Patch {
+            [HarmonyPatch(nameof(RuleCalculatePsychicPhenomenaEffect.OnTrigger))]
+            [HarmonyPrefix]
+            public static bool OnTrigger() => !Settings.toggleNoPsychicPhenomena;
+        }
 
         // Disables the lockout for reporting achievements
         [HarmonyPatch(typeof(AchievementEntity), nameof(AchievementEntity.IsDisabled), MethodType.Getter)]

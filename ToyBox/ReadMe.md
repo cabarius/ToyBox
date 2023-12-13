@@ -56,7 +56,9 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 
-### ToyBox Rogue - Ver 1.5.8o built for Rogue Trader 1.0.62
+### ToyBox Rogue - Ver 1.5.8p built for Rogue Trader 1.0.62
+* (***ADDB***) Fixed respecced from 0 for Cassia.
+* (***ADDB***) Added cheat to disable psychic phenomena.
 * (***ADDB***) Added option to dump/extract built-in portraits.
 * (***ADDB***) Fix Jealousy Begone (someone reached the part of the game where the jealous dialog can be triggered and noticed it still triggered; with that save I was able to fix it).
 * (***ADDB***) Fix Highlight Objects not revealing everything when the corresponding options are enaabled.
