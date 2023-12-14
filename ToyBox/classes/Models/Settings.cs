@@ -259,7 +259,7 @@ namespace ToyBox {
         public bool stripHtmlTagsFromNativeConsole = true;
         public bool stripHtmlTagsFromUMMLogsTab = true;
         public bool toggleDevopmentMode = false;
-        public bool toggleGuidsClipboard = true;
+        public bool toggleGuidsClipboard = false;
         public bool toggleRiskyToggles = false;
         public bool onlyShowLanguagesWithFiles = true;
 
