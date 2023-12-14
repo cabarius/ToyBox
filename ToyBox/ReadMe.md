@@ -55,8 +55,8 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
-
-### ToyBox Rogue - Ver 1.5.8p built for Rogue Trader 1.0.62
+### ToyBox Rogue - Ver 1.5.9 built for Rogue Trader 1.0.68
+* (***ADDB***) Fixed Remote Companion Dialog not showing dialog for... remote companions.
 * (***ADDB***) Fixed respecced from 0 for Cassia.
 * (***ADDB***) Added cheat to disable psychic phenomena.
 * (***ADDB***) Added option to dump/extract built-in portraits.
@@ -78,6 +78,7 @@
 * (***ADDB***) Rewrote object highlight system because people don't turn it off before combat.
 * (***ADDB***) Experimental Fix for issue where leaving a unit from another region selected in Search 'n Pick would crash the mod because that unit was already disposed.
 * (***ADDB***) Fix Stats Editor for Abelard (and any other companion with missing base soul marks).
+### ToyBox Rogue - Ver 1.5.8a built for Rogue Trader 1.0.62
 * (***ADDB***) Allow Respec From Zero for Companions and RT. See Level Up Category.
 * (***ADDB***) Fixed weird behaviour when changing stats using the Textfield.
 * (***ADDB***) Fixed Search 'n Pick - missing key update if collation happens too fast

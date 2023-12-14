@@ -240,6 +240,10 @@ namespace ToyBox.BagOfPatches {
                     UnitPartCompanion unitPartCompanion = unit.GetCompanionOptional();
                     return unitPartCompanion != null && unitPartCompanion.State == CompanionState.ExCompanion;
                 }
+                bool isMaybeCompanion(BaseUnitEntity unit) {
+                    UnitPartCompanion unitPartCompanion = unit.GetCompanionOptional();
+                    return unitPartCompanion != null;
+                }
                 var overrideValue = hasOverride && DialogSpeaker_GetEntityOverrides[GUID];
                 var unit = Shodan.AllBaseUnits
                         //.Where(u => u.IsInGame && !u.Suppressed)
@@ -251,7 +255,17 @@ namespace ToyBox.BagOfPatches {
                         .NotNull()
                         .Distinct()
                         .Nearest(dialogPosition);
-                Mod.Debug($"found {unit?.CharacterName ?? "no one".cyan()} position: {unit?.Position.ToString() ?? "n/a"}");
+                Mod.Debug($"found {unit?.CharacterName ?? "no one loaded".cyan()} position: {unit?.Position.ToString() ?? "n/a"}");
+                if (unit == null) {
+                    unit = Game.Instance.Player.AllCharactersAndStarships.Where(isMaybeCompanion)
+                        .Where(u => !IsExCompanion(u) || settings.toggleExCompanionDialog)
+                        .NotNull()
+                        .Distinct()
+                        .Where(u => u.Blueprint.AssetGuid == __instance.Blueprint.AssetGuid)
+                        .Nearest(dialogPosition);
+                    Mod.Debug($"Did not find unit. Trying to get unit not in game: {unit?.CharacterName ?? (unit != null).ToString()} position: {unit?.Position.ToString() ?? "n/a"}");
+
+                }
                 if (unit != null) {
                     if (unit.DistanceTo(dialogPosition) > 25) {
                         var mainChar = Shodan.MainCharacter;

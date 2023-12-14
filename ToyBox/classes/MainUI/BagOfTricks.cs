@@ -213,7 +213,6 @@ namespace ToyBox {
             Div(0, 25);
             HStack("Dialog".localize(),
                    1,
-                   () => Label($"{"Experimental! ".red().bold()} means that this feature is still pretty untested. if you encounter any bugs and/or problems please report on Discord or GitHub."),
                    () => {
                        Toggle(("♥♥ ".red() + "Love is Free".bold() + " ♥♥".red()).localize(), ref Settings.toggleAllowAnyGenderRomance, 300.width());
                        25.space();
@@ -230,14 +229,14 @@ namespace ToyBox {
                        Label("Draws dialog choices that you have previously selected in smaller type".localize().green());
                    },
                    () => {
-                       Toggle("Experimental! ".red().bold() + "Expand Dialog To Include Remote Companions".localize(), ref Settings.toggleRemoteCompanionDialog, 300.width());
+                       Toggle("Expand Dialog To Include Remote Companions".localize(), ref Settings.toggleRemoteCompanionDialog, 300.width());
                        200.space();
                        Label(" Allow remote companions to make comments on dialog you are having.".localize().green());
                    },
                    () => {
                        if (Settings.toggleRemoteCompanionDialog) {
                            50.space();
-                           Toggle("Experimental! ".red().bold() + "Include Former Companions".localize(), ref Settings.toggleExCompanionDialog, 300.width());
+                           Toggle("Include Former Companions".localize(), ref Settings.toggleExCompanionDialog, 300.width());
                            150.space();
                            Label("This also includes companions who left the party".localize().green());
                        }
