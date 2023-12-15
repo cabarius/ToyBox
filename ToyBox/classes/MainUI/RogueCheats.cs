@@ -116,8 +116,8 @@ namespace ToyBox {
             },
             () => {
                 using (HorizontalScope()) {
-                    var VeilThicknessCounter = Game.Instance.TurnController.VeilThicknessCounter;
-                    if (VeilThicknessCounter != null) {
+                    var VeilThicknessCounter = Game.Instance.TurnController?.VeilThicknessCounter;
+                    if (VeilThicknessCounter != null && Game.Instance.LoadedAreaState?.AreaVailPart != null) {
                         Label("Current Veil Thickness".localize().bold() + ": ", Width(startingWidth));
                         using (VerticalScope()) {
                             Label(VeilThicknessCounter.Value.ToString());
