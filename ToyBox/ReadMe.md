@@ -55,8 +55,9 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
-### ToyBox Rogue - Ver 1.5.9b built for Rogue Trader 1.0.69
+### ToyBox Rogue - Ver 1.5.9c built for Rogue Trader 1.0.69
 * (***ADDB***) Fixed broken Custom Portrait Editor.
+* (***ADDB***) Fixed some stuff staying highlighted when activating highlight hidden objects.
 * (***ADDB***) Infinite Actions now no longer works for enemies.
 * (***ADDB***) Added new option to really don't use AP (even for attacks and stuff).
 * (***ADDB***) Fixed Search 'n Pick gets stuck on collation in Progression Category.

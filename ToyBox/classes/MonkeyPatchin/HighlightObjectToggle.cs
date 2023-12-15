@@ -115,9 +115,9 @@ namespace ToyBox.classes.MonkeyPatchin {
         private static class MapObjectView_Patch {
             [HarmonyPatch(nameof(MapObjectView.ShouldBeHighlighted))]
             [HarmonyPostfix]
-            private static void UpdateHighlight(MapObjectView __instance, ref bool __result) {
+            private static void ShouldBeHighlighted(MapObjectView __instance, ref bool __result) {
                 if (__instance == null) return;
-                bool flag = __instance.Highlighted || __instance.m_ForcedHighlightOnReveal || ((__instance.GlobalHighlighting || Main.Settings.highlightHiddenObjects) && (!__instance.Data.IsInFogOfWar || Main.Settings.highlightHiddenObjectsInFog));
+                bool flag = __instance.Highlighted || __instance.m_ForcedHighlightOnReveal || (__instance.GlobalHighlighting && (!__instance.Data.IsInFogOfWar || Main.Settings.highlightHiddenObjectsInFog));
                 if (Game.Instance.TurnController.TurnBasedModeActive) {
                     if (__instance.Data.Parts.GetAll<InteractionPart>().Any((InteractionPart i) => i is InteractionLootPart)) {
                         flag = false;
