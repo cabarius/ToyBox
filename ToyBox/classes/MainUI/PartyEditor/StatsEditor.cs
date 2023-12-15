@@ -69,13 +69,14 @@ namespace ToyBox {
             CustomPortraitsManager.Instance.Cleanup();
         }
         public static PortraitData LoadCustomPortrait(string customID, out bool loaded) {
+            loaded = false;
             try {
                 PortraitData portraitData;
-                loaded = true;
                 if (!_portraitsByID.TryGetValue(customID, out portraitData)) {
                     portraitData = new PortraitData(customID);
                     if (portraitData.DirectoryExists()) {
                         _portraitsByID[customID] = CustomPortraitsManager.CreatePortraitData(customID);
+                        loaded = true;
                         return _portraitsByID[customID];
                     }
                 }
@@ -83,7 +84,6 @@ namespace ToyBox {
             catch (Exception e) {
                 Mod.Log(e.ToString());
             }
-            loaded = false;
             return null;
         }
         public static void OnPortraitGUI(string customID, float scaling = 0.5f, bool isButton = true, int targetWidth = 0) {

@@ -56,6 +56,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(RuleRollDice))]
         private static class RuleRollDicePatch {
             [HarmonyPatch(nameof(RuleRollDice.Roll))]
+            [HarmonyPriority(Priority.LowerThanNormal)]
             [HarmonyPostfix]
             private static void Roll(RuleRollDice __instance) {
                 if (Rulebook.CurrentContext.Current is RuleRollChance chanceRoll) {

@@ -55,6 +55,12 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
+### ToyBox Rogue - Ver 1.5.9a built for Rogue Trader 1.0.69
+* (***ADDB***) Infinite Actions only works for Party Characters.
+* (***ADDB***) Added new option to really don't use AP (even for attacks and stuff).
+* (***ADDB***) Maybe Removed Buff Multiplier error.
+* (***ADDB***) Recompiled against new version.
+
 ### ToyBox Rogue - Ver 1.5.9 built for Rogue Trader 1.0.68
 * (***ADDB***) Fixed Remote Companion Dialog not showing dialog for... remote companions.
 * (***ADDB***) Fixed respecced from 0 for Cassia.

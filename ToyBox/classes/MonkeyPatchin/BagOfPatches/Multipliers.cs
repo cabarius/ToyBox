@@ -20,6 +20,8 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch(nameof(BuffCollection.Add), new Type[] { typeof(BlueprintBuff), typeof(MechanicEntity), typeof(MechanicsContext), typeof(BuffDuration) })]
             [HarmonyPostfix]
             public static void Add(BlueprintBuff blueprint, MechanicEntity caster, MechanicsContext parentContext, ref BuffDuration duration) {
+                if (!duration.Rounds.HasValue) return;
+                if (caster == null) return;
                 try {
                     if (!caster.IsPlayerEnemy && isGoodBuff(blueprint)) {
                         if (!duration.IsPermanent) {
