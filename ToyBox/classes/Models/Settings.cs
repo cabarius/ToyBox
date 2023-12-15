@@ -143,6 +143,7 @@ namespace ToyBox {
         public bool disableTraps = false;
         public bool togglekillOnEngage = false;
         public bool disableWarpRandomEncounter = false;
+        public bool freezeVeilThickness = false;
         public bool disableEndTurnHotkey = false;
 
         // Loot 

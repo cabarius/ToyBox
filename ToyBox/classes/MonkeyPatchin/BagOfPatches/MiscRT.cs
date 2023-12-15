@@ -16,6 +16,7 @@ using Kingmaker.Code.UI.MVVM.View.Vendor;
 using Kingmaker.Code.UI.MVVM.VM.Common;
 using Kingmaker.Code.UI.MVVM.VM.CounterWindow;
 using Kingmaker.Controllers;
+using Kingmaker.Designers.WarhammerSurfaceCombatPrototype.PsychicPowers;
 //using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
@@ -90,6 +91,12 @@ namespace ToyBox.BagOfPatches {
                     return;
                 }
             }
+        }
+        [HarmonyPatch(typeof(VeilThicknessCounter))]
+        public static class VeilThicknessCounter_Patch {
+            [HarmonyPatch(nameof(VeilThicknessCounter.Value), MethodType.Setter)]
+            [HarmonyPrefix]
+            public static bool setValue() => !Settings.freezeVeilThickness;
         }
         [HarmonyPatch(typeof(Game))]
         public static class Game_Patch {

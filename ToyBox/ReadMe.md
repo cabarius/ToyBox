@@ -58,6 +58,10 @@
 ### ToyBox Rogue - Ver 1.5.9a built for Rogue Trader 1.0.69
 * (***ADDB***) Infinite Actions only works for Party Characters.
 * (***ADDB***) Added new option to really don't use AP (even for attacks and stuff).
+* (***ADDB***) Fixed Search 'n Pick gets stuck on collation in Progression Category.
+* (***ADDB***) Added option to pick character filter in Search 'n Pick window.
+* (***ADDB***) Did some work at Camera Tweaks in Enhanced UI; soem stuff works now; some not.
+* (***ADDB***) Added option to change/freeze Veil Thickness.
 * (***ADDB***) Maybe Removed Buff Multiplier error.
 * (***ADDB***) Recompiled against new version.
 

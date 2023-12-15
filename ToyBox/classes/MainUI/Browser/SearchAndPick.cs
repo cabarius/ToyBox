@@ -76,7 +76,7 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintFeature>("Features", null, bp => bp.CollationNames(
                                                       )),
             new NamedTypeFilter<BlueprintCharacterClass>("Classes", null, bp => bp.CollationNames()),
-            new NamedTypeFilter<BlueprintProgression>("Progression", null, bp => bp.Classes.Select(cl => cl.Name).ToList()),
+            new NamedTypeFilter<BlueprintProgression>("Progression", null, bp => bp.Classes.NotNull().Select(cl => cl.Name).ToList()),
             new NamedTypeFilter<BlueprintArchetype>("Archetypes", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintAbility>("Abilities", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintAbility>("Spells", bp => bp.IsSpell, bp => bp.CollationNames(bp.School.ToString())),
@@ -153,6 +153,7 @@ namespace ToyBox {
         public static NamedTypeFilter selectedTypeFilter = null;
 
         public static IEnumerable<SimpleBlueprint> blueprints = null;
+        public static bool showCharacterFilterCategories = false;
 
         public static void RedoLayout() {
             if (bps == null) return;
@@ -255,6 +256,10 @@ namespace ToyBox {
                     using (HorizontalScope()) {
                         50.space();
                         using (VerticalScope()) {
+                            Toggle("Show Character filter choices".localize(), ref showCharacterFilterCategories);
+                            if (showCharacterFilterCategories) {
+                                CharacterPicker.OnFilterPickerGUI();
+                            }
                             CharacterPicker.OnCharacterPickerGUI();
                             var tmp = CharacterPicker.GetSelectedCharacter();
                             if (tmp != selectedUnit) {

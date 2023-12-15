@@ -17,6 +17,7 @@ namespace ToyBox {
         private static int navigatorInsightAdjustment = 100;
         private static int scrapAdjustment = 100;
         private static int profitFactorAdjustment = 1;
+        private static int veilThicknessAdjustment = 1;
         private static int startingWidth = 250;
         public static void OnGUI() {
             if (factionsToPick == null) {
@@ -112,6 +113,24 @@ namespace ToyBox {
                         }
                     }
                 }
+            },
+            () => {
+                using (HorizontalScope()) {
+                    var VeilThicknessCounter = Game.Instance.TurnController.VeilThicknessCounter;
+                    if (VeilThicknessCounter != null) {
+                        Label("Current Veil Thickness".localize().bold() + ": ", Width(startingWidth));
+                        using (VerticalScope()) {
+                            Label(VeilThicknessCounter.Value.ToString());
+                            using (HorizontalScope()) {
+                                Label("Set Veil Thickness to the following amount:".localize());
+                                IntTextField(ref veilThicknessAdjustment, null, MinWidth(200), AutoWidth());
+                                veilThicknessAdjustment = Math.Max(0, veilThicknessAdjustment);
+                                10.space();
+                                ActionButton("Set".localize(), () => VeilThicknessCounter.Value = veilThicknessAdjustment);
+                            }
+                        }
+                    }
+                }
             });
             VStack("Tweaks".localize().bold(),
                 () => {
@@ -127,7 +146,9 @@ namespace ToyBox {
                             }
                         }
                     }
-                });
+                },
+                () => Toggle("Prevent Psychic Phenomena".localize(), ref Settings.toggleNoPsychicPhenomena),
+                () => Toggle("Prevent Veil Thickness from changing".localize(), ref Settings.freezeVeilThickness));
         }
     }
 }
