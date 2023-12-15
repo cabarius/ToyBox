@@ -73,13 +73,7 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
-
-
-### ToyBox Rogue - Ver 1.5.9 (Coming Soon)
-**ToyBox Rogue - Ver 1.5.9 -** ***Sh0dan*** **Preview Version 1.5.8a** built for 0.2.1ah
-* (***ADDB***) Fixed weird behaviour when changing stats using the Textfield.
-* (***ADDB***) Fixed Search 'n Pick - missing key update if collation happens too fast
-### ToyBox Wrath - Ver 1.5.9 (Coming Soon)
+### ToyBox Wrath - Ver 1.5.9 (built for 2.2.3c)
 **ToyBox Wrath - Ver 1.5.9 - Preview Version 1.5.8b** built for 2.2.0av
 * (***ADDB***) Fixed Search 'n Pick - missing key update if collation happens too fast.
 * (***ADDB***) Temporarily change repository link to my Fork until Narria's one is active again.
