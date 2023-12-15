@@ -76,6 +76,7 @@
 ### ToyBox Wrath - Ver 1.5.9 (built for 2.2.3c)
 **ToyBox Wrath - Ver 1.5.9 - Preview Version 1.5.8b** built for 2.2.0av
 * (***ADDB***) Fixed Search 'n Pick - missing key update if collation happens too fast.
+* (***ADDB***) Recompiled against new binaries.
 * (***ADDB***) Temporarily change repository link to my Fork until Narria's one is active again.
 
 ### ToyBox Wrath - Ver 1.5.8 (built for 2.2.0as)
