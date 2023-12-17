@@ -56,6 +56,7 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
   
 ### ToyBox Rogue - Ver 1.5.9d built for Rogue Trader 1.0.70
+* (***ADDB***) Readd unstart Etude.
 * (***ADDB***) Made Achievement Enabler opt-out by default.
 * (***ADDB***) Remove more log spam.
 ### ToyBox Rogue - Ver 1.5.9c built for Rogue Trader 1.0.69
