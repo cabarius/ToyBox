@@ -132,7 +132,7 @@ namespace ToyBox {
         public bool toggleInstantRestAfterCombat = false;
         public bool toggleInfiniteItems = false;
         public bool toggleAutomaticallyLoadLastSave = false;
-        public bool toggleAllowAchievementsDuringModdedGame = false;
+        public bool toggleAllowAchievementsDuringModdedGame = true;
         public bool togglAutoEquipConsumables = false;
         public bool toggleEquipItemsDuringCombat = false;
         public bool toggleUseItemsDuringCombat = false;

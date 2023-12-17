@@ -31,20 +31,6 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             }
         }
 
-        // TODO: remove this hack when OwlCat fixes the combat logging
-        [HarmonyPatch(typeof(ReportCombatLogManager), nameof(ReportCombatLogManager.LogCombatLogMessage))]
-        public static class ReportCombatLogManagerPatch {
-            [HarmonyPrefix]
-            private static bool LogCombatLogMessage(ReportCombatLogManager __instance, CombatLogMessage msg) {
-                //Mod.Debug($"ReportCombatLogManager.LogCombatLogMessage - {msg.Message}");
-                if (msg.Message.Contains("ToyBox")) {
-                    __instance.ManageCombatMessageData(msg, null, null);
-                    return false;
-                }
-                return true;
-            }
-        }
-
         [HarmonyPatch(typeof(BlueprintConverter))]
         private static class ForceSuccessfulLoad_Blueprints_Patch {
             [HarmonyPatch(nameof(BlueprintConverter.ReadJson), new Type[] {typeof(JsonReader), typeof(Type), typeof(object), typeof(JsonSerializer)})]
@@ -85,31 +71,5 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                 if (__instance.Blueprint == null) Mod.Warn($"Fact type '{__instance}' failed to load. UniqueID: {__instance.UniqueId}");
             }
         }
-        #if false
-        [HarmonyPatch(typeof(JsonUpgradeSystem))]
-        public static class JsonUpgradeSystemPatch {
-            [HarmonyPatch(nameof(JsonUpgradeSystem.GetUpgraders), typeof(SaveInfo))]
-            [HarmonyPrefix]
-            private static bool GetUpgraders(SaveInfo saveInfo, IEnumerable<UpgraderEntry> __result) {
-                return false;
-                if (!settings.enableLoadWithMissingBlueprints) return true;
-                var saveVersionsSet = new HashSet<int>(saveInfo.Versions);
-                var availableList = s_Updaters.Select(u => u.Version).ToList();
-                var availableSet = new HashSet<int>(availableList);
-                var saveVersions = string.Join(", ", saveInfo.Versions.Select(i => i.ToString()).ToArray());
-                var availVersions = string.Join(", ", availableList.Select(i => i.ToString()).ToArray());
-                Mod.Warn($"save versions: {saveVersions}");
-                Mod.Warn($"available versions: {availVersions}");
-                foreach (var version in saveInfo.Versions) {
-                    if (!availableSet.Contains(version)) {
-                        Mod.Warn(string.Format("Unknown version in save info: {0}", version) + string.Format("\nSave versions: {0}", saveInfo.Versions) + string.Format("\nKnown versions: {0}", availableList));
-//                        throw new JsonUpgradeException(string.Format("Unknown version in save info: {0}", version) + string.Format("\nSave versions: {0}", saveInfo.Versions) + string.Format("\nKnown versions: {0}", availableList));
-                    }
-                }
-                __result = s_Updaters.Where(u => !saveVersionsSet.Contains(u.Version));
-                return false;
-            }
-        }
-#endif
     }
 }

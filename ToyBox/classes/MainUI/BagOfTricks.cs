@@ -9,6 +9,7 @@ using Kingmaker.Controllers.Dialog;
 using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameModes;
+using Kingmaker.Mechanics.Entities;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UnitLogic;
 using Kingmaker.View;

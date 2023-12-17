@@ -54,7 +54,10 @@
   your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
-
+  
+### ToyBox Rogue - Ver 1.5.9d built for Rogue Trader 1.0.70
+* (***ADDB***) Made Achievement Enabler opt-out by default.
+* (***ADDB***) Remove more log spam.
 ### ToyBox Rogue - Ver 1.5.9c built for Rogue Trader 1.0.69
 * (***ADDB***) Fixed broken Custom Portrait Editor.
 * (***ADDB***) Fixed some stuff staying highlighted when activating highlight hidden objects.
@@ -65,7 +68,6 @@
 * (***ADDB***) Did some work at Camera Tweaks in Enhanced UI; soem stuff works now; some not.
 * (***ADDB***) Added option to change/freeze Veil Thickness.
 * (***ADDB***) Maybe Removed Buff Multiplier error.
-* (***ADDB***) Recompiled against new version.
 
 ### ToyBox Rogue - Ver 1.5.9 built for Rogue Trader 1.0.68
 * (***ADDB***) Fixed Remote Companion Dialog not showing dialog for... remote companions.

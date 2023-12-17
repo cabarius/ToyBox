@@ -175,6 +175,10 @@ namespace ToyBox {
                                                      (bp, ch, n, index) => Game.Instance.Player.EtudesSystem.MarkEtudeCompleted(bp),
                                                      (bp, ch, index) => !Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp) &&
                                                                         !Game.Instance.Player.EtudesSystem.EtudeIsCompleted(bp));
+            BlueprintAction.Register<BlueprintEtude>("Unstart".localize(),
+                                         (bp, ch, n, index) =>
+                                             Game.Instance.Player.EtudesSystem.UnstartEtude(bp),
+                                         (bp, ch, index) => !Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp));
             // Flags
             BlueprintAction.Register<BlueprintUnlockableFlag>("Unlock".localize(),
                 (bp, ch, n, index) => flags.Unlock(bp),
