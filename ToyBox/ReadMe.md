@@ -55,9 +55,12 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
   
+
+### ToyBox Rogue - Ver 1.5.9e built for Rogue Trader 1.0.70
+
 ### ToyBox Rogue - Ver 1.5.9d built for Rogue Trader 1.0.70
 * (***ADDB***) Readd unstart Etude.
-* (***ADDB***) Made Achievement Enabler opt-out by default.
+* (***ADDB***) Made Achievement Enabler opt-out by default. (If you are updating the mod then this changes nothing for you).
 * (***ADDB***) Remove more log spam.
 ### ToyBox Rogue - Ver 1.5.9c built for Rogue Trader 1.0.69
 * (***ADDB***) Fixed broken Custom Portrait Editor.
