@@ -123,14 +123,13 @@ namespace ToyBox.classes.MonkeyPatchin {
                         flag = false;
                     }
                 }
-                if (!flag || (!__instance.HighlightOnHover && !Main.Settings.highlightHiddenObjects) || ((!__instance.Data.IsRevealed || !__instance.Data.IsAwarenessCheckPassed) && !Main.Settings.highlightHiddenObjects)) {
+                if (!flag || !__instance.HighlightOnHover || ((!__instance.Data.IsRevealed || !__instance.Data.IsAwarenessCheckPassed) && !Main.Settings.highlightHiddenObjects)) {
                     __result = __instance.Data.Parts.GetAll<InteractionPart>().Any((InteractionPart i) => i.HasVisibleTrap());
                 }
                 else {
                     __result = true;
                 }
-                if (__instance != null)
-                Mod.Trace($"Checking highlighting for {__instance.name}: Result:{__result}; flag:{flag}; Highlighted:{__instance.Highlighted} - ForcedHighlightOnReveal:{__instance.m_ForcedHighlightOnReveal} - GlobalHighlighting:{__instance.GlobalHighlighting} - IsInFogOfWar:{__instance.Data.IsInFogOfWar} - HighlightOnHover:{__instance.HighlightOnHover} - IsRevealed:{__instance.Data.IsRevealed} - AwarenessCheckPassed:{__instance.Data.IsAwarenessCheckPassed}");
+                Mod.Debug($"Checking highlighting for {__instance.name}: Result:{__result}; flag:{flag}; Highlighted:{__instance.Highlighted} - ForcedHighlightOnReveal:{__instance.m_ForcedHighlightOnReveal} - GlobalHighlighting:{__instance.GlobalHighlighting} - IsInFogOfWar:{__instance.Data.IsInFogOfWar} - HighlightOnHover:{__instance.HighlightOnHover} - IsRevealed:{__instance.Data.IsRevealed} - AwarenessCheckPassed:{__instance.Data.IsAwarenessCheckPassed}");
             }
         }
     }

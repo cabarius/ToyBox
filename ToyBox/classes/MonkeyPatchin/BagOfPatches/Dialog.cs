@@ -71,13 +71,18 @@ namespace ToyBox.BagOfPatches {
                 if (__instance.Not) return; // We only want this patch to run for conditions requiring the character to be in the party so if it is for the inverse we bail.  Example of this comes up with Lann and Wenduag in the final scene of the Prologue Labyrinth
                 if (SecretCompanions.Contains(__instance.companion.AssetGuid.ToString())) return;
                 if (ProblemCues.Contains(__instance.Owner.AssetGuid.ToString())) return;
-                if (settings.toggleRemoteCompanionDialog) {
-                    if (__instance.Owner is BlueprintCue cueBP) {
-                        Mod.Debug($"overiding {cueBP.name} Companion {__instance.companion.name} In Party to true");
-                        __result = true;
-                    }
-                    if (__instance.Owner is BlueprintCue etudeBP) {
+                UnitPartCompanion unitPartCompanion = Game.Instance.Player.AllCharacters.FirstOrDefault(unit => unit.Blueprint == __instance.companion).GetCompanionOptional();
+                if (unitPartCompanion != null) {
+                    if (settings.toggleRemoteCompanionDialog && unitPartCompanion.State != CompanionState.None) {
+                        if ((settings.toggleExCompanionDialog && unitPartCompanion.State == CompanionState.ExCompanion) || unitPartCompanion.State != CompanionState.ExCompanion) {
+                            if (__instance.Owner is BlueprintCue cueBP) {
+                                Mod.Debug($"overiding {cueBP.name} Companion {__instance.companion.name} In Party to true");
+                                __result = true;
+                            }
+                            if (__instance.Owner is BlueprintCue etudeBP) {
 
+                            }
+                        }
                     }
                 }
             }
@@ -220,7 +225,6 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(DialogSpeaker), nameof(DialogSpeaker.GetEntity))]
         public static class DialogSpeaker_GetEntity_Patch {
             public static bool Prefix(DialogSpeaker __instance, BlueprintCueBase cue, ref BaseUnitEntity __result) {
-                if (!settings.toggleRemoteCompanionDialog) return true;
                 if (!settings.toggleRemoteCompanionDialog) return true;
                 if (__instance.Blueprint == null) {
                     __result = null;

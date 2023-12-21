@@ -56,7 +56,9 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
   
 
-### ToyBox Rogue - Ver 1.5.9e built for Rogue Trader 1.0.70
+### ToyBox Rogue - Ver 1.5.9e built for Rogue Trader 1.0.73
+* (***ADDB***) Fix (keep) highlighting wrong objects.
+* (***ADDB***) Maybe fix Remote Companion Dialog including Companions before recruiting them.
 
 ### ToyBox Rogue - Ver 1.5.9d built for Rogue Trader 1.0.70
 * (***ADDB***) Readd unstart Etude.
