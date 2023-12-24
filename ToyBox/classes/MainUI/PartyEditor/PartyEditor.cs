@@ -1,12 +1,10 @@
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using Kingmaker;
-using Kingmaker.Blueprints;
 using Kingmaker.Cheats;
 using Kingmaker.Code.UnitLogic;
 using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
-using Kingmaker.UnitLogic.Levelup.Components;
 using Kingmaker.UnitLogic.Parts;
 using ModKit;
 using ModKit.DataViewer;
@@ -287,19 +285,35 @@ namespace ToyBox {
             Space(25);
             if (recruitableCount > 0) {
                 Label($"{recruitableCount} " + ("character(s) can be ".orange().bold() + "Recruited".cyan() + ". This allows you to add non party NPCs to your party as if they were mercenaries".green()).localize());
+                Toggle("Enable experimental fix for recruited characters being invisible on scene change".localize().green(), ref Settings.experimentalLoadRecruitedCharactersFix, 500.width());
             }
             if (respecableCount > 0) {
                 Label($"{respecableCount} " + ("character(s) can be ".orange().bold() + "Respecced".cyan() + ". Pressing Respec will close the mod window and take you to character level up".green()).localize());
-                Toggle("Respec from Level 0".localize(), ref Settings.toggleSetDefaultRespecLevelZero, 300.width());
+                Toggle("Respec from Level 0".localize().green(), ref Settings.toggleSetDefaultRespecLevelZero, 500.width());
             }
             Space(25);
             foreach (var action in todo)
                 action();
-            if (charToAdd != null) { BaseUnitDataUtils.AddCompanion(charToAdd); }
-            if (charToRecruit != null) { BaseUnitDataUtils.RecruitCompanion(charToRecruit); }
-            if (charToRemove != null) { BaseUnitDataUtils.RemoveCompanion(charToRemove); }
+            bool needsFix = false;
+            if (charToAdd != null) { 
+                BaseUnitDataUtils.AddCompanion(charToAdd); 
+                needsFix = true; 
+            }
+            if (charToRecruit != null) { 
+                BaseUnitDataUtils.RecruitCompanion(charToRecruit); 
+                needsFix = true;
+            }
+            if (charToRemove != null) { 
+                BaseUnitDataUtils.RemoveCompanion(charToRemove);
+                needsFix = true;
+            }
             if (charToUnrecruit != null) {
-                charToUnrecruit.GetCompanionOptional()?.SetState(CompanionState.None); charToUnrecruit.Remove<UnitPartCompanion>();
+                charToUnrecruit.GetCompanionOptional()?.SetState(CompanionState.None); 
+                charToUnrecruit.Remove<UnitPartCompanion>();
+                needsFix = true;
+            }
+            if (needsFix) {
+                Game.Instance.Player.FixPartyAfterChange();
             }
         }
     }

@@ -117,13 +117,18 @@ namespace ToyBox.classes.MonkeyPatchin {
             [HarmonyPostfix]
             private static void ShouldBeHighlighted(MapObjectView __instance, ref bool __result) {
                 if (__instance == null) return;
+                if (!Main.Settings.highlightHiddenObjects && !Main.Settings.highlightHiddenObjectsInFog) return;
                 bool flag = __instance.Highlighted || __instance.m_ForcedHighlightOnReveal || (__instance.GlobalHighlighting && (!__instance.Data.IsInFogOfWar || Main.Settings.highlightHiddenObjectsInFog));
                 if (Game.Instance.TurnController.TurnBasedModeActive) {
                     if (__instance.Data.Parts.GetAll<InteractionPart>().Any((InteractionPart i) => i is InteractionLootPart)) {
                         flag = false;
                     }
                 }
-                if (!flag || !__instance.HighlightOnHover || ((!__instance.Data.IsRevealed || !__instance.Data.IsAwarenessCheckPassed) && !Main.Settings.highlightHiddenObjects)) {
+                bool HighlightOnHover = (__instance.Data.IsRevealed || Main.Settings.highlightHiddenObjects) && (__instance.CanBeAttackedDirectly || __instance.Data.Parts.GetAll<InteractionPart>().Any(i => {
+                    InteractionType type = i.Type;
+                    return (type == InteractionType.Approach || type == InteractionType.Direct) && i.Enabled && (!i.Settings.ShowOvertip || (i.Settings.ShowOvertip && i.Settings.ShowHighlight));
+                }));
+                if (!flag || !HighlightOnHover || ((__instance.Data.IsRevealed || !__instance.Data.IsAwarenessCheckPassed) && !Main.Settings.highlightHiddenObjects)) {
                     __result = __instance.Data.Parts.GetAll<InteractionPart>().Any((InteractionPart i) => i.HasVisibleTrap());
                 }
                 else {

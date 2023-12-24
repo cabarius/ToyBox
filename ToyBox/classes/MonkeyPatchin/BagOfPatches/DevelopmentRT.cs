@@ -31,6 +31,13 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
             }
         }
 
+        [HarmonyPatch(typeof(BuildModeUtility), nameof(BuildModeUtility.CheatsEnabled), MethodType.Getter)]
+        private static class BuildModeUtility_CheatsEnabled_Patch {
+            private static void Postfix(ref bool __result) {
+                if (settings.toggleDevopmentMode) __result = true;
+            }
+        }
+
         [HarmonyPatch(typeof(BlueprintConverter))]
         private static class ForceSuccessfulLoad_Blueprints_Patch {
             [HarmonyPatch(nameof(BlueprintConverter.ReadJson), new Type[] {typeof(JsonReader), typeof(Type), typeof(object), typeof(JsonSerializer)})]

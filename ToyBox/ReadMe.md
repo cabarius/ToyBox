@@ -55,6 +55,11 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
   
+### ToyBox Rogue - Ver 1.5.9f built for Rogue Trader 1.0.79
+* (***ADDB***) Added experimental fix for recruited characters being invisible when changing Areas. **You need to manually activate this with the toggle located in the Party Tab.**
+* (***ADDB***) Development mode now allows cheat-only commands.
+* (***ADDB***) Fixed some recruited units being controlled by AI instead of the player.
+* (***ADDB***) Probably finally fixed Highlight Hidden Objects...
 
 ### ToyBox Rogue - Ver 1.5.9e built for Rogue Trader 1.0.73
 * (***ADDB***) Fix (keep) highlighting wrong objects.

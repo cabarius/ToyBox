@@ -30,12 +30,12 @@ namespace ToyBox {
                 PartyFilterChoices = new NamedFunc<List<BaseUnitEntity>>[] {
                     new NamedFunc<List<BaseUnitEntity>>("Party".localize(), () => Game.Instance.Player.Party),
                     new NamedFunc<List<BaseUnitEntity>>("Party & Pets".localize(), () => Game.Instance.Player.m_PartyAndPets),
-                    new NamedFunc<List<BaseUnitEntity>>("All".localize(), () => Game.Instance.Player.AllCharactersAndStarships.ToList()),
+                    new NamedFunc<List<BaseUnitEntity>>("All".localize(), () => Game.Instance.Player.AllCharactersAndStarships),
                     new NamedFunc<List<BaseUnitEntity>>("Active".localize(), () => Game.Instance.Player.ActiveCompanions),
                     new NamedFunc<List<BaseUnitEntity>>("Remote".localize(), () => Game.Instance.Player.m_RemoteCompanions),
                     new NamedFunc<List<BaseUnitEntity>>("Custom".localize(), PartyUtils.GetCustomCompanions),
                     new NamedFunc<List<BaseUnitEntity>>("Pets".localize(), PartyUtils.GetPets),
-                    new NamedFunc<List<BaseUnitEntity>>("Starships".localize(), () => Game.Instance.Player.AllStarships.ToList()),
+                    new NamedFunc<List<BaseUnitEntity>>("Starships".localize(), () => Game.Instance.Player.AllStarships),
                     //new NamedFunc<List<UnitEntityData>>("Familiars", Game.Instance.Player.Party.SelectMany(ch => ch.Familiars),
                     new NamedFunc<List<BaseUnitEntity>>("Nearby".localize(), () => {
                         var player = GameHelper.GetPlayerCharacter();
@@ -43,7 +43,7 @@ namespace ToyBox {
                     }),
                     new NamedFunc<List<BaseUnitEntity>>("Friendly".localize(), () => Shodan.AllBaseUnits.Where((u) => u != null && !u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
                     new NamedFunc<List<BaseUnitEntity>>("Enemies".localize(), () => Shodan.AllBaseUnits.Where((u) => u != null && u.IsEnemy(GameHelper.GetPlayerCharacter())).ToList()),
-                    new NamedFunc<List<BaseUnitEntity>>("All Units".localize(), () => Shodan.AllBaseUnits.ToList()),
+                    new NamedFunc<List<BaseUnitEntity>>("All Units".localize(), () => Shodan.AllBaseUnits.m_Entities),
                };
             }
             return PartyFilterChoices;

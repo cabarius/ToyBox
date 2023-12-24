@@ -234,6 +234,7 @@ namespace ToyBox.BagOfPatches {
             private static void Postfix() {
                 Mod.Debug("Player_OnAreaLoaded_Patch");
                 Settings.ClearCachedPerSave();
+                if (Settings.experimentalLoadRecruitedCharactersFix) Game.Instance.Player.FixPartyAfterChange();
                 PartyEditor.lastScaleSize = new();
                 PartyEditor.statEditorStorage.Clear();
                 foreach (var ID in Main.Settings.perSave.characterModelSizeMultiplier.Keys) {
