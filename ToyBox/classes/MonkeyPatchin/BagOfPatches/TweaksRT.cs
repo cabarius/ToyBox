@@ -15,6 +15,7 @@ using Kingmaker.Code.UI.MVVM.VM.Slots;
 using Kingmaker.Code.UI.MVVM.VM.WarningNotification;
 using Kingmaker.Controllers.Combat;
 using Kingmaker.Controllers.MapObjects;
+using Kingmaker.Controllers.TurnBased;
 using Kingmaker.Designers;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.GameCommands;
@@ -42,6 +43,29 @@ namespace ToyBox.BagOfPatches {
         public static Settings Settings = Main.Settings;
         public static Player player = Game.Instance.Player;
 
+        [HarmonyPatch(typeof(TurnController))]
+        private static class TurnController_Patch {
+            [HarmonyPatch(nameof(TurnController.IsPlayerTurn), MethodType.Getter)]
+            [HarmonyPostfix]
+            private static void IsPlayerTurn(TurnController __instance, ref bool __result) {
+                if (__instance.CurrentUnit == null) return;
+                if (Main.Settings.perSave.doOverideEnableAiForCompanions.TryGetValue(__instance.CurrentUnit.HashKey(), out var maybeOverride)) {
+                    if (maybeOverride.Item1) {
+                        __result = !maybeOverride.Item2;
+                    }
+                }
+            }
+            [HarmonyPatch(nameof(TurnController.IsAiTurn), MethodType.Getter)]
+            [HarmonyPostfix]
+            private static void IsAiTurn(TurnController __instance, ref bool __result) {
+                if (__instance.CurrentUnit == null) return;
+                if (Main.Settings.perSave.doOverideEnableAiForCompanions.TryGetValue(__instance.CurrentUnit.HashKey(), out var maybeOverride)) {
+                    if (maybeOverride.Item1) {
+                        __result = maybeOverride.Item2;
+                    }
+                }
+            }
+        }
         [HarmonyPatch(typeof(PartUnitCombatState))]
         private static class PartUnitCombatStatePatch {
             public static void MaybeKill(PartUnitCombatState unitCombatState) {

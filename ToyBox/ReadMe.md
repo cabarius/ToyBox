@@ -55,6 +55,11 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
   
+### ToyBox Rogue - Ver 1.5.9g built for Rogue Trader 1.0.81
+* (***ADDB***) Fix Show Interestingness Coefficient feature sometimes crashing the mod.
+* (***ADDB***) It is now possible to use the Party => Stats window to let AI take control of Companions during fights.
+* (***ADDB***) To prevent collisions this update introduced some changes which will reset existing VisualSizeMultiplier options. Until now those have been based on Character Name. They are now based on Character Unique Id.
+
 ### ToyBox Rogue - Ver 1.5.9f built for Rogue Trader 1.0.79
 * (***ADDB***) Added experimental fix for recruited characters being invisible when changing Areas. **You need to manually activate this with the toggle located in the Party Tab.**
 * (***ADDB***) Development mode now allows cheat-only commands.

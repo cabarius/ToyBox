@@ -49,7 +49,15 @@ namespace ToyBox {
         }
         public static bool IsActive(this IntrestingnessEntry entry) =>
             (entry.checker?.IsActive() ?? false)
-            || (entry?.elements.Any(element => element.IsActive()) ?? false)
+            || (entry?.elements.Any(element => {
+                try {
+                    return element.IsActive();
+                }
+                catch (Exception ex) {
+                    Mod.Debug(ex.ToString());
+                    return false;
+                }
+            }) ?? false)
             || (entry?.elements?.Count > 0 && entry.source is ActionsHolder) // Kludge until we get more clever about analyzing dialog state.  This lets Lathimas show up as active
             ;
         public static bool IsActive(this Element element) => element switch {
@@ -74,7 +82,14 @@ namespace ToyBox {
                                                                    ;
         public static int InterestingnessCoefficent(this MechanicEntity entity)
             => entity is BaseUnitEntity unit ? unit.InterestingnessCoefficent() : 0;
-        public static int InterestingnessCoefficent(this BaseUnitEntity unit) => unit.GetUnitInteractionConditions().Count(entry => entry.IsActive());
+        public static int InterestingnessCoefficent(this BaseUnitEntity unit) => unit.GetUnitInteractionConditions().Count(entry => {
+            try {
+                return entry.IsActive();
+            } catch (Exception ex) {
+                Mod.Debug(ex.ToString());
+                return false;
+            }
+        });
         public static List<BlueprintDialog> GetDialog(this BaseUnitEntity unit) {
             var dialogs = unit.Parts.m_Parts
                                          .OfType<UnitPartInteractions>()

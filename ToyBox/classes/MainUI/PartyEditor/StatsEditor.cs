@@ -311,50 +311,52 @@ namespace ToyBox {
                     }
                 }
             }
-            Div(100, 20, 755);
-            var soulMarks = ch.GetSoulMarks();
-            using (HorizontalScope()) {
-                100.space();
-                Label("Soul Marks".localize(), Width(200));
-                // TODO: Actually implement this for companions.
-                using (VerticalScope()) {
-                    foreach (SoulMarkDirection dir in Enum.GetValues(typeof(SoulMarkDirection))) {
-                        if (dir == SoulMarkDirection.None || dir == SoulMarkDirection.Reason) continue;
-                        SoulMark soulMark = null;
-                        try {
-                            soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, dir);
-                            if (soulMark == null) continue;
-                            /*{        
-                            var f = Shodan.MainCharacter.Blueprint.m_AddFacts.Select(f => f.Get()).OfType<BlueprintSoulMark>().Where(f => f == SoulMarkShiftExtension.GetBaseSoulMarkFor(dir)).First();
-                            ch.AddFact(f);
-                            soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, dir);
-                            }*/
-                        }
-                        catch (Exception ex) {
-                            Mod.Error(ex);
-                            continue;
-                        }
-                        using (HorizontalScope()) {
-                            Label(dir.ToString().localize().orange(), 200.width());
-                            ActionButton(" < ",
-                                         () => modifySoulmark(dir, soulMark, ch, soulMark.Rank - 1, soulMark.Rank - 2),
-                                         GUI.skin.box,
-                                         AutoWidth());
-                            Space(20);
-                            var val = soulMark.Rank - 1;
-                            Label($"{val}".orange().bold(), Width(50f));
-                            ActionButton(" > ",
-                                         () => modifySoulmark(dir, soulMark, ch, soulMark.Rank - 1, soulMark.Rank),
-                                         GUI.skin.box,
-                                         AutoWidth());
-                            Space(25);
-                            val = soulMark.Rank - 1;
-                            ActionIntTextField(ref val, (v) => {
-                                if (v > 0) {
-                                    modifySoulmark(dir, soulMark, ch, soulMark.Rank - 1, v);
-                                }
-                            },
-                                Width(75));
+            // TODO: Actually implement this for companions.
+            if (ch.IsMainCharacter) {
+                Div(100, 20, 755);
+                var soulMarks = ch.GetSoulMarks();
+                using (HorizontalScope()) {
+                    100.space();
+                    Label("Soul Marks".localize(), Width(200));
+                    using (VerticalScope()) {
+                        foreach (SoulMarkDirection dir in Enum.GetValues(typeof(SoulMarkDirection))) {
+                            if (dir == SoulMarkDirection.None || dir == SoulMarkDirection.Reason) continue;
+                            SoulMark soulMark = null;
+                            try {
+                                soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, dir);
+                                if (soulMark == null) continue;
+                                /*{        
+                                var f = Shodan.MainCharacter.Blueprint.m_AddFacts.Select(f => f.Get()).OfType<BlueprintSoulMark>().Where(f => f == SoulMarkShiftExtension.GetBaseSoulMarkFor(dir)).First();
+                                ch.AddFact(f);
+                                soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, dir);
+                                }*/
+                            }
+                            catch (Exception ex) {
+                                Mod.Error(ex);
+                                continue;
+                            }
+                            using (HorizontalScope()) {
+                                Label(dir.ToString().localize().orange(), 200.width());
+                                ActionButton(" < ",
+                                             () => modifySoulmark(dir, soulMark, ch, soulMark.Rank - 1, soulMark.Rank - 2),
+                                             GUI.skin.box,
+                                             AutoWidth());
+                                Space(20);
+                                var val = soulMark.Rank - 1;
+                                Label($"{val}".orange().bold(), Width(50f));
+                                ActionButton(" > ",
+                                             () => modifySoulmark(dir, soulMark, ch, soulMark.Rank - 1, soulMark.Rank),
+                                             GUI.skin.box,
+                                             AutoWidth());
+                                Space(25);
+                                val = soulMark.Rank - 1;
+                                ActionIntTextField(ref val, (v) => {
+                                    if (v > 0) {
+                                        modifySoulmark(dir, soulMark, ch, soulMark.Rank - 1, v);
+                                    }
+                                },
+                                    Width(75));
+                            }
                         }
                     }
                 }
@@ -368,10 +370,35 @@ namespace ToyBox {
                         if (lastScale != scaleMultiplier) {
                             ch.View.gameObject.transform.localScale = new Vector3(lastScale, lastScale, lastScale);
                         }
-                        if (LogSliderCustomLabelWidth("Visual Character Size Multiplier".localize().color(RGBA.none) + " (This setting is per-save)".localize(), ref lastScale, 0.01f, 40f, 1, 2, "", 400, AutoWidth())) {
+                        if (LogSliderCustomLabelWidth("Visual Character Size Multiplier".localize().color(RGBA.none), ref lastScale, 0.01f, 40f, 1, 2, "", 400, AutoWidth())) {
                             Main.Settings.perSave.characterModelSizeMultiplier[ch.HashKey()] = lastScale;
                             ch.View.gameObject.transform.localScale = new Vector3(lastScale, lastScale, lastScale);
                             lastScaleSize[ch.HashKey()] = lastScale;
+                            Settings.SavePerSaveSettings();
+                        }
+                    }
+                }
+                using (HorizontalScope()) {
+                    Space(100);
+                    if (!Main.Settings.perSave.doOverideEnableAiForCompanions.TryGetValue(ch.HashKey(), out var valuePair)) {
+                        valuePair = new(false, false);
+                    }
+                    var temp = valuePair.Item1;
+                    if (Toggle("Override AI Control Behaviour".localize(), ref temp)) {
+                        if (temp) {
+                            Main.Settings.perSave.doOverideEnableAiForCompanions[ch.HashKey()] = new(temp, valuePair.Item2);
+                            Settings.SavePerSaveSettings();
+                        }
+                        else {
+                            Main.Settings.perSave.doOverideEnableAiForCompanions.Remove(ch.HashKey());
+                            Settings.SavePerSaveSettings();
+                        }
+                    }
+                    if (temp) {
+                        Space(50);
+                        var temp2 = valuePair.Item2;
+                        if (Toggle("Make Character AI Controlled".localize(), ref temp2)) {
+                            Main.Settings.perSave.doOverideEnableAiForCompanions[ch.HashKey()] = new(temp, temp2);
                             Settings.SavePerSaveSettings();
                         }
                     }
