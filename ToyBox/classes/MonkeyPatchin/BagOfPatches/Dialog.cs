@@ -70,6 +70,9 @@ namespace ToyBox.BagOfPatches {
         public static class CompanionInParty_CheckCondition_Patch {
             public static void Postfix(CompanionInParty __instance, ref bool __result) {
                 if (__instance.Not) return; // We only want this patch to run for conditions requiring the character to be in the party so if it is for the inverse we bail.  Example of this comes up with Lann and Wenduag in the final scene of the Prologue Labyrinth
+                // We don't want to match when the game only checks for Ex companions since this is basically a check for companions which left the party then
+                // Example is 6aeb6812dcc1464a9b087786556c9b18 which checks whether Pascal left as a companion. Really weird design from Owlcat right there.
+                if (__instance.MatchWhenEx && !__instance.MatchWhenActive && !__instance.MatchWhenDetached && !__instance.MatchWhenRemote) return;
                 if (SecretCompanions.Contains(__instance.companion.AssetGuid.ToString())) return;
                 if (ProblemCues.Contains(__instance.Owner.AssetGuid.ToString())) return;
                 UnitPartCompanion unitPartCompanion = null;
@@ -255,7 +258,7 @@ namespace ToyBox.BagOfPatches {
                     return unitPartCompanion != null;
                 }
                 var overrideValue = hasOverride && DialogSpeaker_GetEntityOverrides[GUID];
-                var unit = Shodan.AllBaseUnits
+                var unit = Shodan.AllBaseUnits.Concat(second)
                         //.Where(u => u.IsInGame && !u.Suppressed)
                         .Where(u => u.IsInGame && !u.Suppressed
                                     || (hasOverride ? overrideValue : settings.toggleExCompanionDialog || !IsExCompanion(u))
@@ -277,6 +280,7 @@ namespace ToyBox.BagOfPatches {
 
                 }
                 if (unit != null) {
+                    /*
                     if (unit.DistanceTo(dialogPosition) > 25) {
                         var mainChar = Shodan.MainCharacter;
                         var mainPos = mainChar.Position;
@@ -284,6 +288,7 @@ namespace ToyBox.BagOfPatches {
                         var mainDirection = mainChar.OrientationDirection;
                         unit.Position = mainPos - 5 * mainDirection + offset;
                     }
+                    */
                     __result = unit;
                     return false;
                 }
