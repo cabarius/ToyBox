@@ -45,11 +45,6 @@ namespace ToyBox {
 #endif
                    () => Toggle("Highlight Copyable Scrolls".localize(), ref Settings.toggleHighlightCopyableScrolls),
                    () => {
-                       Toggle("Auto Follow While Holding Camera Follow Key".localize(), ref Settings.toggleAutoFollowHold, 400.width());
-                       100.space();
-                       HelpLabel("When enabled and you hold down the camera follow key (usually f) the camera will keep following the unit until you release it".localize());
-                   },
-                   () => {
                        var modifier = KeyBindings.GetBinding("InventoryUseModifier");
                        var modifierText = modifier.Key == KeyCode.None ? "Modifer" : modifier.ToString();
                        Toggle("Allow ".localize() + $"{modifierText}".cyan() + (" + Click".cyan() + " To Use Items In Inventory").localize(), ref Settings.toggleShiftClickToUseInventorySlot, 470.width());
