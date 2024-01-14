@@ -51,7 +51,10 @@ namespace ToyBox {
                     new NamedAction("Dialog & NPCs", DialogAndNPCs.OnGUI),
                     new NamedAction("Saves", GameSavesBrowser.OnGUI),
                     new NamedAction("Achievements", AchievementsUnlocker.OnGUI),
-                    new NamedAction("Settings", SettingsUI.OnGUI)};
+#if DEBUG        
+            new NamedAction("Outfits (Experimental)", Outfits.OnGUI),
+#endif
+            new NamedAction("Settings", SettingsUI.OnGUI)};
         private static int partyTabID = -1;
         public static bool Enabled;
         public static bool IsModGUIShown = false;
@@ -236,6 +239,7 @@ namespace ToyBox {
         private static void OnShowGUI(UnityModManager.ModEntry modEntry) {
             IsModGUIShown = true;
             EnchantmentEditor.OnShowGUI();
+            AchievementsUnlocker.OnShowGUI();
             EtudesEditor.OnShowGUI();
             Mod.OnShowGUI();
         }

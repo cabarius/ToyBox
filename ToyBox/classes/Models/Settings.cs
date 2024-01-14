@@ -26,10 +26,15 @@ namespace ToyBox {
         // This is the scaling modifier which is applied to the visual model of each character
         [JsonProperty]
         public Dictionary<string, float> characterModelSizeMultiplier = new();
-        [JsonProperty]
         // Dictionary<Character Hashcode,
         //              { doOverride, OverrideValue }
-        public Dictionary<string, Tuple<bool, bool>> doOverideEnableAiForCompanions = new();
+        [JsonProperty]
+        public Dictionary<string, Tuple<bool, bool>> doOverrideEnableAiForCompanions = new();
+
+        // Dictionary<Character Hashcode,
+        //              { doOverride, List<GUID> with outfits to use }
+        [JsonProperty]
+        public Dictionary<string, Tuple<bool, List<string>>> doOverrideOutfit = new();
     }
 
     public class Settings : UnityModManager.ModSettings {

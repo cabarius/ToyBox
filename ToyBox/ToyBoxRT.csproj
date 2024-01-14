@@ -49,10 +49,10 @@
     <MakeDir Directories="$(SolutionDir)lib/RT" />
     <Publicise InputAssemblies="@(PubliciseInputAssemblies)" OutputPath="$(SolutionDir)lib/RT/" PubliciseCompilerGenerated="true" />
   </Target>
-	<Target Name="PublishToSteamWorkshop" AfterTargets="Publish">
-        <PublishToWorkshop PathToManifest="$(MSBuildThisFileDirectory)\ModDetails\OwlcatModificationManifest.json" ImageDir="$(MSBuildThisFileDirectory)\ModDetails\" BuildDir="$(TargetDir)" GameAppId="2186680" />
-    </Target>
-    <ItemGroup>
+  <Target Name="PublishToSteamWorkshop" AfterTargets="Publish">
+    <PublishToWorkshop PathToManifest="$(MSBuildThisFileDirectory)\ModDetails\OwlcatModificationManifest.json" ImageDir="$(MSBuildThisFileDirectory)\ModDetails\" BuildDir="$(TargetDir)" GameAppId="2186680" />
+  </Target>
+  <ItemGroup>
     <PackageReference Include="PublishToWorkshop" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" Version="1.0.9" PrivateAssets="all" />
     <PackageReference Include="Aze.Publicise.MSBuild.Task" Version="1.0.0" />
     <Reference Include="0Harmony">
@@ -460,6 +460,7 @@
     <Compile Include="classes\Infrastructure\Teleport.cs" />
     <Compile Include="classes\MainUI\Actions.cs" />
     <Compile Include="classes\MainUI\ActionsRT.cs" />
+    <Compile Include="classes\MainUI\Browser\Outfits.cs" />
     <Compile Include="classes\MainUI\Browser\AchievementsUnlocker.cs" />
     <Compile Include="classes\MainUI\Browser\BlueprintActionRT.cs" />
     <Compile Include="classes\MainUI\ColonyEditor.cs" />
@@ -568,7 +569,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties info_1json__JsonSchema="https://json.schemastore.org/global.json" config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" />
+      <UserProperties config_4bindings_1json__JsonSchema="https://json.schemastore.org/global.json" info_1json__JsonSchema="https://json.schemastore.org/global.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

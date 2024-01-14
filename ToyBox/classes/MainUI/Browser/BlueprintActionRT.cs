@@ -17,11 +17,13 @@ using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Persistence;
 using Kingmaker.Globalmap.Blueprints;
 using Kingmaker.Globalmap.Blueprints.SectorMap;
+using Kingmaker.PubSubSystem.Core;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
+using Kingmaker.Visual.CharacterSystem;
 using ModKit;
 using System;
 using System.Collections.Generic;
@@ -72,6 +74,54 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintSectorMapPoint>("Teleport".localize(),
                                                               (globalMapPoint, ch, n, index) => { } //Teleport.To(globalMapPoint)
                                                                                                             );
+            BlueprintAction.Register<KingmakerEquipmentEntity>("Dress".localize(), (bp, ch, n, index) => {
+                IEnumerable<EquipmentEntity> enumerable = bp.Load(ch.Gender, ch.ViewSettings.Doll.RacePreset.RaceId);
+                ch.View.CharacterAvatar.AddEquipmentEntities(enumerable);
+                foreach (var ee in bp.GetLinks(ch.Gender, ch.ViewSettings.Doll.RacePreset.RaceId)) {
+                    if (!ch.View.CharacterAvatar.m_SavedEquipmentEntities.Contains(ee)) {
+                        ch.View.CharacterAvatar.m_SavedEquipmentEntities.Add(ee);
+                    }
+                }
+                if (!Main.Settings.perSave.doOverrideOutfit.TryGetValue(ch.HashKey(), out var valuePair)) {
+                    valuePair = new(false, new());
+                }
+                valuePair.Item2.Add(bp.AssetGuid);
+                Main.Settings.perSave.doOverrideOutfit[ch.HashKey()] = valuePair;
+                Settings.SavePerSaveSettings();
+            }, (bp, ch, index) => {
+                if (ch.IsInGame && ch.View != null && ch.View.CharacterAvatar != null) {
+                    IEnumerable<EquipmentEntity> enumerable = bp.Load(ch.Gender, ch.ViewSettings.Doll.RacePreset.RaceId);
+                    foreach (var ee in enumerable) {
+                        if (ch.View.CharacterAvatar.EquipmentEntities.Contains(ee)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                return false;
+            });
+            BlueprintAction.Register<KingmakerEquipmentEntity>("Undress".localize(), (bp, ch, n, index) => {
+                IEnumerable<EquipmentEntity> enumerable = bp.Load(ch.Gender, ch.ViewSettings.Doll.RacePreset.RaceId);
+                ch.View.CharacterAvatar.RemoveEquipmentEntities(enumerable);
+                var links = bp.GetLinks(ch.Gender, ch.ViewSettings.Doll.RacePreset.RaceId);
+                ch.View.CharacterAvatar.m_SavedEquipmentEntities.RemoveAll(s => links.Contains(s));
+                if (!Main.Settings.perSave.doOverrideOutfit.TryGetValue(ch.HashKey(), out var valuePair)) {
+                    valuePair = new(false, new());
+                }
+                valuePair.Item2.Remove(bp.AssetGuid);
+                Main.Settings.perSave.doOverrideOutfit[ch.HashKey()] = valuePair;
+                Settings.SavePerSaveSettings();
+            }, (bp, ch, index) => {
+                if (ch.IsInGame && ch.View != null && ch.View.CharacterAvatar != null) {
+                    IEnumerable<EquipmentEntity> enumerable = bp.Load(ch.Gender, ch.ViewSettings.Doll.RacePreset.RaceId);
+                    foreach (var ee in enumerable) {
+                        if (ch.View.CharacterAvatar.EquipmentEntities.Contains(ee)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            });
 
 
 #if false   // TODO: implement this

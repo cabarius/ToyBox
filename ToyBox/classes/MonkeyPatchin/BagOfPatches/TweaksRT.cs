@@ -49,7 +49,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPostfix]
             private static void IsPlayerTurn(TurnController __instance, ref bool __result) {
                 if (__instance.CurrentUnit == null) return;
-                if (Main.Settings.perSave.doOverideEnableAiForCompanions.TryGetValue(__instance.CurrentUnit.HashKey(), out var maybeOverride)) {
+                if (Main.Settings.perSave.doOverrideEnableAiForCompanions.TryGetValue(__instance.CurrentUnit.HashKey(), out var maybeOverride)) {
                     if (maybeOverride.Item1) {
                         __result = !maybeOverride.Item2;
                     }
@@ -59,7 +59,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPostfix]
             private static void IsAiTurn(TurnController __instance, ref bool __result) {
                 if (__instance.CurrentUnit == null) return;
-                if (Main.Settings.perSave.doOverideEnableAiForCompanions.TryGetValue(__instance.CurrentUnit.HashKey(), out var maybeOverride)) {
+                if (Main.Settings.perSave.doOverrideEnableAiForCompanions.TryGetValue(__instance.CurrentUnit.HashKey(), out var maybeOverride)) {
                     if (maybeOverride.Item1) {
                         __result = maybeOverride.Item2;
                     }

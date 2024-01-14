@@ -385,17 +385,17 @@ namespace ToyBox {
                 }
                 using (HorizontalScope()) {
                     Space(100);
-                    if (!Main.Settings.perSave.doOverideEnableAiForCompanions.TryGetValue(ch.HashKey(), out var valuePair)) {
+                    if (!Main.Settings.perSave.doOverrideEnableAiForCompanions.TryGetValue(ch.HashKey(), out var valuePair)) {
                         valuePair = new(false, false);
                     }
                     var temp = valuePair.Item1;
                     if (Toggle("Override AI Control Behaviour".localize(), ref temp)) {
                         if (temp) {
-                            Main.Settings.perSave.doOverideEnableAiForCompanions[ch.HashKey()] = new(temp, valuePair.Item2);
+                            Main.Settings.perSave.doOverrideEnableAiForCompanions[ch.HashKey()] = new(temp, valuePair.Item2);
                             Settings.SavePerSaveSettings();
                         }
                         else {
-                            Main.Settings.perSave.doOverideEnableAiForCompanions.Remove(ch.HashKey());
+                            Main.Settings.perSave.doOverrideEnableAiForCompanions.Remove(ch.HashKey());
                             Settings.SavePerSaveSettings();
                         }
                     }
@@ -403,7 +403,7 @@ namespace ToyBox {
                         Space(50);
                         var temp2 = valuePair.Item2;
                         if (Toggle("Make Character AI Controlled".localize(), ref temp2)) {
-                            Main.Settings.perSave.doOverideEnableAiForCompanions[ch.HashKey()] = new(temp, temp2);
+                            Main.Settings.perSave.doOverrideEnableAiForCompanions[ch.HashKey()] = new(temp, temp2);
                             Settings.SavePerSaveSettings();
                         }
                     }

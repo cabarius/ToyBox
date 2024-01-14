@@ -3,19 +3,29 @@ using Kingmaker.Achievements;
 using ModKit;
 using ModKit.DataViewer;
 using ModKit.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace ToyBox {
     public class AchievementsUnlocker {
-        public static Browser<AchievementEntity, AchievementEntity> AchievementBrowser = new(true, true);
+        public static Browser<AchievementEntity, AchievementEntity> AchievementBrowser = new(true);
         public static List<AchievementEntity> availableAchievements = new();
         public static List<AchievementEntity> unlocked = new();
         public static Settings Settings => Main.Settings;
+        public static void OnShowGUI() {
+            try {
+                justInit = true;
+                availableAchievements.Clear();
+                unlocked.Clear();
+            } catch (Exception ex) {
+                Mod.Debug(ex.ToString());
+            }
+        }
         //TODO: Check in RT release version whether there is a good heuristic to check if an achievement is blocked on the platform
+        private static bool justInit = false;
         public static void OnGUI() {
-            bool justInit = false;
             if (availableAchievements == null || availableAchievements?.Count == 0 || justInit) {
                 UI.Label("Achievements not available until you load a save.".localize().yellow().bold());
                 availableAchievements = Game.Instance?.Player?
@@ -63,7 +73,7 @@ namespace ToyBox {
                             if (!achievement.IsUnlocked) {
                                 achievement.IsUnlocked = true;
                                 achievement.NeedCommit = true;
-                                Game.Instance?.Player?.Achievements.OnAchievementUnlocked(achievement);
+                                achievement.Manager.OnAchievementUnlocked(achievement);
                             }
                         }, Width(116));
                         Space(70);
