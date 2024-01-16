@@ -10,6 +10,8 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Kingmaker.Utility;
+using ToyBox.Multiclass;
 #if Wrath
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
@@ -174,7 +176,6 @@ namespace ToyBox.classes.Infrastructure {
             selectedSpellbook.RemoveSpellsOfLevel(level);
         }
 #if Wrath
-#if true // TODO: the else case of this #if has a patch that fixes the level for spontaneous spell casters learning scrolls but causes the gestalt feature to stop working by causing spells to not show up for spell casting classes like oracle and sorc when you try to select/gestalt them after choosing say a scaled fist monk
         public static int GetActualSpellsLearnedForClass(UnitDescriptor unit, Spellbook spellbook, int level) {
             Mod.Trace($"GetActualSpellsLearnedForClass - unit: {unit?.CharacterName} spellbook: {spellbook?.Blueprint.DisplayName} level:{level}");
             // Get all +spells known facts for this spellbook's class so we can ignore them when getting spell counts
@@ -201,67 +202,30 @@ namespace ToyBox.classes.Infrastructure {
 
             return known.Count;
         }
-#else
-       public static int GetActualSpellsLearnedForClass(UnitDescriptor unit, Spellbook spellbook, int level) {
-            Mod.Trace($"GetActualSpellsLearnedForClass - unit: {unit?.CharacterName} spellbook: {spellbook?.Blueprint.DisplayName} level:{level}");
-            // Get all +spells known facts for this spellbook's class so we can ignore them when getting spell counts
-            var spellsToIgnore = unit.Facts.List.SelectMany(x =>
-                x.BlueprintComponents.Where(y => y is AddKnownSpell)).Select(z => z as AddKnownSpell)
-                .Where(x => x.CharacterClass == spellbook.Blueprint.CharacterClass && (x.Archetype == null || unit.Progression.IsArchetype(x.Archetype))).Select(y => y.Spell)
-                .ToList();
-            Spellbook spellbookOfNormalUnit = null;
-            if (unit.TryGetPartyMemberForLevelUpVersion(out var ch)) { // get the real units spellbook, the levelup version does not contain flags like CopiedFromScroll
-                if (ch?.Spellbooks?.Count() > 0)
-                    spellbookOfNormalUnit = ch.Spellbooks.First(s => s.Blueprint == spellbook.Blueprint);
-            }
-            return GetActualSpellsLearned(spellbook, level, spellsToIgnore, spellbookOfNormalUnit);
+
+        public static int CountExternallyAddedSpells(UnitDescriptor unit, Spellbook spellbook, int level) {
+
+            if (!unit.TryGetPartyMemberForLevelUpVersion(out var ch)) return 0;
+            if (ch?.Spellbooks?.Count() <= 0) return 0;
+            if (!ch.Spellbooks.TryFind(s => s.Blueprint == spellbook.Blueprint, out var unitSpellbook)) return 0;
+            if (unitSpellbook?.SureKnownSpells(level) == null) return 0;
+
+            var IsExternal = (AbilityData spell) => {
+                return spell.IsTemporary
+                        || spell.CopiedFromScroll
+                        || spell.IsFromMythicSpellList
+                        || spell.SourceItem != null
+                        || spell.SourceItemEquipmentBlueprint != null
+                        || spell.SourceItemUsableBlueprint != null
+                        || spell.IsMysticTheurgeCombinedSpell;
+            };
+
+            //If copiedCount has records here, we've already taken them into account in GetActualSpellsLearned, and would be double counting here.
+            var copiedCount = spellbook.SureKnownSpells(level).Where(IsExternal).Count();
+            if (copiedCount > 0) return 0;
+
+            return unitSpellbook.SureKnownSpells(level).Where(IsExternal).Count();
         }
-
-        /// <summary>
-        /// Calculates the number of spells selected via levelup, excluding spells from items, learned from scrolls and similar.
-        /// If the spellbook comes from a UnitDescriptor thats part of a levelup, you need to specify spellbookOfNormalUnit as the base units spellbook.
-        /// (Because levelup logic does not copy any AbilityData flags.) (see GetActualSpellsLearnedForClass as example.)
-        /// </summary>
-        /// <param name="spellbook"></param>
-        /// <param name="level"></param>
-        /// <param name="spellsToIgnore"></param>
-        /// <param name="spellbookOfNormalUnit"></param>
-        /// <returns></returns>
-        public static int GetActualSpellsLearned(Spellbook spellbook, int level, List<BlueprintAbility> spellsToIgnore, Spellbook spellbookOfNormalUnit = null) {
-            Mod.Trace($"GetActualSpellsLearned - spellbook: {spellbook?.Blueprint.DisplayName} level:{level}");
-
-            Func<AbilityData, bool> normalSpellbookCondition = x => true;
-            if (spellbookOfNormalUnit != null) {
-                var normalSpellsOfLevel = spellbookOfNormalUnit.SureKnownSpells(level);
-                normalSpellbookCondition = x => {
-                    var sp = normalSpellsOfLevel.First(a => a.Blueprint == x.Blueprint);
-                    if (sp == null)
-                        return true;
-                    return !sp.IsTemporary
-                        && !sp.CopiedFromScroll
-                        && !sp.IsFromMythicSpellList
-                        && sp.SourceItem == null
-                        && sp.SourceItemEquipmentBlueprint == null
-                        && sp.SourceItemUsableBlueprint == null
-                        && !sp.IsMysticTheurgeCombinedSpell;
-                };
-            }
-            var known = spellbook.SureKnownSpells(level)
-                .Where(x => !x.IsTemporary
-                && !x.CopiedFromScroll
-                && !x.IsFromMythicSpellList
-                && x.SourceItem == null
-                && x.SourceItemEquipmentBlueprint == null
-                && x.SourceItemUsableBlueprint == null
-                && !x.IsMysticTheurgeCombinedSpell
-                && !spellsToIgnore.Contains(x.Blueprint)
-                && normalSpellbookCondition(x))
-                .Distinct()
-                .ToList();
-
-            return known.Count;
-        }
-#endif
 
         public static IEnumerable<ClassData> MergableClasses(this UnitEntityData unit) {
             var spellbookCandidates = unit.Spellbooks
