@@ -54,11 +54,13 @@
   your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
+ 
+### ToyBox Rogue - Ver 1.5.9j built for Rogue Trader 1.0.??
+* (***ADDB***) Readded changing Ranks of features which support that.
 
 ### ToyBox Rogue - Ver 1.5.9i built for Rogue Trader 1.0.93
 * (***ADDB***) Fix Achievements tab?
 * (***ADDB***) Addressed a caching issue which made Achievements tab behave weirdly when loading another save.
-
 ### ToyBox Rogue - Ver 1.5.9h built for Rogue Trader 1.0.89
 * (***ADDB***) Fix BlueprintVoiceEditor crashing mod when editing Unit without an existing voice.
 * (***ADDB***) Fixed Remote Companion Dialog somehow causing the game to assume that a companion was turned into an ExCompanion.

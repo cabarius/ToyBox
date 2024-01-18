@@ -41,7 +41,19 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintFeature>("Remove".localize(),
                                                        (bp, ch, n, index) => ch.Progression.Features.Remove(bp),
                                                        (bp, ch, index) => ch.Progression.Features.Contains(bp));
+            BlueprintAction.Register<BlueprintFeature>("<".localize(),
+                               (bp, ch, n, index) => ch.Progression.Features.Get(bp)?.RemoveRank(),
+                               (bp, ch, index) => {
+                                   var feature = ch.Progression.Features.Get(bp);
+                                   return feature?.GetRank() > 1;
+                               });
 
+            BlueprintAction.Register<BlueprintFeature>(">".localize(),
+                                                       (bp, ch, n, index) => ch.Progression.Features.Get(bp)?.AddRank(),
+                                                       (bp, ch, index) => {
+                                                           var feature = ch.Progression.Features.Get(bp);
+                                                           return feature != null && feature.GetRank() < feature.Blueprint.Ranks;
+                                                       });
             // Buffs
             BlueprintAction.Register<BlueprintBuff>("Add".localize(),
                                                     (bp, ch, n, index) => GameHelper.ApplyBuff(ch, bp),
@@ -50,6 +62,20 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintBuff>("Remove".localize(),
                                                     (bp, ch, n, index) => ch.Descriptor().Facts.Remove(bp),
                                                     (bp, ch, index) => ch.Descriptor().Buffs.Contains(bp));
+            BlueprintAction.Register<BlueprintBuff>("<".localize(),
+                                                    (bp, ch, n, index) => ch.Descriptor().Buffs.Get(bp)?.RemoveRank(),
+                                                    (bp, ch, index) => {
+                                                        var buff = ch.Descriptor().Buffs.Get(bp);
+                                                        return buff?.GetRank() > 1;
+                                                    });
+
+            BlueprintAction.Register<BlueprintBuff>(">".localize(),
+                                                    (bp, ch, n, index) => ch.Descriptor().Buffs.Get(bp)?.AddRank(),
+                                                    (bp, ch, index) => {
+                                                        var buff = ch.Descriptor().Buffs.Get(bp);
+                                                        return buff != null && buff?.GetRank() < buff.Blueprint.Ranks - 1;
+                                                    });
+            // Kingdom Bufs
             // Abilities
             BlueprintAction.Register<BlueprintAbility>("Add".localize(),
                                                        (bp, ch, n, index) => ch.Abilities.Add(bp),
