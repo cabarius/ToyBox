@@ -98,10 +98,10 @@ namespace ToyBox.BagOfPatches {
                     var min = 1;
                     var max = 101;
                     if (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.rollWithAdvantage)) {
-                        result = Math.Max(result, PFStatefulRandom.RuleSystem.Range(min, max));
+                        result = Math.Min(result, PFStatefulRandom.RuleSystem.Range(min, max));
                     }
                     else if (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.rollWithDisadvantage)) {
-                        result = Math.Min(result, PFStatefulRandom.RuleSystem.Range(min, max));
+                        result = Math.Max(result, PFStatefulRandom.RuleSystem.Range(min, max));
                     }
                     if (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.neverRoll1) && result == 1) {
                         min = 2;
