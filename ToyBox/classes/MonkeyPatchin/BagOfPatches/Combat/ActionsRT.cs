@@ -63,7 +63,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch(nameof(PartAbilityCooldowns.StartCooldown))]
             [HarmonyPrefix]
             public static bool StartCooldown(AbilityData ability) {
-                if (!Settings.toggleReallyUnlimitedActionsPerTurn) return true;
+                if (!Settings.toggleNoCooldowns) return true;
                 if (ability.Caster.IsInPlayerParty)
                     return false;
                 return true;
@@ -72,7 +72,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch(nameof(PartAbilityCooldowns.IsIgnoredByComponent))]
             [HarmonyPrefix]
             public static bool IsIgnoredByComponent(ref bool __result, BlueprintAbilityGroup group, AbilityData ability) {
-                if (!Settings.toggleReallyUnlimitedActionsPerTurn) return true;
+                if (!Settings.toggleNoCooldowns) return true;
                 if (ability.Caster.IsInPlayerParty) {
                     __result = true;
                     return false;

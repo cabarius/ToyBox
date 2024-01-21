@@ -376,7 +376,8 @@ namespace ToyBox {
                                Toggle("Don't use any AP during your turn.".localize(), ref Settings.toggleReallyUnlimitedActionsPerTurn);
                            }
                        }
-                       },
+                   },
+                   () => Toggle("No ability/attack cooldowns".localize(), ref Settings.toggleNoCooldowns),
                    () => Toggle("Infinite Charges On Items".localize(), ref Settings.toggleInfiniteItems),
                    () => Toggle("ignore Equipment Restrictions".localize(), ref Settings.toggleEquipmentRestrictions),
                    () => Toggle("Restore Spells & Skills After Combat".localize(), ref Settings.toggleRestoreSpellsAbilitiesAfterCombat),
