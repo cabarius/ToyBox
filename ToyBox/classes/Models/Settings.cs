@@ -130,10 +130,9 @@ namespace ToyBox {
         // Tweaks
         public bool toggleNoPsychicPhenomena = false;
         public bool toggleInfiniteAbilities = false;
-        public bool toggleInfiniteSpellCasts = false;
+        public bool toggleNoAttackCooldowns = false;
         public bool toggleUnlimitedActionsPerTurn = false;
         public bool toggleReallyUnlimitedActionsPerTurn = false;
-        public bool toggleNoCooldowns = false;
         public bool toggleEquipmentRestrictions = false;
         public bool toggleDialogRestrictions = false;
         // TODO: Should this stay experimental?

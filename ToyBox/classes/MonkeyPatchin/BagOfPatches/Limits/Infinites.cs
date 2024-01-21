@@ -55,11 +55,5 @@ namespace ToyBox.BagOfPatches {
             public static bool Prefix() => !settings.toggleInfiniteAbilities;
         }
 
-        [HarmonyPatch(typeof(AbilityResourceLogic), nameof(AbilityResourceLogic.CalculateCost))]
-
-        public static class AbilityData_SpellSlotCost_Patch {
-            public static bool Prefix() => !settings.toggleInfiniteSpellCasts;
-        }
-
     }
 }
