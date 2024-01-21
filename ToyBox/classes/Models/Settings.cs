@@ -130,7 +130,7 @@ namespace ToyBox {
         // Tweaks
         public bool toggleNoPsychicPhenomena = false;
         public bool toggleInfiniteAbilities = false;
-        public bool toggleInfiniteSpellCasts = false;
+        public bool toggleNoAttackCooldowns = false;
         public bool toggleUnlimitedActionsPerTurn = false;
         public bool toggleReallyUnlimitedActionsPerTurn = false;
         public bool toggleEquipmentRestrictions = false;

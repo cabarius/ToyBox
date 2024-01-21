@@ -366,8 +366,8 @@ namespace ToyBox {
                            }
                        }
                    },
-                   () => Toggle("Infinite Abilities".localize(), ref Settings.toggleInfiniteAbilities),
-                   () => Toggle("Infinite Spell Casts".localize(), ref Settings.toggleInfiniteSpellCasts),
+                   () => Toggle("Infinite Abilities (No cooldowns no cost)".localize(), ref Settings.toggleInfiniteAbilities),
+                   () => Toggle("No attack/spell cooldowns".localize(), ref Settings.toggleNoAttackCooldowns),
                    () => {
                        using (HorizontalScope()) {
                            Toggle("Don't use AP (except abilities which consume all AP) During Turn".localize(), ref Settings.toggleUnlimitedActionsPerTurn);
@@ -376,7 +376,7 @@ namespace ToyBox {
                                Toggle("Don't use any AP during your turn.".localize(), ref Settings.toggleReallyUnlimitedActionsPerTurn);
                            }
                        }
-                       },
+                   },
                    () => Toggle("Infinite Charges On Items".localize(), ref Settings.toggleInfiniteItems),
                    () => Toggle("ignore Equipment Restrictions".localize(), ref Settings.toggleEquipmentRestrictions),
                    () => Toggle("Restore Spells & Skills After Combat".localize(), ref Settings.toggleRestoreSpellsAbilitiesAfterCombat),
