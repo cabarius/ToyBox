@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Warhammer.SpaceCombat.StarshipLogic;
 using Utilities = Kingmaker.Cheats.Utilities;
 
 namespace ToyBox {
@@ -35,6 +36,8 @@ namespace ToyBox {
         Friendly,
         Enemies,
         Everyone,
+        Ship,
+        EnemyShip,
     }
 
     public static class BaseUnitDataUtils {
@@ -60,6 +63,10 @@ namespace ToyBox {
                     return !baseUnitEntity.IsEnemy();
                 case UnitSelectType.Enemies:
                     return baseUnitEntity.IsEnemy();
+                case UnitSelectType.Ship:
+                    return baseUnitEntity.IsStarship() && !baseUnitEntity.IsEnemy();
+                case UnitSelectType.EnemyShip:
+                    return baseUnitEntity.IsStarship() && baseUnitEntity.IsEnemy();
                 default:
                     return false;
             }
