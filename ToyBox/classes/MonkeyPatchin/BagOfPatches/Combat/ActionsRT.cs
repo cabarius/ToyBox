@@ -2,13 +2,26 @@
 
 using HarmonyLib;
 using Kingmaker;
+using Kingmaker.Blueprints;
 using Kingmaker.Controllers.Combat;
 //using Kingmaker.Controllers.GlobalMap;
 using Kingmaker.EntitySystem.Entities;
+using Kingmaker.Items;
+using Kingmaker.RuleSystem.Rules;
+using Kingmaker.UnitLogic;
+using Kingmaker.UnitLogic.Abilities;
+using Kingmaker.UnitLogic.Abilities.Blueprints;
+
+
+
 //using Kingmaker.UI._ConsoleUI.Models;
 //using Kingmaker.UI.RestCamp;
 using Kingmaker.UnitLogic.Commands.Base;
+using Kingmaker.UnitLogic.Parts;
+using Kingmaker.Utility;
 using System;
+using System.Collections.Generic;
+
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 using UnityModManager = UnityModManagerNet.UnityModManager;
 
@@ -26,7 +39,8 @@ namespace ToyBox.BagOfPatches {
                 if (!Settings.toggleUnlimitedActionsPerTurn) return true;
                 if (__instance.Owner.IsPartyOrPet()) {
                     return false;
-                } else {
+                }
+                else {
                     return true;
                 }
             }
@@ -41,6 +55,31 @@ namespace ToyBox.BagOfPatches {
                     return true;
                 }
             }
+        }
+
+
+        [HarmonyPatch(typeof(PartAbilityCooldowns))]
+        public static class PartAbilityCooldownsPatch {
+            [HarmonyPatch(nameof(PartAbilityCooldowns.StartCooldown))]
+            [HarmonyPrefix]
+            public static bool StartCooldown(AbilityData ability) {
+                if (!Settings.toggleReallyUnlimitedActionsPerTurn) return true;
+                if (ability.Caster.IsInPlayerParty)
+                    return false;
+                return true;
+            }
+
+            [HarmonyPatch(nameof(PartAbilityCooldowns.IsIgnoredByComponent))]
+            [HarmonyPrefix]
+            public static bool IsIgnoredByComponent(ref bool __result, BlueprintAbilityGroup group, AbilityData ability) {
+                if (!Settings.toggleReallyUnlimitedActionsPerTurn) return true;
+                if (ability.Caster.IsInPlayerParty) {
+                    __result = true;
+                    return false;
+                }
+                return true;
+            }
+
         }
     }
 }
