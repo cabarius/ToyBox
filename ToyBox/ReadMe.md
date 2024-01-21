@@ -57,6 +57,8 @@
  
 ### ToyBox Rogue - Ver 1.5.9j built for Rogue Trader 1.0.??
 * (***ADDB***) Readded changing Ranks of features which support that.
+* (***Deltharis***) Reversing Advantage/Disadvantage for RT.
+* (***Deltharis***) Added ship options for roll cheats.
 
 ### ToyBox Rogue - Ver 1.5.9i built for Rogue Trader 1.0.93
 * (***ADDB***) Fix Achievements tab?
