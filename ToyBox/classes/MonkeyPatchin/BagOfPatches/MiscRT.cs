@@ -238,7 +238,7 @@ namespace ToyBox.BagOfPatches {
                 PartyEditor.lastScaleSize = new();
                 PartyEditor.statEditorStorage.Clear();
                 foreach (var ID in Main.Settings.perSave.characterModelSizeMultiplier.Keys) {
-                    foreach (BaseUnitEntity cha in Game.Instance.State.AllUnits.Where((u) => u.CharacterName.Equals(ID))) {
+                    foreach (BaseUnitEntity cha in Game.Instance.State.AllUnits.Where((u) => u.HashKey().Equals(ID))) {
                         float scale = Main.Settings.perSave.characterModelSizeMultiplier.GetValueOrDefault(ID, 1);
                         cha.View.gameObject.transform.localScale = new Vector3(scale, scale, scale);
                         PartyEditor.lastScaleSize[cha.HashKey()] = scale;
