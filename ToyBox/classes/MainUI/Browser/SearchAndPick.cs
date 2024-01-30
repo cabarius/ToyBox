@@ -17,7 +17,9 @@ using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.Globalmap.Blueprints;
+using Kingmaker.Globalmap.Blueprints.Colonization;
 using Kingmaker.Globalmap.Blueprints.SectorMap;
+using Kingmaker.Globalmap.Blueprints.SystemMap;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
@@ -133,6 +135,8 @@ namespace ToyBox {
                 return new List<string?> { "-" };
                 }),
             new NamedTypeFilter<BlueprintAnswer>("Answer", null, bp => bp.CaptionCollationNames()),
+            new NamedTypeFilter<BlueprintPlanet>("Planets", null, bp => bp.CaptionCollationNames()),
+            new NamedTypeFilter<BlueprintColony>("Colonies", null, bp => bp.CaptionCollationNames()),
 #if false
             new NamedTypeFilter<BlueprintItemEquipment>("Equip (ench)", null, (bp) => {
                 try {

@@ -55,6 +55,11 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
  
+### ToyBox Rogue - Ver 1.5.10a built for Rogue Trader 1.0.98
+* (***ADDB***) Removed experimental invisibility fix because it didn't work?
+* (***ADDB***) Removed some stuff related to Outfits which wasn't really finished.
+* (***ADDB***) Search 'n Pick now allows colonizing planets (this is pretty experimental; feel free to provide feedback). **You need to be in the respective Star System on the Star System Map to Colonize a planet**.
+
 ### ToyBox Rogue - Ver 1.5.10 built for Rogue Trader 1.0.98
 * (***ADDB***) One of my previous changes broke Visual size multiplier; fixed that.
 * (***ADDB***) (Maybe) readded changing Ranks of features which support that.

@@ -1,12 +1,16 @@
-﻿using Kingmaker;
+﻿using DG.Tweening;
+using Kingmaker;
 using Kingmaker.Cheats;
 using Kingmaker.Globalmap.Blueprints.Colonization;
+using Kingmaker.Globalmap.Blueprints.SystemMap;
 using Kingmaker.Globalmap.Colonization;
+using Kingmaker.Globalmap.SystemMap;
 using ModKit;
 using ModKit.DataViewer;
 using ModKit.Utility;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static ToyBox.BlueprintExtensions;
 
@@ -15,7 +19,7 @@ namespace ToyBox.classes.MainUI {
         public static Settings Settings => Main.Settings;
         public static Dictionary<Colony, Browser<BlueprintColonyTrait, BlueprintColonyTrait>> colonyTraitBrowser = new();
         public static List<BlueprintColonyTrait> ColonyTraits;
-        public static Browser<BlueprintResource, BlueprintResource> resourceBrowser = new(true, true);
+        public static Browser<BlueprintResource, BlueprintResource> resourceBrowser = new(Mod.ModKitSettings.searchAsYouType, true);
         public static List<BlueprintResource> ColonyResources;
         public static string selectedStat;
         public static int statIndex;

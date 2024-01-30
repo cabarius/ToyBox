@@ -285,7 +285,6 @@ namespace ToyBox {
             Space(25);
             if (recruitableCount > 0) {
                 Label($"{recruitableCount} " + ("character(s) can be ".orange().bold() + "Recruited".cyan() + ". This allows you to add non party NPCs to your party as if they were mercenaries".green()).localize());
-                Toggle("Enable experimental fix for recruited characters being invisible on scene change".localize().green(), ref Settings.experimentalLoadRecruitedCharactersFix, 500.width());
             }
             if (respecableCount > 0) {
                 Label($"{respecableCount} " + ("character(s) can be ".orange().bold() + "Respecced".cyan() + ". Pressing Respec will close the mod window and take you to character level up".green()).localize());

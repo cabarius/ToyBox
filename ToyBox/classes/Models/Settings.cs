@@ -273,7 +273,6 @@ namespace ToyBox {
         public bool toggleGuidsClipboard = false;
         public bool toggleRiskyToggles = false;
         public bool onlyShowLanguagesWithFiles = true;
-        public bool experimentalLoadRecruitedCharactersFix = false;
 
         // Save
         public override void Save(UnityModManager.ModEntry modEntry) => Save(this, modEntry);

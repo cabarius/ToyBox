@@ -10,24 +10,31 @@ using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Quests;
+using Kingmaker.Cheats;
 using Kingmaker.Designers;
 using Kingmaker.Designers.EventConditionActionSystem.ContextData;
 using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Persistence;
+using Kingmaker.GameModes;
 using Kingmaker.Globalmap.Blueprints;
+using Kingmaker.Globalmap.Blueprints.Colonization;
 using Kingmaker.Globalmap.Blueprints.SectorMap;
+using Kingmaker.Globalmap.Blueprints.SystemMap;
+using Kingmaker.Globalmap.SectorMap;
 using Kingmaker.PubSubSystem.Core;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.Utility;
+using Kingmaker.View;
 using Kingmaker.Visual.CharacterSystem;
 using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace ToyBox {
 
@@ -98,8 +105,8 @@ namespace ToyBox {
             // Teleport
             BlueprintAction.Register<BlueprintStarSystemMap>("Teleport".localize(), (map, ch, n, index) => Teleport.To(map));
             BlueprintAction.Register<BlueprintSectorMapPoint>("Teleport".localize(),
-                                                              (globalMapPoint, ch, n, index) => { } //Teleport.To(globalMapPoint)
-                                                                                                            );
+                                                              (globalMapPoint, ch, n, index) => { }); //Teleport.To(globalMapPoint)
+#if DEBUG
             BlueprintAction.Register<KingmakerEquipmentEntity>("Dress".localize(), (bp, ch, n, index) => {
                 IEnumerable<EquipmentEntity> enumerable = bp.Load(ch.Gender, ch.ViewSettings.Doll.RacePreset.RaceId);
                 ch.View.CharacterAvatar.AddEquipmentEntities(enumerable);
@@ -148,8 +155,7 @@ namespace ToyBox {
                 }
                 return false;
             });
-
-
+#endif
 #if false   // TODO: implement this
             // Teleport
             BlueprintAction.Register<BlueprintAreaEnterPoint>("Teleport", (enterPoint, ch, n, index) => Teleport.To(enterPoint));
@@ -165,6 +171,42 @@ namespace ToyBox {
                 Actions.CreateArmy(bp,false);
             });
 #endif
+            BlueprintAction.Register<BlueprintPlanet>("Colonize".localize(), (bp, ch, n, index) => {
+                try {
+                    CheatsColonization.ColonizePlanet(bp);
+                }
+                catch (Exception ex) {
+                    throw new Exception("Error trying to colonize Planet. Are you in the correct Star System?\n".localize().orange().bold() + ex.Message + ex.StackTrace.ToString());
+                }
+            }, (bp, ch, index) => {
+                var system = bp.ConnectedAreas.FirstOrDefault(f => f is BlueprintStarSystemMap) as BlueprintStarSystemMap;
+                return bp.GetComponent<ColonyComponent>() != null && Game.Instance.CurrentlyLoadedArea is BlueprintStarSystemMap && (system == null || Game.Instance.Player.CurrentStarSystem == system);
+
+            });
+            BlueprintAction.Register<BlueprintColony>("Colonize".localize(), (bp, ch, n, index) => {
+
+                try {
+                    CheatsColonization.ColonizePlanet(ColonyToPlanet[bp]);
+                }
+                catch (Exception ex) {
+                    throw new Exception("Error trying to colonize Planet. Are you in the correct Star System?\n".localize().orange().bold() + ex.Message + ex.StackTrace.ToString());
+                }
+            }, (bp, ch, index) => {
+                if (ColonyToPlanet == null) {
+                    ColonyToPlanet = new();
+                    foreach (var planet in BlueprintLoader.Shared.GetBlueprints<BlueprintPlanet>()) {
+                        var colonyComponent = planet.GetComponent<ColonyComponent>();
+                        if (colonyComponent != null) {
+                            if (colonyComponent.ColonyBlueprint != null) {
+                                ColonyToPlanet[colonyComponent.ColonyBlueprint] = planet;
+                            }
+                        }
+                    }
+                }
+                var system = ColonyToPlanet[bp].ConnectedAreas.FirstOrDefault(f => f is BlueprintStarSystemMap) as BlueprintStarSystemMap;
+                return ColonyToPlanet[bp] != null && Game.Instance.CurrentlyLoadedArea is BlueprintStarSystemMap && (system == null || Game.Instance.Player.CurrentStarSystem == system);
+            });
         }
+        private static Dictionary<BlueprintColony, BlueprintPlanet> ColonyToPlanet = null;
     }
 }
