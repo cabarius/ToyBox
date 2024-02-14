@@ -45,6 +45,7 @@
   </Target>
   <ItemGroup>
     <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\Code.dll" />
+    <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\RogueTrader.GameCore.dll" />
     <PubliciseInputAssemblies Include="$(RoguePath)\WH40KRT_Data\Managed\Owlcat.Runtime.UI.dll" />
     <PubliciseInputAssemblies Include="$(userprofile)\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\UnityModManager.dll" />
   </ItemGroup>
@@ -432,6 +433,18 @@
       <HintPath>$(RoguePath)\WH40KRT_Data\Managed\Utility.UnityExtensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="RogueTrader.GameCore">
+      <HintPath>..\lib\RT\RogueTrader.GameCore_public.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RogueTrader.SharedTypes">
+      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\RogueTrader.SharedTypes.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RogueTrader.NetPlayer">
+      <HintPath>$(RoguePath)\WH40KRT_Data\Managed\RogueTrader.NetPlayer.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\Infrastructure\AssetLoader.cs" />
@@ -537,7 +550,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.md" />
-    <Content Include="Localization\*">
+      <Content Include="Localization\RogueTrader\*.*">
+      <Link>Localization\%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="zmisc\api.txt" />

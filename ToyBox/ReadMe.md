@@ -73,15 +73,21 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
-### ToyBox Rogue - Ver 1.5.8 (Coming Soon)
-**ToyBox Rogue - Ver 1.5.8 -** ***Sh0dan*** **Preview Version 1.5.7a** built for 0.2.1ah
-* (***ADDB***) Fixed weird behaviour when changing stats using the Textfield.
-### ToyBox Wrath - Ver 1.5.8 (Coming Soon)
-**ToyBox Wrath - Ver 1.5.8 - Preview Version 1.5.7a** built for 2.1.5r
+### ToyBox Wrath - Ver 1.5.9 (built for 2.2.3c)
+**ToyBox Wrath - Ver 1.5.9 - Preview Version 1.5.8b** built for 2.2.0av
+* (***evandixon***) Fix unusable map screen on console view (e.g. PC Controller User & Steam Deck)
+* (***ADDB***) Fixed Search 'n Pick - missing key update if collation happens too fast.
+* (***ADDB***) Recompiled against new binaries.
+* (***ADDB***) Temporarily change repository link to my Fork until Narria's one is active again.
+
+### ToyBox Wrath - Ver 1.5.8 (built for 2.2.0as)
 * (***ADDB***) Ride everything now really allows riding everything. Looks ridiculous but still.
 * (***ADDB***) Fixed weird behaviour when changing stats using the Textfield.
-* * (***ifarmpandas***) Added ActivatableAbilities to "Abilities" button in party editor.
-* (***evandixon***) Fix unusable map screen on console view (e.g. Steam Deck)
+* (***ADDB***) Prevent mod from being unable to load when localization files are missing.
+* (***ADDB***) Improved detection and added auto-deletion of concurrently installed outdated ToyBox version.
+* (***ifarmpandas***) Added ActivatableAbilities to "Abilities" button in party editor. 
+* (***ADDB***) Recompile for new version.
+* (***ADDB***) Fixed some whoopsies (missing Localization files in Release; Wrong Repository Branch in Info file etc.).
 ### ToyBox Rogue - Ver 1.5.7 (built for 0.2.1ah)
 * (***ADDB***) Added all localization keys to allow full localization.
 ### ToyBox Wrath - Ver 1.5.7 (built for 2.1.5r)

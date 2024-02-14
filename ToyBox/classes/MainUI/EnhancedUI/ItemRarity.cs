@@ -80,6 +80,8 @@ namespace ToyBox {
             return rarity;
         }
         public static int Rating(this BlueprintItemEnchantment bp) {
+            // This is impossible, but appearently a user might've encountered this in issue #1061
+            if (bp == null) return 0;
 #if Wrath
             int rating;
 
