@@ -72,10 +72,14 @@
   your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
+  
+**ToyBox Wrath - Ver 1.5.11 - Preview Version 1.5.10a** built for 2.2.4p
+
+### ToyBox Wrath - Ver 1.5.10 (built for 2.2.4p)
+* (***evandixon***) Fix unusable map screen on console view (e.g. PC Controller User & Steam Deck).
+* (***ADDB***) Probably fixed Skill Point cap.
 
 ### ToyBox Wrath - Ver 1.5.9 (built for 2.2.3c)
-**ToyBox Wrath - Ver 1.5.9 - Preview Version 1.5.8b** built for 2.2.0av
-* (***evandixon***) Fix unusable map screen on console view (e.g. PC Controller User & Steam Deck)
 * (***ADDB***) Fixed Search 'n Pick - missing key update if collation happens too fast.
 * (***ADDB***) Recompiled against new binaries.
 * (***ADDB***) Temporarily change repository link to my Fork until Narria's one is active again.
