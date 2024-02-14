@@ -1,27 +1,21 @@
 ﻿using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Blueprints.Area;
-using Kingmaker.Controllers;
 using Kingmaker.Controllers.Clicks.Handlers;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.FactLogic;
-using Kingmaker.UnitLogic.Interaction;
-using Kingmaker.UnitLogic.Parts;
 using Kingmaker.Utility;
-using Kingmaker.View.MapObjects;
 using Kingmaker.Visual.LocalMap;
 using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kingmaker.View;
 using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
 #if Wrath
 using Kingmaker.UI._ConsoleUI.Overtips;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap;
@@ -224,7 +218,7 @@ namespace ToyBox.BagOfPatches {
                     }
                 }
                 catch (Exception ex) {
-                    Mod.Log("Exception in LocalMapBaseViewPatch.SetDrawResult: " + ex.ToString());
+                    Mod.Debug("Exception in LocalMapBaseViewPatch.SetDrawResult: " + ex.ToString());
                 }
                 return false;
             }
