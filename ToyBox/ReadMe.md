@@ -78,6 +78,7 @@
 ### ToyBox Wrath - Ver 1.5.10 (built for 2.2.4p)
 * (***evandixon***) Fix unusable map screen on console view (e.g. PC Controller User & Steam Deck).
 * (***ADDB***) Probably fixed Skill Point cap.
+* (***ADDB***) Equipment no Weight now works for single Units too (and not just for the whole party).
 
 ### ToyBox Wrath - Ver 1.5.9 (built for 2.2.3c)
 * (***ADDB***) Fixed Search 'n Pick - missing key update if collation happens too fast.
