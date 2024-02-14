@@ -75,6 +75,7 @@
 
 ### ToyBox Wrath - Ver 1.5.9 (built for 2.2.3c)
 **ToyBox Wrath - Ver 1.5.9 - Preview Version 1.5.8b** built for 2.2.0av
+* (***evandixon***) Fix unusable map screen on console view (e.g. PC Controller User & Steam Deck)
 * (***ADDB***) Fixed Search 'n Pick - missing key update if collation happens too fast.
 * (***ADDB***) Recompiled against new binaries.
 * (***ADDB***) Temporarily change repository link to my Fork until Narria's one is active again.
