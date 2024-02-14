@@ -109,10 +109,11 @@ namespace ToyBox.BagOfPatches {
         }
 
         // Thanks AlterAsc - https://github.com/alterasc/CombatRelief/blob/main/CombatRelief/SkillRolls.cs
-        [HarmonyPatch(typeof(RuleSkillCheck), nameof(RuleSkillCheck.RollD20))]
-        public static class RuleSkillCheck_RollD20_Patch {
+        [HarmonyPatch(typeof(RuleSkillCheck))]
+        public static class RuleSkillCheck_Patch {
+            [HarmonyPatch(nameof(RuleSkillCheck.RollD20))]
             [HarmonyPrefix]
-            private static bool Prefix(ref RuleRollD20 __result, RuleSkillCheck __instance) {
+            private static bool RollD20(ref RuleRollD20 __result, RuleSkillCheck __instance) {
                 if (__instance.Initiator.IsInCombat) {
                     return true;
                 }
@@ -125,6 +126,15 @@ namespace ToyBox.BagOfPatches {
                     return false;
                 }
                 return true;
+            }
+            // Camping gives a repeated until failed check (with each attempt dc + 5) which grants +5 min to a buff
+            // Not auto-failing that check with ToyBox cheats activated can cause this to be repeated infinitely
+            [HarmonyPatch(nameof(RuleSkillCheck.Success), MethodType.Getter)]
+            [HarmonyPostfix]
+            private static void Success(ref bool __result, RuleSkillCheck __instance) {
+                if (__instance.DC > 250) {
+                    __result = false;
+                }
             }
         }
     }
