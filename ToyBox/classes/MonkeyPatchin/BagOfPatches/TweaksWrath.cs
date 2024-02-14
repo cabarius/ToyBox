@@ -488,6 +488,15 @@ namespace ToyBox.BagOfPatches {
                 return false;
             }
         }
+        [HarmonyPatch(typeof(UnitBody), nameof(UnitBody.EquipmentWeightAfterBuff), MethodType.Getter)]
+        public static class NoWeight_Patch3 {
+            public static bool Prefix(ref float __result) {
+                if (!Settings.toggleEquipmentNoWeight) return true;
+
+                __result = 0f;
+                return false;
+            }
+        }
 
         [HarmonyPatch(typeof(ItemEntity), nameof(ItemEntity.IsUsableFromInventory), MethodType.Getter)]
         public static class ItemEntity_IsUsableFromInventory_Patch {

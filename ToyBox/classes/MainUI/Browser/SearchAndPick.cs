@@ -218,8 +218,8 @@ namespace ToyBox {
         }
 
         public static void OnGUI() {
-            if (Event.current.type == EventType.Layout && (SearchAndPickBrowser.isCollating || needsRedoKeys)) {
-                needsRedoKeys = SearchAndPickBrowser.isCollating;
+            if (Event.current.type == EventType.Layout && needsRedoKeys) {
+                needsRedoKeys = SearchAndPickBrowser.isCollating || SearchAndPickBrowser._needsRedoCollation;
                 var count = SearchAndPickBrowser.collatedDefinitions.Keys.Count;
                 var tmp = new string[(int)(1.1 * count) + 10];
                 SearchAndPickBrowser.collatedDefinitions.Keys.CopyTo(tmp, 0);
@@ -529,11 +529,13 @@ namespace ToyBox {
             RedoLayout();
             bpCount = bps.Count();
             SearchAndPickBrowser.RedoCollation();
+            needsRedoKeys = true;
         }
 
         public static void ResetGUI() {
             RedoLayout();
             SearchAndPickBrowser.RedoCollation();
+            needsRedoKeys = true;
         }
     }
 }

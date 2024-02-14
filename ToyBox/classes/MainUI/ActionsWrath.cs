@@ -150,12 +150,19 @@ namespace ToyBox {
             //           var worldPosition = Game.Instance.Player.MainCharacter.Value.Position;
             if (!(unit == null)) {
                 for (var i = 0; i < count; i++) {
-                    var offset = 5f * UnityEngine.Random.insideUnitSphere;
-                    Vector3 spawnPosition = new(
-                        worldPosition.x + offset.x,
-                        worldPosition.y,
-                        worldPosition.z + offset.z);
-                    Game.Instance.EntityCreator.SpawnUnit(unit, spawnPosition, Quaternion.identity, Game.Instance.State.LoadedAreaState.MainState);
+                    Vector3 spawnPosition = worldPosition;
+                    try {
+                        var offset = 5f * UnityEngine.Random.insideUnitSphere;
+                        spawnPosition = new(
+                            worldPosition.x + offset.x,
+                            worldPosition.y,
+                            worldPosition.z + offset.z);
+                    }
+                    catch {
+                    }
+                    finally {
+                        Game.Instance.EntityCreator.SpawnUnit(unit, spawnPosition, Quaternion.identity, Game.Instance.State.LoadedAreaState.MainState);
+                    }
                 }
             }
         }

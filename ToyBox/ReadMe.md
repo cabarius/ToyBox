@@ -72,15 +72,28 @@
   your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
+  
+**ToyBox Wrath - Ver 1.5.11 - Preview Version 1.5.10a** built for 2.2.4p
 
-### ToyBox Rogue - Ver 1.5.8 (Coming Soon)
-**ToyBox Rogue - Ver 1.5.8 -** ***Sh0dan*** **Preview Version 1.5.7a** built for 0.2.1ah
-* (***ADDB***) Fixed weird behaviour when changing stats using the Textfield.
-### ToyBox Wrath - Ver 1.5.8 (Coming Soon)
-**ToyBox Wrath - Ver 1.5.8 - Preview Version 1.5.7a** built for 2.1.5r
+### ToyBox Wrath - Ver 1.5.10a (built for 2.2.4p)
+* (***evandixon***) Fix unusable map screen on console view (e.g. PC Controller User & Steam Deck).
+* (***ADDB***) Probably fixed Skill Point cap.
+* (***ADDB***) Equipment no Weight now works for single Units too (and not just for the whole party).
+* (***ADDB***) Fixed issue where game is stuck when camping and auto-succeeding skill checks with ToyBox.
+
+### ToyBox Wrath - Ver 1.5.9 (built for 2.2.3c)
+* (***ADDB***) Fixed Search 'n Pick - missing key update if collation happens too fast.
+* (***ADDB***) Recompiled against new binaries.
+* (***ADDB***) Temporarily change repository link to my Fork until Narria's one is active again.
+
+### ToyBox Wrath - Ver 1.5.8 (built for 2.2.0as)
 * (***ADDB***) Ride everything now really allows riding everything. Looks ridiculous but still.
 * (***ADDB***) Fixed weird behaviour when changing stats using the Textfield.
-* * (***ifarmpandas***) Added ActivatableAbilities to "Abilities" button in party editor. 
+* (***ADDB***) Prevent mod from being unable to load when localization files are missing.
+* (***ADDB***) Improved detection and added auto-deletion of concurrently installed outdated ToyBox version.
+* (***ifarmpandas***) Added ActivatableAbilities to "Abilities" button in party editor. 
+* (***ADDB***) Recompile for new version.
+* (***ADDB***) Fixed some whoopsies (missing Localization files in Release; Wrong Repository Branch in Info file etc.).
 ### ToyBox Rogue - Ver 1.5.7 (built for 0.2.1ah)
 * (***ADDB***) Added all localization keys to allow full localization.
 ### ToyBox Wrath - Ver 1.5.7 (built for 2.1.5r)

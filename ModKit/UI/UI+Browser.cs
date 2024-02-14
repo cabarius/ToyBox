@@ -93,8 +93,8 @@ namespace ModKit {
                 ReloadData();
             }
             public bool needsReloadData = true;
-            private bool _needsRedoCollation = true;
-            private bool _collationFinished = false;
+            internal bool _needsRedoCollation = true;
+            internal bool _collationFinished = false;
             public void RedoCollation() {
                 _needsRedoCollation = true;
                 _collationFinished = false;
