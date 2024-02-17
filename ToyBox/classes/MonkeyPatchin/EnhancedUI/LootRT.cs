@@ -22,6 +22,7 @@ using Kingmaker.Utility;
 using Kingmaker.View.MapObjects;
 using ModKit;
 using ModKit.Utility;
+using Owlcat.Runtime.Core.Utility;
 using Owlcat.Runtime.UI.MVVM;
 using System;
 using System.Collections.Generic;

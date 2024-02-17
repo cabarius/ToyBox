@@ -31,6 +31,7 @@ using Kingmaker.UnitLogic.Abilities;
 using Kingmaker.Utility;
 using Kingmaker.View.Covers;
 using ModKit;
+using Owlcat.Runtime.Core.Utility;
 using System;
 using System.Collections.Generic;
 using UniRx;

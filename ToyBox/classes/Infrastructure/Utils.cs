@@ -14,6 +14,7 @@ using Kingmaker.Localization;
 using Kingmaker.Utility;
 using ModKit;
 using Newtonsoft.Json;
+using Owlcat.Runtime.Core.Utility;
 using UnityEngine;
 using Attribute = System.Attribute;
 using LocalizationManager = Kingmaker.Localization.LocalizationManager;
