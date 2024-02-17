@@ -1,1 +1,36 @@
-[h1]ToyBox[/h1]
+[h2]Information[/h2]
+Mod with Cheats, Tweaks and Quality of Life Improvements
+[list]
+[*]Bag of Tricks: 
+[list]
+[*]Allow both male and female RTs to romance Heinrix and Cassia
+[*]Allow Remote Companions to join into dialog
+[*]Modify Faction Reputation, Navigator's Insight, Scrap and more
+[*]Experience Multiplier
+[*]Dice Roll Cheats/Options
+[*]Enable Achievements with Mods installed
+[/list]
+[*]Level Up: Make Respec start from Level 0 for you and Companions
+[*]Party Editor: Modify your own conviction and/or stats or features or portraits or voices of party members
+[*]Search 'n Pick: Search for ingame items/stuff and spawn/teleport/give yourself things!
+[*]Etudes: Fix your progression by changing states!
+[*]Colonies: Modify different Colony Resources
+[/list]
+
+Warning: ToyBox for Warhammer 40,000: Rogue Trader is a complex mod. Save early and often.
+Note: If you find non-functioning features, please report them.
+Note: Using Mods will disable Achievements. There is an option to re-enable achievements in the Bag of Tricks category of this mod.
+
+[h2]Installation[/h2]
+[url=https://github.com/cabarius/ToyBox/wiki/Installing-Toybox-for-RT-(Steam-Workshop-Edition)]Read the installation Guide here.[/url]
+In addition to the three ways mentioned in the link above, there is also [url=https://steamcommunity.com/workshop/discussions/18446744073709551615/4206994023679864569/?appid=2186680]experimental Workshop Integration[/url].
+
+[url=https://www.reddit.com/r/RogueTraderCRPG/comments/18cxbyo/modding_in_rogue_trader/]Information on Modding in Rogue Trader[/url]
+[url=https://github.com/xADDBx/ToyBox/blob/RT/ToyBox/ReadMe.md]Release Notes[/url]
+
+Credits to:
+[list]
+[*] Narria, the original creator of the mod who is currently busy which is why I'm maintaining the mod for now
+[*] CascadingDragon, the writer of the installation instructions
+[*] Other people from the Owlcat Discord who helped me with modding.
+[/list]

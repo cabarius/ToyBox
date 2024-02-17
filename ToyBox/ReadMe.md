@@ -20,7 +20,7 @@
 1. **Please note that the game comes with its own built in Unity Mod Manager so you do not need to install another one**
 1. Navigate to %userprofile%\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
 1. An example path is C:\Users\PC\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
-1. Copy 0ToyBox0 into the UnityModManagerFolder
+1. Copy 0ToyBox0 into the UnityModManager Folder
 1. Launch Rogue Trader and you may need to hit ctrl+F10 to see the mod manager window
 1. Load a save or start a new game to get the most out of of the mod
 

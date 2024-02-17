@@ -76,14 +76,8 @@ There are preview builds available on the official [Owlcat Discord](https://disc
 # Development Setup
 1. Install ToyBox mod into your game via Unity Mod Manager
 1. Clone the git repo
-1. You can contribute to Rogue Trader, Wrath or both of them. If you only want to contribute to one you can unload the unused one in Visual Studio and only need to setup the variable for the one you need.
-1. Locate the install folder of Pathfinder Wrath of the Righteous and/or Warhammer 40,000 Rogue Trader.
-1. Go to System Properties > Environment Variables and add WrathPath and/or RoguePath with a value that looks like this:
-        `WrathPath`   `C:\Program Files (x86)\Steam\steamapps\common\Pathfinder Second Adventure`
-		`RoguePath`   `C:\Program Files (x86)\Steam\steamapps\common\Warhammer 40,000 Rogue Trader`
-1.  First time and when the game updates make sure you clean the solution to trigger the publicize step
-1. build the solution debug and it will automatically build and install into the mod folder in the game
-1.  when you rebuild you can go to the mod and hit the reload button at the top to make it use the latest
+1. Build the solution twice and restart Visual Studio
+1. Now you can just change things and build the solution and it will automatically build and install into the mod folder in the game
 1. **Important** If you are adding a feature or fixing a bug please add a release note entry to the *ReadMe.md*.  This is how we tell our the world about your great work^_^
     1. Find the highest release name near the top. It will look something like `### Ver 1.3.7 (Coming Soon)`. 
     1. Usually it is 0.0.1 higher than the current release but please check on Nexus.  If not please add a new Version entry at the top for the next release using proper markdown. 
