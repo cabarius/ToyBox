@@ -60,7 +60,8 @@ namespace ToyBox.classes.MonkeyPatchin {
                         InteractionHighlightController.Instance.HighlightOff();
                         wasTurnedOff = false;
                     }
-                } else {
+                }
+                else {
                     if (wasTurnedOffBefore && (!InteractionHighlightController.Instance?.IsHighlighting ?? false)) {
                         InteractionHighlightController.Instance.HighlightOn();
                         wasTurnedOffBefore = false;

@@ -78,7 +78,8 @@ namespace ToyBox.BagOfPatches {
                 UnitPartCompanion unitPartCompanion = null;
                 try {
                     unitPartCompanion = Game.Instance.Player.AllCharacters.FirstOrDefault(unit => unit.Blueprint == __instance.companion).GetCompanionOptional();
-                } catch (NullReferenceException ex) {
+                }
+                catch (NullReferenceException ex) {
                     Mod.Trace(ex.ToString());
                 }
                 if (unitPartCompanion != null) {

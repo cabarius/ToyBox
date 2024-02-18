@@ -33,7 +33,7 @@ namespace ToyBox {
             RGBA.brown,
             RGBA.cyan,
             RGBA.darkgrey,
-            
+
             RGBA.yellow,
             RGBA.lime,
             RGBA.red

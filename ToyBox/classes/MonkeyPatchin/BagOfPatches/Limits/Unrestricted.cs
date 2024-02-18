@@ -98,7 +98,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        
+
         [HarmonyPatch(typeof(Modifier), nameof(Modifier.Stacks), MethodType.Getter)]
         public static class ModifiableValue_UpdateValue_Patch {
             public static bool Prefix(Modifier __instance) {

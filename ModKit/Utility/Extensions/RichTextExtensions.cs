@@ -44,35 +44,35 @@ namespace ModKit.Utility {
             if (string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(query))
                 return source;
             var htmlStart = source.IndexOf('<');
-            if (htmlStart == -1) 
+            if (htmlStart == -1)
                 return source.MarkedSubstringNoHTML(query);
             var result = new StringBuilder();
             var len = source.Length;
             var segment = source.Substring(0, htmlStart);
-            #if MARK_DEBUG
+#if MARK_DEBUG
             bool detail = source.Contains("More");
             if (detail) Mod.Debug($"{query} in {source}");
             var cnt = 0;
-            #endif
+#endif
             segment = segment.MarkedSubstringNoHTML(query);
-            #if MARK_DEBUG
+#if MARK_DEBUG
             if (detail) Mod.Log($"{(cnt++)} - segment - (0, {htmlStart}) {segment} ");
-            #endif
+#endif
             result.Append(segment);
             var htmlEnd = source.IndexOf('>', htmlStart);
             while (htmlStart != -1 && htmlEnd != -1) {
                 var tag = source.Substring(htmlStart, htmlEnd + 1 - htmlStart);
-                #if MARK_DEBUG
+#if MARK_DEBUG
                 if (detail) Mod.Log($"{(cnt++)} - tag - ({htmlStart}, {htmlEnd}) {tag} ");
-                #endif
+#endif
                 result.Append(tag);
                 htmlStart = source.IndexOf('<', htmlEnd);
                 if (htmlStart != -1) {
                     segment = source.Substring(htmlEnd + 1, htmlStart - htmlEnd - 1);
                     segment = segment.MarkedSubstringNoHTML(query);
-                    #if MARK_DEBUG
+#if MARK_DEBUG
                     if (detail) Mod.Log($"{(cnt++)} - segment - ({htmlEnd+1}, {htmlStart}) {segment} ");
-                    #endif
+#endif
                     result.Append(segment);
                     htmlEnd = source.IndexOf('>', htmlStart);
                 }
@@ -80,15 +80,15 @@ namespace ModKit.Utility {
             if (htmlStart != -1) {
                 var malformedTag = source.Substring(htmlStart, len + 1 - htmlStart);
                 result.Append(malformedTag);
-                #if MARK_DEBUG
+#if MARK_DEBUG
                 if (detail) Mod.Log($"{(cnt++)} - badtag - ({htmlEnd + 1}, {htmlStart}) {malformedTag} ");
-                #endif
+#endif
             }
             else if (htmlEnd < len) {
                 segment = source.Substring(htmlEnd + 1, len - htmlEnd - 1);
-                #if MARK_DEBUG
+#if MARK_DEBUG
                 if (detail) Mod.Log($"{(cnt++)} - segment - ({htmlEnd + 1}, {len}) {segment} ");
-                #endif
+#endif
                 result.Append(segment.MarkedSubstringNoHTML(query));
             }
             return result.ToString();

@@ -87,7 +87,8 @@ namespace ToyBox {
         public static int InterestingnessCoefficent(this BaseUnitEntity unit) => unit.GetUnitInteractionConditions().Count(entry => {
             try {
                 return entry.IsActive();
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 Mod.Debug(ex.ToString());
                 return false;
             }

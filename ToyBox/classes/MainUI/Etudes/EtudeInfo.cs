@@ -8,8 +8,7 @@ using ModKit;
 #nullable enable annotations
 
 namespace ToyBox {
-        public class ConflictingGroupIdReferences
-    {
+    public class ConflictingGroupIdReferences {
         public string Name;
         public List<BlueprintGuid> Etudes = new();
     }

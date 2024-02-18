@@ -26,12 +26,12 @@ namespace ModKit {
             bool result;
             Rect rect;
             using (VerticalScope()) {
-            using (HorizontalScope()) {
-                Space(6.point());
-                result = GL.Button(title, linkStyle, options);
-                rect = GUILayoutUtility.GetLastRect();
-            }
-            DrawDiv(linkStyle.normal.textColor, 0 , 0, rect.width + 4.point());
+                using (HorizontalScope()) {
+                    Space(6.point());
+                    result = GL.Button(title, linkStyle, options);
+                    rect = GUILayoutUtility.GetLastRect();
+                }
+                DrawDiv(linkStyle.normal.textColor, 0, 0, rect.width + 4.point());
             }
             if (result) {
                 Application.OpenURL(url);

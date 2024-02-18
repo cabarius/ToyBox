@@ -16,11 +16,7 @@ namespace ToyBox {
         private static IEnumerable<SaveInfo> _allSaves = null;
         private static IEnumerable<SaveInfo> _currentSaves = null;
         public static string? SearchKey(this SaveInfo info) =>
-            $"{info.Name
-            }{info.Area.AreaName.ToString()
-            }{info.Description
-            }{info.FileName
-            }";
+            $"{info.Name}{info.Area.AreaName.ToString()}{info.Description}{info.FileName}";
         public static IComparable?[] SortKey(this SaveInfo info) => new IComparable[] {
             info.PlayerCharacterName,
             info.GameSaveTime

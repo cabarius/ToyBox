@@ -178,8 +178,7 @@ namespace ToyBox {
             foreach (var item in toValues) {
                 var mutator = actionLookup[item.Key];
                 if (mutator != null)
-                    try { mutator.action(item.Value, null); }
-                    catch (Exception e) { Mod.Error(e); }
+                    try { mutator.action(item.Value, null); } catch (Exception e) { Mod.Error(e); }
             }
             if (toValues.Count > 0) {
                 UpdateEtudeStates();

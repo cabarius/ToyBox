@@ -78,7 +78,8 @@ namespace ToyBox {
                         loaded = true;
                         return _portraitsByID[customID];
                     }
-                } else {
+                }
+                else {
                     loaded = true;
                     return portraitData;
                 }

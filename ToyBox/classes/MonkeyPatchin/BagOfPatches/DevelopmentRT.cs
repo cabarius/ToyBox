@@ -40,7 +40,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
 
         [HarmonyPatch(typeof(BlueprintConverter))]
         private static class ForceSuccessfulLoad_Blueprints_Patch {
-            [HarmonyPatch(nameof(BlueprintConverter.ReadJson), new Type[] {typeof(JsonReader), typeof(Type), typeof(object), typeof(JsonSerializer)})]
+            [HarmonyPatch(nameof(BlueprintConverter.ReadJson), new Type[] { typeof(JsonReader), typeof(Type), typeof(object), typeof(JsonSerializer) })]
             [HarmonyPrefix]
             public static bool ReadJson(
                     BlueprintConverter __instance,

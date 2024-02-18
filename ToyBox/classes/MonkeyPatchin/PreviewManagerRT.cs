@@ -341,7 +341,7 @@ namespace ToyBox {
                                     continue;
                             }
 
-                        label_8:;
+label_8:;
                     }
                 }
 

@@ -42,7 +42,7 @@ namespace ToyBox {
         }
 
         public static void DestroyChildren(this GameObject obj, params string[] paths) {
-            foreach (var doomed in obj.ChildObjects(paths)) 
+            foreach (var doomed in obj.ChildObjects(paths))
                 UnityEngine.Object.Destroy(doomed);
         }
         public static void DestroyChildrenImmediate(this GameObject obj, params string[] paths) {

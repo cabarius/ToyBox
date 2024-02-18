@@ -19,7 +19,8 @@ namespace ToyBox {
                 justInit = true;
                 availableAchievements.Clear();
                 unlocked.Clear();
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 Mod.Debug(ex.ToString());
             }
         }

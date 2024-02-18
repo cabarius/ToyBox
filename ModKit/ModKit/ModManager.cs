@@ -27,7 +27,7 @@ namespace ModKit {
     public class ModManager<TCore, TSettings>
         where TCore : class, new()
         where TSettings : UnityModManager.ModSettings, new() {
-    #region Fields & Properties
+        #region Fields & Properties
 
         private UnityModManager.ModEntry.ModLogger _logger;
         private List<IModEventHandler> _eventHandlers;
@@ -42,9 +42,9 @@ namespace ModKit {
 
         public bool Patched { get; private set; }
 
-    #endregion
+        #endregion
 
-    #region Toggle
+        #region Toggle
 
         public void Enable(UnityModManager.ModEntry modEntry, Assembly assembly) {
             _logger = modEntry.Logger;
@@ -160,9 +160,9 @@ namespace ModKit {
             process.Log("Disabled.");
         }
 
-    #endregion
+        #endregion
 
-    #region Settings
+        #region Settings
 
         public void ResetSettings() {
             if (Enabled) {
@@ -176,9 +176,9 @@ namespace ModKit {
             ModKitSettings.Save();
         }
 
-    #endregion
+        #endregion
 
-    #region Loggers
+        #region Loggers
 
         public void Critical(string str) => _logger.Critical(str);
 
@@ -211,7 +211,7 @@ namespace ModKit {
         [Conditional("DEBUG")]
         public void Debug(object obj) => _logger.Log(obj?.ToString() ?? "null");
 
-    #endregion
+        #endregion
 
         private class ProcessLogger : IDisposable {
             private readonly Stopwatch _stopWatch = new();

@@ -282,20 +282,20 @@ namespace ToyBox {
             foreach (var action in todo)
                 action();
             bool needsFix = false;
-            if (charToAdd != null) { 
-                BaseUnitDataUtils.AddCompanion(charToAdd); 
-                needsFix = true; 
-            }
-            if (charToRecruit != null) { 
-                BaseUnitDataUtils.RecruitCompanion(charToRecruit); 
+            if (charToAdd != null) {
+                BaseUnitDataUtils.AddCompanion(charToAdd);
                 needsFix = true;
             }
-            if (charToRemove != null) { 
+            if (charToRecruit != null) {
+                BaseUnitDataUtils.RecruitCompanion(charToRecruit);
+                needsFix = true;
+            }
+            if (charToRemove != null) {
                 BaseUnitDataUtils.RemoveCompanion(charToRemove);
                 needsFix = true;
             }
             if (charToUnrecruit != null) {
-                charToUnrecruit.GetCompanionOptional()?.SetState(CompanionState.None); 
+                charToUnrecruit.GetCompanionOptional()?.SetState(CompanionState.None);
                 charToUnrecruit.Remove<UnitPartCompanion>();
                 needsFix = true;
             }

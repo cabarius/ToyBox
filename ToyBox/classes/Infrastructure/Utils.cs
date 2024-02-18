@@ -74,7 +74,7 @@ namespace ToyBox {
                 }
                 foreach (var guid in guids) {
                     var bp = ResourcesLibrary.TryGetBlueprint<BlueprintItem>(guid);
-                    if (bp != null) 
+                    if (bp != null)
                         items.Add(bp);
                 }
             }
@@ -158,7 +158,7 @@ namespace ToyBox {
         public static string CollectionToString(this IEnumerable<object> col) => $"{{{string.Join(", ", col.Select(i => i.ToString()))}}}";
         // Object to Dictionary
         public static IDictionary<string, object> ToDictionary(this object source) => source.ToDictionary<object>();
-        
+
         public static IDictionary<string, T> ToDictionary<T>(this object source) {
             if (source == null)
                 ThrowExceptionWhenSourceArgumentIsNull();
@@ -191,14 +191,14 @@ namespace ToyBox {
         }
         public static Dictionary<string, string> ToStringDictionary(this object obj) {
             var propDict = obj.GetType()
-                            .GetProperties(BindingFlags.Instance 
+                            .GetProperties(BindingFlags.Instance
                                            | BindingFlags.NonPublic
                                            | BindingFlags.Public)
                             .Where(field => field.GetValue(obj) is string)
                             .ToDictionary(prop => prop.Name, prop => prop.StringValue(obj)
                             );
             var fieldDict = obj.GetType()
-                            .GetFields(BindingFlags.Instance 
+                            .GetFields(BindingFlags.Instance
                                        | BindingFlags.NonPublic
                                        | BindingFlags.Public)
                             .Where(field => field.GetValue(obj) is string)

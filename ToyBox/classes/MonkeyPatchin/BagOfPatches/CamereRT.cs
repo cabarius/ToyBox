@@ -58,7 +58,7 @@ namespace ToyBox.BagOfPatches {
                     instance.MaxSpaceCameraAngle = +15;
 
                 }
-                if (__instance.m_AllowScroll ||Settings.toggleScrollOnAllMaps) {
+                if (__instance.m_AllowScroll || Settings.toggleScrollOnAllMaps) {
                     __instance.Follower.TryFollow();
                     instance.TickScroll();
                 }
@@ -71,7 +71,7 @@ namespace ToyBox.BagOfPatches {
                 return false;
             }
         }
-        
+
         [HarmonyPatch(typeof(CameraZoom))]
         private static class CameraZoomPatch {
             private static float BaseFovMin => (Settings.toggleZoomOnAllMaps || Settings.toggleZoomableLocalMaps) ? 12 : 17.5f;
@@ -162,8 +162,7 @@ namespace ToyBox.BagOfPatches {
                     __instance.FigureOutScreenBasis();
                     Vector3 prevPos = __instance.m_TargetPosition;
                     __instance.m_TargetPosition += vector2.x * __instance.Right + vector2.y * __instance.Up;
-                    EventBus.RaiseEvent<ICameraMovementHandler>(delegate (ICameraMovementHandler h)
-                    {
+                    EventBus.RaiseEvent<ICameraMovementHandler>(delegate (ICameraMovementHandler h) {
                         h.HandleCameraTransformed(Vector3.Dot(prevPos, __instance.m_TargetPosition));
                     }, true);
                     if (!Settings.toggleFreeCamera) {
@@ -187,12 +186,12 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPrefix]
             public static bool TickRotate(CameraRig __instance, ref Vector3 ___m_TargetPosition) {
                 if (!Settings.toggleRotateOnAllMaps
-                    && !Settings.toggleCameraPitch 
-                    && !Settings.toggleCameraElevation 
-                    && !Main.resetExtraCameraAngles 
-                    && !Settings.toggleInvertXAxis 
+                    && !Settings.toggleCameraPitch
+                    && !Settings.toggleCameraElevation
+                    && !Main.resetExtraCameraAngles
+                    && !Settings.toggleInvertXAxis
                     && !Settings.toggleInvertKeyboardXAxis
-                    ) 
+                    )
                     return true;
                 if (__instance.RotationByMouse || __instance.m_RotationByKeyboard) {
                     var eulerAngles = __instance.transform.rotation.eulerAngles;
