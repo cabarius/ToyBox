@@ -75,6 +75,9 @@
   
 **ToyBox Wrath - Ver 1.5.11 - Preview Version 1.5.10a** built for 2.2.4p
 
+### ToyBox Wrath - Ver 1.5.10b (built for 2.2.4p)
+* (***ADDB***) Backported alternate glyphs from RT ToyBox.
+
 ### ToyBox Wrath - Ver 1.5.10a (built for 2.2.4p)
 * (***evandixon***) Fix unusable map screen on console view (e.g. PC Controller User & Steam Deck).
 * (***ADDB***) Probably fixed Skill Point cap.
