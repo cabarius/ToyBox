@@ -33,7 +33,6 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
-using ToyBox.classes.MainUI.Inventory;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;

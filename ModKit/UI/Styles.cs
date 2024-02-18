@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityModManagerNet;
+#nullable enable annotations
 
 namespace ModKit {
     public static partial class UI {

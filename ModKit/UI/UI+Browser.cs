@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ToyBox;
 using UnityEngine;
+#nullable enable annotations
 
 namespace ModKit {
 

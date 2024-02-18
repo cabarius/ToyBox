@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
 using static ModKit.Utility.ReflectionCache;
-
+#nullable enable annotations
 namespace ModKit.DataViewer {
     public enum NodeType {
         Root,
@@ -25,6 +25,7 @@ namespace ModKit.DataViewer {
     }
 
     public class ReflectionTree<TRoot> {
+
         private RootNode<TRoot>? _root;
 
         public TRoot Root => _root!.Value;
@@ -56,10 +57,10 @@ namespace ModKit.DataViewer {
             IsNullable = Type.IsGenericType && !Type.IsGenericTypeDefinition && Type.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
-        [ObsoleteAttribute("TODO - move this into a proper view model", false)]
+        //TODO: move this into a proper view model
         public ToggleState Expanded { get; set; }
 
-        [ObsoleteAttribute("TODO - move this into a proper view model", false)]
+        //TODO: move this into a proper view model
         public bool Matches { get; set; }
 
         public string NodeTypePrefix {

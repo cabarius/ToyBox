@@ -30,6 +30,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
 using static ToyBox.BlueprintExtensions;
+#nullable enable annotations
+
 namespace ToyBox {
 
     public static partial class BlueprintExtensions {

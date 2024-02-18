@@ -115,7 +115,7 @@ namespace ToyBox {
                 }
 
                 // get nodes (classes)
-                foreach (var characterClass in progression.Classes.Select(item => item.CharacterClass)) {
+                foreach (var characterClass in progression.AllCareerPaths.Select(item => item.Blueprint)) {
                     normalNodes.Add(characterClass, new FeatureNode(characterClass.Name, 0, characterClass, null));
                 }
 

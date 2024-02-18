@@ -40,12 +40,9 @@ namespace ToyBox {
         private static BaseUnitEntity multiclassEditCharacter = null;
         private static int respecableCount = 0;
         private static int recruitableCount = 0;
-        private static int selectedSpellbook = 0;
         public static int selectedSpellbookLevel = 0;
         public static int SelectedNewSpellLvl = 0;
         private static (string, string) nameEditState = (null, null);
-        private static bool editSpellbooks = false;
-        private static BaseUnitEntity spellbookEditCharacter = null;
         internal static readonly Dictionary<string, int> statEditorStorage = new();
         public static Dictionary<string, Spellbook> SelectedSpellbook = new();
         private static BaseUnitEntity GetEditCharacter() {
@@ -57,7 +54,6 @@ namespace ToyBox {
 
         public static void ResetGUI() {
             editingCharacterIndex = 0;
-            selectedSpellbook = 0;
             selectedSpellbookLevel = 0;
             CharacterPicker.PartyFilterChoices = null;
             Main.Settings.selectedPartyFilter = 0;
@@ -154,7 +150,6 @@ namespace ToyBox {
                 var progression = ch.Descriptor().Progression;
                 var xpTable = progression.ExperienceTable;
                 var level = progression.CharacterLevel;
-                var mythicLevel = progression.MythicLevel;
                 var spellbooks = ch.Spellbooks.ToList();
                 var spellCount = spellbooks.Sum((sb) => sb.GetAllKnownSpells().Count());
                 var isOnTeam = player.AllCharacters.Contains(ch);
@@ -241,9 +236,6 @@ namespace ToyBox {
                     ReflectionTreeView.DetailToggle("Inspect".localize(), ch, ch, 75);
                     Wrap(!isWide, NarrowIndent - 20);
                     ActionsGUI(ch);
-                    if (prevSelectedChar != selectedCharacter) {
-                        selectedSpellbook = 0;
-                    }
                 }
                 if (!isWide) Div(00, 10);
                 5.space();
@@ -251,10 +243,6 @@ namespace ToyBox {
                 //if (!UI.IsWide && (selectedToggle != ToggleChoice.Stats || ch != selectedCharacter)) {
                 //    UI.Div(20, 20);
                 //}
-                if (selectedCharacter != spellbookEditCharacter) {
-                    editSpellbooks = false;
-                    spellbookEditCharacter = null;
-                }
                 if (selectedCharacter != multiclassEditCharacter) {
                     editMultiClass = false;
                     multiclassEditCharacter = null;

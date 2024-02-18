@@ -9,7 +9,7 @@ using UnityEngine;
 using static ModKit.UI;
 using static ModKit.Utility.StringExtensions;
 using Object = System.Object;
-
+#nullable enable annotations
 namespace ModKit.DataViewer {
     public class ReflectionTreeView {
 #if false
@@ -57,14 +57,13 @@ namespace ModKit.DataViewer {
         private int _totalNodeCount;
         private int _nodesCount;
         private int _startIndex;
-        private int _skipLevels;
+        private int _skipLevels = 0;
         private string _searchText = "";
 
         internal string[] SearchTerms => _searchText.Length == 0
                                              ? Array.Empty<string>()
                                              : _searchText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-        private bool enableCopy = false;
         private int visitCount = 0;
         private int searchDepth = 0;
         private int searchBreadth = 0;
@@ -361,7 +360,7 @@ namespace ModKit.DataViewer {
                 // children
                 if (expanded.IsOn()) DrawChildren(node, depth + 1, collapse);
             }
-            catch (Exception e) { }
+            catch (Exception) { }
         }
 
         private void DrawChildren(Node node, int depth, bool collapse, Func<Node, bool>? hoist = null) {

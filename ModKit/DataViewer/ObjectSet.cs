@@ -32,7 +32,7 @@ namespace ModKit.DataViewer {
             Console.WriteLine(sw.ElapsedMilliseconds);
         }
 
-        public bool IsExist(object obj) => objectSet.TryGetValue(obj, out tryGetValue_out0);
+        public bool IsExist(object obj) => objectSet.TryGetValue(obj, out _);
 
         public bool Add(object obj) {
             if (IsExist(obj))
@@ -45,9 +45,6 @@ namespace ModKit.DataViewer {
 
         /// <summary> internal representation of the set. (only use the key) </summary>
         private ConditionalWeakTable<object, object> objectSet = new();
-
-        /// <summary> used to fill the out parameter of ConditionalWeakTable.TryGetValue(). </summary>
-        private static object? tryGetValue_out0 = null;
     }
 
     [Obsolete("It will crash if there are too many objects and ObjectSetUsingConditionalWeakTable get a better performance.")]

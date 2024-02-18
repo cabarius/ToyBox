@@ -102,7 +102,7 @@ namespace ToyBox.BagOfPatches {
                 //Mod.Debug($"{unit.CharacterName.orange()} -> unit interestingness: {count}");
                 //var attentionMark = markerView.transform.Find("ToyBoxAttentionMark")?.gameObject;
                 //Mod.Debug($"attentionMark: {attentionMark}");
-                var markImage = markerView.transform.FindChild("Mark").GetComponent<Image>();
+                var markImage = markerView.transform.Find("Mark").GetComponent<Image>();
                 if (count >= 1) {
                     //Mod.Debug($"adding Mark to {unit.CharacterName.orange()}");
                     var mark = markerView.transform;

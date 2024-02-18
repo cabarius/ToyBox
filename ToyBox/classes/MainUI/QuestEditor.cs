@@ -25,6 +25,7 @@ using UnityEngine;
 using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
 using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
+#nullable enable annotations
 
 namespace ToyBox {
     public static class QuestExtensions {

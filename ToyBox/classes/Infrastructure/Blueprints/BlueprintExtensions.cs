@@ -54,7 +54,9 @@ namespace ToyBox {
         public static string GetDisplayName(this SimpleBlueprint bp) => bp switch {
             BlueprintAbilityResource abilityResource => abilityResource.Name,
             BlueprintArchetype archetype => archetype.Name,
+#pragma warning disable CS0612 // Type or member is obsolete
             BlueprintCharacterClass charClass => charClass.Name,
+#pragma warning restore CS0612 // Type or member is obsolete
             BlueprintItem item => item.Name,
             BlueprintItemEnchantment enchant => enchant.Name,
             BlueprintMechanicEntityFact fact => fact.NameSafe(),
@@ -285,6 +287,7 @@ namespace ToyBox {
             return names;
         }
         public static List<string> CollationNames(this SimpleBlueprint bp, params string[] extras) => DefaultCollationNames(bp, extras);
+        [Obsolete]
         public static List<string> CollationNames(this BlueprintCharacterClass bp, params string[] extras) {
             var names = DefaultCollationNames(bp, extras);
             if (bp.IsArcaneCaster) names.Add("Arcane");
@@ -378,6 +381,7 @@ namespace ToyBox {
 
             }
             catch (Exception e) {
+                Mod.Debug(e.ToString());
 #if DEBUG
                 return "ERROR".red().bold() + $": caught exception {e}";
 #else

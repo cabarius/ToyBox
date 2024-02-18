@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using GL = UnityEngine.GUILayout;
+#nullable enable annotations
 
 namespace ModKit {
     public static partial class UI {

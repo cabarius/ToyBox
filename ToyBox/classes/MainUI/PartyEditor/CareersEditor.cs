@@ -113,7 +113,6 @@ namespace ToyBox {
 #endif
                 var classCount = careerPaths.Count();
                 foreach (var cd in careerPaths) {
-                    var showedGestalt = false;
                     Div(100, 20);
                     using (HorizontalScope()) {
                         Space(100);
@@ -124,7 +123,7 @@ namespace ToyBox {
                         //                        ActionButton("<", () => cd.level = Math.Max(0, cd.level - 1), AutoWidth());
                         Space(25);
                         Label("level".localize().green() + $": {cd.level}", Width(100f));
-                        var maxLevel = 20;
+                        //var maxLevel = 20;
                         //ActionButton(">", () => cd.level = Math.Min(maxLevel, cd.level + 1), AutoWidth());
                         Space(23);
                     }

@@ -41,11 +41,9 @@ using Kingmaker.Controllers;
 using Kingmaker.Designers;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.Designers.EventConditionActionSystem.Conditions;
-using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.EntitySystem.Persistence;
 using Kingmaker.GameCommands;
-using Kingmaker.Localization;
 using Kingmaker.Localization;
 using Kingmaker.Mechanics.Entities;
 using Kingmaker.PubSubSystem;
@@ -62,6 +60,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UniRx;
+#nullable enable annotations
 
 namespace ToyBox {
     public static partial class Shodan {

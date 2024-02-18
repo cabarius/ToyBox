@@ -47,7 +47,6 @@ namespace ToyBox {
         public static Dictionary<string, float> lastScaleSize = new();
         private static readonly Dictionary<string, PortraitData> _portraitsByID = new();
         private static bool _portraitsLoaded = false;
-        private static int _increase = 1;
         private static Browser<string, string> portraitBrowser;
         private static Browser<BlueprintPortrait, BlueprintPortrait> blueprintPortraitBrowser;
         private static Browser<BlueprintUnitAsksList, BlueprintUnitAsksList> blueprintVoiceBrowser;
@@ -473,7 +472,7 @@ namespace ToyBox {
                     }
                 }
                 catch (Exception ex) {
-                    // Mod.Error(ex);
+                    Mod.Trace(ex.ToString());
                 }
             }
             return todo;

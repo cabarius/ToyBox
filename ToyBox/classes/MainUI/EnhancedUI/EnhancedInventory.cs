@@ -17,7 +17,6 @@ namespace ToyBox {
 
     public static class EnhancedInventory {
         public static Settings Settings => Main.Settings;
-        private static Harmony m_harmony;
 
         public static readonly Dictionary<ItemSortCategories, (int index, string title)> SorterCategoryMap = new Dictionary<ItemSortCategories, (int index, string title)> {
             [ItemSortCategories.NotSorted] = ((int)ItemsSorterType.NotSorted, null),

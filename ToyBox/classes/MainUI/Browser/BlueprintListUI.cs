@@ -15,6 +15,8 @@ using System.Linq;
 using UnityEngine;
 using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
+#nullable enable annotations
+
 namespace ToyBox {
     public class BlueprintListUI {
         public delegate void NavigateTo(params string[] argv);
@@ -220,10 +222,8 @@ namespace ToyBox {
                     using (HorizontalScope()) {
                         Space(titleWidth);
                         using (VerticalScope()) {
-                            var needsSelection = false;
                             var nameStrings = selectionBPValuesNames.GetValueOrDefault(selectionBP, null);
                             if (nameStrings == null) {
-                                needsSelection = true;
                                 nameStrings = selectionBP.AllFeatures.Select(x => x.NameSafe()).OrderBy(x => x).ToArray().TrimCommonPrefix();
                                 selectionBPValuesNames[selectionBP] = nameStrings;
                             }

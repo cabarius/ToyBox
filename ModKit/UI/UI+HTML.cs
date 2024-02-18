@@ -2,7 +2,7 @@
 using UnityEngine;
 using System;
 using GL = UnityEngine.GUILayout;
-
+#nullable enable annotations
 namespace ModKit {
     public static partial class UI {
         private static GUIStyle linkStyle = null;

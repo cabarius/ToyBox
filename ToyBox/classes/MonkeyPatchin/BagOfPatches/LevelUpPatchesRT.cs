@@ -46,7 +46,7 @@ namespace ToyBox.BagOfPatches {
                 try {
                     ret = _instance.AllCareerPaths.Last<ValueTuple<BlueprintCareerPath, int>>();
                 }
-                catch (Exception ex) {
+                catch (Exception) {
                     ret = new(null, 1);
                 }
                 Mod.Debug($"Respec Career returned: {ret}");
@@ -129,7 +129,7 @@ namespace ToyBox.BagOfPatches {
                                 modifiableValue2.BaseValue = modifiableValue.BaseValue;
                             }
                         }
-                        catch (NullReferenceException ex) {
+                        catch (NullReferenceException) {
 
                         }
                     }

@@ -74,7 +74,6 @@ namespace ToyBox.BagOfPatches {
         
         [HarmonyPatch(typeof(CameraZoom))]
         private static class CameraZoomPatch {
-            private static bool firstCall = true;
             private static float BaseFovMin => (Settings.toggleZoomOnAllMaps || Settings.toggleZoomableLocalMaps) ? 12 : 17.5f;
             private static readonly float BaseFovMax = 30;
             private static float FovMin => BaseFovMin / Settings.fovMultiplier;
@@ -117,10 +116,7 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(CameraRig))]
         public static class CameraRigPatch {
-            private static UISettingsEntityKeyBinding _followKeyBinding = null;
-            private static bool _RotationByMouse = false;
             public static void OnAreaLoad() {
-                _followKeyBinding = null;
             }
 
 

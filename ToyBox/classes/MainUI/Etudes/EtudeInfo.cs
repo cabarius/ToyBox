@@ -5,6 +5,7 @@ using System.Text;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
 using ModKit;
+#nullable enable annotations
 
 namespace ToyBox {
         public class ConflictingGroupIdReferences

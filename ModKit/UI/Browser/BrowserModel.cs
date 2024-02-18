@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ModKit.Utility;
-
+#nullable enable annotations
 namespace ModKit {
     public class Entry {
         private Type[] Inheritance; // this may be able to become type
@@ -32,7 +32,9 @@ namespace ModKit {
     }
 
     public class Category<T> {
+#pragma warning disable CS0169 // The field 'Category<T>.Name' is never used
         private string? Name;
+#pragma warning restore CS0169 // The field 'Category<T>.Name' is never used
         public delegate bool CategoryChecker(T obj);
         public delegate string[] Tagger(T obj);
         public CategoryChecker? IsCategory;

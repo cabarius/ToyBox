@@ -5,6 +5,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using UnityEngine;
 using GL = UnityEngine.GUILayout;
+#nullable enable annotations
 
 namespace ModKit {
     public static partial class UI {

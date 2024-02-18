@@ -3,6 +3,7 @@ using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
+#nullable enable annotations
 
 namespace ModKit.Utility {
     public static class StringExtensions {
@@ -51,8 +52,8 @@ namespace ModKit.Utility {
             #if MARK_DEBUG
             bool detail = source.Contains("More");
             if (detail) Mod.Debug($"{query} in {source}");
-            #endif
             var cnt = 0;
+            #endif
             segment = segment.MarkedSubstringNoHTML(query);
             #if MARK_DEBUG
             if (detail) Mod.Log($"{(cnt++)} - segment - (0, {htmlStart}) {segment} ");

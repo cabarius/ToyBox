@@ -11,9 +11,7 @@
 		<FileAlignment>512</FileAlignment>
 		<LangVersion>latest</LangVersion>
 		<RootNamespace>ToyBox</RootNamespace>
-		<Deterministic>false</Deterministic>
-		<Nullable>enable</Nullable>
-		<WarningLevel>4</WarningLevel>
+		<WarningLevel>5</WarningLevel>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<RestoreAdditionalProjectSources>
 			https://api.nuget.org/v3/index.json;

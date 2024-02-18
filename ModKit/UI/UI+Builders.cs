@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using GL = UnityEngine.GUILayout;
+#nullable enable annotations
 
 namespace ModKit {
     public static partial class UI {
@@ -92,7 +93,7 @@ namespace ModKit {
             using (VerticalScope(options)) {
                 if (title != null)
                     Label(title);
-                var ii = 0;
+                // var ii = 0;
                 foreach (var item in items) {
                     //Mod.Log($"    row: {ii++} - {item.GetType().ToString()}");
                     action(item);
@@ -107,7 +108,7 @@ namespace ModKit {
                         Label(title);
                     }
                 }
-                var ii = 0;
+                // var ii = 0;
                 foreach (var item in items) {
                     using (VerticalScope(options)) {
                         //Mod.Log($"        col: {ii++} - {item.GetType().ToString()}");

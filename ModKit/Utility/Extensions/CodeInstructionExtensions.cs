@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
+#nullable enable annotations
 
 namespace ModKit.Utility {
     public static class CodeInstructionExtensions {
@@ -308,7 +309,7 @@ namespace ModKit.Utility {
                     return true;
                 else if (x == null)
                     return false;
-                else if ((y.opcode == null || OpCodeEquals(y.opcode, x.opcode)) &&
+                else if ((OpCodeEquals(y.opcode, x.opcode)) &&
                         (y.operand == null || (y.operand is ValueType ? y.operand.Equals(x.operand) : y.operand == x.operand)) &&
                         (y.labels.Count == 0 || y.labels.TrueForAll(label => x.labels.Contains(label))))
                     return true;

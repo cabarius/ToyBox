@@ -5,6 +5,7 @@ using Kingmaker.EntitySystem.Entities;
 using ModKit;
 using System;
 using System.Collections.Generic;
+#nullable enable annotations
 
 namespace ToyBox {
     public class NamedTypeFilter {

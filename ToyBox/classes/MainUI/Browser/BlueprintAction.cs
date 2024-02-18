@@ -27,6 +27,8 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+#nullable enable annotations
+
 namespace ToyBox {
     public abstract class BlueprintAction {
         public delegate void Perform(SimpleBlueprint bp, BaseUnitEntity? ch = null, int count = 1, int listValue = 0);

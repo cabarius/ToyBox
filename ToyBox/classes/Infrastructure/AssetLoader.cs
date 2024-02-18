@@ -2,6 +2,7 @@
 using TMPro;
 using UnityEngine;
 using ModKit;
+#nullable enable annotations
 
 namespace ToyBox {
     class AssetLoader {

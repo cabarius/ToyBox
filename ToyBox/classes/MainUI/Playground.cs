@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#nullable enable annotations
 
 namespace ModKit {
     public static partial class ui {

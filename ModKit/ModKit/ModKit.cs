@@ -4,7 +4,7 @@ using ModKit.Utility;
 using System;
 using UnityModManagerNet;
 using static UnityModManagerNet.UnityModManager;
-
+#nullable enable annotations
 namespace ModKit {
     public enum LogLevel : int {
         Error,

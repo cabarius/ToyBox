@@ -4,6 +4,7 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+#nullable enable annotations
 
 namespace ToyBox {
     // To be clear this is an editor of your list of saves

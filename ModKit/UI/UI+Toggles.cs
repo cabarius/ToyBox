@@ -3,6 +3,7 @@ using UnityEngine;
 using HarmonyLib;
 using System;
 using System.Linq;
+#nullable enable annotations
 
 namespace ModKit {
     public enum ToggleState {

@@ -25,6 +25,7 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using Kingmaker.UnitLogic.Mechanics.Blueprints;
 using Kingmaker.UnitLogic.Mechanics.Facts;
+using Kingmaker.UnitLogic.Progression.Paths;
 using Kingmaker.Utility;
 using ModKit;
 using ModKit.DataViewer;
@@ -37,6 +38,7 @@ using System.Linq;
 using UnityEngine;
 using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
+#nullable enable annotations
 
 namespace ToyBox {
     public static class SearchAndPick {
@@ -77,7 +79,7 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintFact>("Facts", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintFeature>("Features", null, bp => bp.CollationNames(
                                                       )),
-            new NamedTypeFilter<BlueprintCharacterClass>("Classes", null, bp => bp.CollationNames()),
+            new NamedTypeFilter<BlueprintCareerPath>("Careers", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintProgression>("Progression", null, bp => bp.Classes.NotNull().Select(cl => cl.Name).ToList()),
             new NamedTypeFilter<BlueprintArchetype>("Archetypes", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintAbility>("Abilities", null, bp => bp.CollationNames()),
@@ -96,7 +98,7 @@ namespace ToyBox {
                 var family = bp.Family;
                 var category = bp.Category;
                 return bp.CollationNames(family.ToString(), category.ToString(), $"{bp.GetCost().ToBinString("⊙".yellow())}");
-                return bp.CollationNames("?", $"{bp.GetCost().ToBinString("⊙".yellow())}");
+                // return bp.CollationNames("?", $"{bp.GetCost().ToBinString("⊙".yellow())}");
                 }),
             new NamedTypeFilter<BlueprintItemArmor>("Armor", null, (bp) => {
                 var type = bp.Type;
