@@ -35,6 +35,10 @@ namespace ToyBox {
 #endif
                 () => Toggle("Display guids in most tooltips, use shift + left click on items/abilities to copy guid to clipboard".localize(), ref Main.Settings.toggleGuidsClipboard),
                 () => Toggle("Display risky options".localize(), ref Main.Settings.toggleRiskyToggles),
+                () => Toggle("Check for Glyph Support".localize(), ref Mod.ModKitSettings.CheckForGlyphSupport),
+                () => {
+                        if(!Mod.ModKitSettings.CheckForGlyphSupport) Toggle("Use default Glyphs".localize(), ref Mod.ModKitSettings.UseDefaultGlyphs);
+                    },
               () => { }
             );
 #if true

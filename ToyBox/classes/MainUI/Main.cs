@@ -166,8 +166,12 @@ namespace ToyBox {
             BlueprintExtensions.ResetCollationCache();
             _caughtException = null;
         }
-
+        private static bool IsFirstOnGUI = true;
         private static void OnGUI(UnityModManager.ModEntry modEntry) {
+            if (IsFirstOnGUI) {
+                IsFirstOnGUI = false;
+                Glyphs.CheckGlyphSupport();
+            }
             if (!Enabled) return;
             IsModGUIShown = true;
             if (!IsInGame) {

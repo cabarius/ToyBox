@@ -63,7 +63,7 @@ namespace ToyBox {
                                     }
 #if DEBUG
                                     25.space();
-                                    ActionButton("Reveal All On Map", RevealInterestingNPCs);
+                                    ActionButton("Reveal All On Map", BlueprintExtensions.RevealInterestingNPCs);
 #endif
                                 },
                                 (u, _) => {

@@ -55,6 +55,11 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
  
+### ToyBox Rogue - Ver 1.5.10b built for Rogue Trader 1.0.102
+* (***ADDB***) Added improved glyph support detection. If you're symbols used to be nice but are now weird then please report that!
+* (***ADDB***) Reworked Ascii Glyphs (for systems where default glyphs aren't supported).
+* (***ADDB***) Ported to SDK style project; Code Cleanup; etc. All in all this should not influence usage experience but should make developing and building for other people easier
+
 ### ToyBox Rogue - Ver 1.5.10a built for Rogue Trader 1.0.102
 * (***ADDB***) Removed experimental invisibility fix because it didn't work?
 * (***ADDB***) Removed some stuff related to Outfits which wasn't really finished.

@@ -13,6 +13,8 @@
         public bool searchAsYouType = true;
         public bool toggleKeyBindingsOutputToTranscript = true;
         public bool toggleDataViewerShowNullAndEmpties = false;
+        public bool UseDefaultGlyphs = true;
+        public bool CheckForGlyphSupport = true;
 
         // Localization
         public string uiCultureCode = "en";
