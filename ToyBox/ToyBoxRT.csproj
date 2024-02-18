@@ -24,7 +24,7 @@
 		<DebugType>portable</DebugType>
 		<Optimize>false</Optimize>
 		<IntermediateOutputPath>obj\RT\Debug\</IntermediateOutputPath>
-    <OutputPath>bin\RT\Debug\0ToyBox0\</OutputPath>
+		<OutputPath>bin\RT\Debug\0ToyBox0\</OutputPath>
 		<DefineConstants>TRACE;DEBUG;RT</DefineConstants>
 		<ErrorReport>none</ErrorReport>
 	</PropertyGroup>
