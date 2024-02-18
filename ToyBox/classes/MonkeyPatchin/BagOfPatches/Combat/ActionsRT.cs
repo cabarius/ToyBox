@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
 
 using HarmonyLib;
@@ -9,12 +10,10 @@ using Kingmaker.UnitLogic.Commands;
 
 
 
-
 //using Kingmaker.UI._ConsoleUI.Models;
 //using Kingmaker.UI.RestCamp;
 using Kingmaker.UnitLogic.Parts;
 using System.Linq;
-
 
 //using Kingmaker.UI._ConsoleUI.GroupChanger;
 

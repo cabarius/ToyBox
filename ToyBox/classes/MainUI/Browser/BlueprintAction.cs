@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 
 using Kingmaker;
@@ -27,7 +28,6 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-#nullable enable annotations
 
 namespace ToyBox {
     public abstract class BlueprintAction {

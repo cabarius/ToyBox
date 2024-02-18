@@ -1,9 +1,9 @@
+#nullable enable annotations
 ﻿using System;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-#nullable enable annotations
 
 namespace ToyBox {
     public static partial class UIHelpers {

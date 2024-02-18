@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using HarmonyLib;
 using System;
@@ -5,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-#nullable enable annotations
 
 namespace ModKit {
     public static class Utilities {

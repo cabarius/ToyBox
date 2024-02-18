@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿using Kingmaker.Blueprints;
 using ModKit;
 using System;
@@ -9,7 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
 using static ModKit.Utility.ReflectionCache;
-#nullable enable annotations
+
 namespace ModKit.DataViewer {
     public enum NodeType {
         Root,

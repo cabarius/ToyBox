@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿using ModKit;
 using ModKit.Utility;
 using System;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-#nullable enable annotations
+
 namespace ModKit.DataViewer {
     public abstract class ResultNode {
         public virtual string? Name { get; }

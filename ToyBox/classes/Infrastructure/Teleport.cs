@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 // based on code by hambeard (thank you ^_^)
 using JetBrains.Annotations;

@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿using Kingmaker.Blueprints;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
 using ModKit;
@@ -5,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static ModKit.UI;
-#nullable enable annotations
 
 namespace ToyBox {
     public class BuffExclusionEditor {

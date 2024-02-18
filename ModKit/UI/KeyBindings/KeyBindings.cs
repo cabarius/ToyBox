@@ -1,10 +1,10 @@
+#nullable enable annotations
 ﻿using System;
 using System.Collections.Generic;
 using ModKit.Utility;
 using static ModKit.UI;
 using static UnityModManagerNet.UnityModManager;
 using System.Linq;
-#nullable enable annotations
 
 namespace ModKit {
     public static partial class UI {

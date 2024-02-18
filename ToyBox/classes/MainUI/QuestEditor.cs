@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿// borrowed shamelessly and enhanced from Kingdom Resolution Mod
 //   "Author": "spacehamster",
 //   "HomePage": "https://www.nexusmods.com/pathfinderkingmaker/mods/36",
@@ -25,7 +26,6 @@ using UnityEngine;
 using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
 using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
-#nullable enable annotations
 
 namespace ToyBox {
     public static class QuestExtensions {

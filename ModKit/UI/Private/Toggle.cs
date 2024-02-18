@@ -1,5 +1,6 @@
-﻿using UnityEngine;
 #nullable enable annotations
+﻿using UnityEngine;
+
 
 namespace ModKit.Private {
     public static partial class UI {

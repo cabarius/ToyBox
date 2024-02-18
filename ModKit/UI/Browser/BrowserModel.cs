@@ -1,10 +1,11 @@
+#nullable enable annotations
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ModKit.Utility;
-#nullable enable annotations
+
 namespace ModKit {
     public class Entry {
         private Type[] Inheritance; // this may be able to become type

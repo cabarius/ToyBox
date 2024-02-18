@@ -1,9 +1,9 @@
+#nullable enable annotations
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using UnityEngine;
 using HarmonyLib;
 using System;
 using System.Linq;
-#nullable enable annotations
 
 namespace ModKit {
     public enum ToggleState {

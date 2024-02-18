@@ -1,9 +1,9 @@
+#nullable enable annotations
 ﻿using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
-#nullable enable annotations
 
 namespace ModKit.Utility {
     public static class CodeInstructionExtensions {

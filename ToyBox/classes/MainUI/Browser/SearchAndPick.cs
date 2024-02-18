@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using Kingmaker;
 using Kingmaker.AI.Blueprints;
@@ -38,7 +39,6 @@ using System.Linq;
 using UnityEngine;
 using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
-#nullable enable annotations
 
 namespace ToyBox {
     public static class SearchAndPick {

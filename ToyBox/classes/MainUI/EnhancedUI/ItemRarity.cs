@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items;
@@ -17,7 +18,6 @@ using System;
 using System.Linq;
 using ToyBox;
 using UnityEngine;
-#nullable enable annotations
 
 namespace ToyBox {
     public enum RarityType {

@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿using UnityEngine;
 
 namespace ModKit {

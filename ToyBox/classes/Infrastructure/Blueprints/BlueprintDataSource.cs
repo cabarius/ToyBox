@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿using UnityEngine;
 using System;
 using System.Collections;

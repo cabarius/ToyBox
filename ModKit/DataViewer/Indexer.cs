@@ -1,7 +1,7 @@
+#nullable enable annotations
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-#nullable enable annotations
 
 namespace ModKit.DataViewer {
     public static class Extensions { }

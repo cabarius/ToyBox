@@ -1,10 +1,11 @@
+#nullable enable annotations
 ﻿// some stuff borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
 
 using ModKit.Utility;
 using System;
 using UnityModManagerNet;
 using static UnityModManagerNet.UnityModManager;
-#nullable enable annotations
+
 namespace ModKit {
     public enum LogLevel : int {
         Error,

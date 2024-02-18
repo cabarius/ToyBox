@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using HarmonyLib;
 using Kingmaker;
@@ -30,7 +31,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
 using static ToyBox.BlueprintExtensions;
-#nullable enable annotations
 
 namespace ToyBox {
 

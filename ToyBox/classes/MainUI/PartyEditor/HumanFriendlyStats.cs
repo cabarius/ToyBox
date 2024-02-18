@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿using Kingmaker.EntitySystem.Stats;
 using System;
 using System.Collections.Generic;

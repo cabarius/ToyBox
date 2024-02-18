@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿// Copyright < 2023 >  - Narria (github user Cabarius) - License: MIT
 using HarmonyLib;
 using Kingmaker;
@@ -26,7 +27,6 @@ using UnityEngine;
 using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
 using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
-#nullable enable annotations
 
 namespace ToyBox {
     public static class DialogEditor {

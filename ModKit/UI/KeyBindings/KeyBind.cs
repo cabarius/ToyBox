@@ -1,7 +1,7 @@
+#nullable enable annotations
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-#nullable enable annotations
 
 namespace ModKit {
     public static partial class UI {

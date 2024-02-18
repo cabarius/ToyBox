@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿// global statics
 // common alternate using
 global using Kingmaker.Blueprints.Base;
@@ -60,7 +61,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UniRx;
-#nullable enable annotations
 
 namespace ToyBox {
     public static partial class Shodan {

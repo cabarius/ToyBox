@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿using Kingmaker;
 using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
 using Kingmaker.EntitySystem.Entities;

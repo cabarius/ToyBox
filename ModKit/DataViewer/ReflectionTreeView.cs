@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿using JetBrains.Annotations;
 using Kingmaker.Blueprints;
 using ModKit.Utility;
@@ -9,7 +10,7 @@ using UnityEngine;
 using static ModKit.UI;
 using static ModKit.Utility.StringExtensions;
 using Object = System.Object;
-#nullable enable annotations
+
 namespace ModKit.DataViewer {
     public class ReflectionTreeView {
 #if false

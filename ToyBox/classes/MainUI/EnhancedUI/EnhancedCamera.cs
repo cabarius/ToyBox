@@ -1,10 +1,10 @@
+#nullable enable annotations
 ﻿using ModKit;
 using ModKit.Utility;
 using System;
 using System.Linq;
 using UnityEngine;
 using static ModKit.UI;
-#nullable enable annotations
 
 namespace ToyBox {
     public static class EnhancedCamera {

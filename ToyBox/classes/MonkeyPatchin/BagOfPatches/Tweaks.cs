@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿using HarmonyLib;
 using Kingmaker.View.MapObjects.Traps;
 

@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,7 +19,6 @@ using Owlcat.Runtime.Core.Utility;
 using UnityEngine;
 using Attribute = System.Attribute;
 using LocalizationManager = Kingmaker.Localization.LocalizationManager;
-#nullable enable annotations
 
 namespace ToyBox {
 

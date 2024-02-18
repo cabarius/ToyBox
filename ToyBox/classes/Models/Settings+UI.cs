@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿using ModKit;
 using System;
 using System.Collections.Generic;
@@ -5,7 +6,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-#nullable enable annotations
 
 namespace ToyBox {
     public partial class SettingsUI {

@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿using Kingmaker;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
@@ -18,7 +19,6 @@ using UnityEditor;
 using UnityEngine;
 using static ModKit.UI;
 using Application = UnityEngine.Application;
-#nullable enable annotations
 
 namespace ToyBox {
     public static class EtudesEditor {

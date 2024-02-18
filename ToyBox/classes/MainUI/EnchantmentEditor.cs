@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿using DG.Tweening;
 using Kingmaker;
 using Kingmaker.Blueprints;

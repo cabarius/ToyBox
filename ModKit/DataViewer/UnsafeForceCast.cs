@@ -1,7 +1,8 @@
+#nullable enable annotations
 ﻿using ModKit.Utility;
 using System;
 using System.Reflection.Emit;
-#nullable enable annotations
+
 namespace ModKit.DataViewer {
     internal static class UnsafeForceCast {
         private static readonly DoubleDictionary<Type, Type, WeakReference> _cache = new();

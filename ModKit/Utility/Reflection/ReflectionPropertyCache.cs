@@ -1,8 +1,8 @@
+#nullable enable annotations
 ﻿using System;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-#nullable enable annotations
 
 namespace ModKit.Utility {
     public static partial class ReflectionCache {

@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using System;
 using System.Collections.Generic;
@@ -5,7 +6,6 @@ using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using UnityEngine;
 using GL = UnityEngine.GUILayout;
-#nullable enable annotations
 
 namespace ModKit {
     public static partial class UI {

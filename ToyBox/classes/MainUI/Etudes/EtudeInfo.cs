@@ -1,3 +1,4 @@
+#nullable enable annotations
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,7 +6,6 @@ using System.Text;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
 using ModKit;
-#nullable enable annotations
 
 namespace ToyBox {
     public class ConflictingGroupIdReferences {

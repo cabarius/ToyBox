@@ -1,8 +1,9 @@
+#nullable enable annotations
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using UnityEngine;
 using System;
 using GL = UnityEngine.GUILayout;
-#nullable enable annotations
+
 namespace ModKit {
     public static partial class UI {
         private static GUIStyle linkStyle = null;

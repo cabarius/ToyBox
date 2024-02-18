@@ -1,9 +1,9 @@
+#nullable enable annotations
 ﻿//#define MARK_DEBUG
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
-#nullable enable annotations
 
 namespace ModKit.Utility {
     public static class StringExtensions {
