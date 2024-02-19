@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿using JetBrains.Annotations;
 using ModKit.Utility;
 using System;

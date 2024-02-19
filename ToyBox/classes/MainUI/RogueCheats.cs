@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿using Kingmaker;
 using Kingmaker.Cheats;
 using Kingmaker.Code.UI.MVVM.VM.NavigatorResource;

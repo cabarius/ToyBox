@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿using Kingmaker;
 using ModKit;
 using Owlcat.Runtime.UI.Controls.Button;

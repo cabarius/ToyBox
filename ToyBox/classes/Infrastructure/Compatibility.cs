@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿// global statics
 // common alternate using
 global using Kingmaker.Blueprints.Base;

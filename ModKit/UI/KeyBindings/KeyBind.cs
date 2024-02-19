@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Newtonsoft.Json;

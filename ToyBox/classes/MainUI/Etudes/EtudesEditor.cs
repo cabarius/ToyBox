@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿using Kingmaker;
 using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;

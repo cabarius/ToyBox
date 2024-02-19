@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿using Kingmaker.Blueprints;
 using ModKit;
 using System;

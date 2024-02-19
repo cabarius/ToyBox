@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿//#define MARK_DEBUG
 using System;
 using System.Text;

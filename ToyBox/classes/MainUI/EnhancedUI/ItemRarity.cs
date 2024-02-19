@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Items;

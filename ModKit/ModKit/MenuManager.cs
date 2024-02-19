@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿using ModKit.Utility;
 using System;
 using System.Collections.Generic;

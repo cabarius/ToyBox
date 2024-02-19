@@ -10,6 +10,7 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<FileAlignment>512</FileAlignment>
 		<LangVersion>latest</LangVersion>
+        <Nullable>annotations</Nullable>
 		<RootNamespace>ToyBox</RootNamespace>
 		<WarningLevel>5</WarningLevel>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>

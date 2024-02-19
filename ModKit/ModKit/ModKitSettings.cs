@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿namespace ModKit {
     public partial class Mod {
         public static ModKitSettings ModKitSettings;

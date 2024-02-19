@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿// Copyright < 2023 >  - Narria (github user Cabarius) - License: MIT
 using HarmonyLib;
 using Kingmaker;

@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿using Kingmaker.Enums.Damage;
 using System;
 using System.Collections.Generic;

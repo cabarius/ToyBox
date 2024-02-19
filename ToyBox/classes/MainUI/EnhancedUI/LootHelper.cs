@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿using Kingmaker;
 using Kingmaker.Blueprints.Loot;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;

@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿// some stuff borrowed shamelessly and enhanced from Kingdom Resolution Mod
 //   "Author": "spacehamster",
 //   "HomePage": "https://www.nexusmods.com/pathfinderkingmaker/mods/36",

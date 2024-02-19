@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿// some stuff borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
 
 using ModKit.Utility;

@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿using HarmonyLib;
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿//
 // TO DO:
 // 1. ref ReturnType

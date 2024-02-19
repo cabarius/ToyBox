@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿using System;
 using UnityEngine;
 

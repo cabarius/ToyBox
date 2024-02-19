@@ -1,5 +1,4 @@
 // Copyright < 2021 > Narria (github user Cabarius) - License: MIT
-#nullable enable annotations
 using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.EntitySystem;

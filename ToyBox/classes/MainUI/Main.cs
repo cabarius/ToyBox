@@ -1,4 +1,3 @@
-#nullable enable annotations
 ﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 // Special thanks to @SpaceHampster and @Velk17 from Pathfinder: Wrath of the Rightous Discord server for teaching me how to mod Unity games
 using HarmonyLib;
