@@ -3,6 +3,7 @@ using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.EntitySystem;
 using Kingmaker.EntitySystem.Persistence;
+using Kingmaker.Enums;
 using Kingmaker.RuleSystem;
 using ModKit;
 using ModKit.Utility;
@@ -35,6 +36,10 @@ namespace ToyBox {
         //              { doOverride, List<GUID> with outfits to use }
         [JsonProperty]
         public Dictionary<string, Tuple<bool, List<string>>> doOverrideOutfit = new();
+        [JsonProperty]
+        // Dictioanry<Character Hashcode,
+        //              Kingmaker.Enums.Size which will override default size
+        public Dictionary<string, Size> characterSizeModifier = new();
     }
 
     public class Settings : UnityModManager.ModSettings {

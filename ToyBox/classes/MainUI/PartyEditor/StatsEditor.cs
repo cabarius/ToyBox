@@ -370,6 +370,47 @@ namespace ToyBox {
             if (ch != null && ch.HashKey() != null) {
                 using (HorizontalScope()) {
                     Space(100);
+                    using (VerticalScope()) {
+                        using (HorizontalScope()) {
+                            Label("Size".localize(), Width(425));
+                            var size = ch.Descriptor().State.Size;
+                            Label($"{size}".orange().bold(), Width(175));
+                        }
+                        Label("Pick size modifier to overwrite default.".localize());
+                        Label("Pick none to stop overwriting.".localize());
+                        using (HorizontalScope()) {
+                            Space(428);
+                            int tmp = 0;
+                            if (Main.Settings.perSave.characterSizeModifier.TryGetValue(ch.HashKey(), out var tmpSize)) {
+                                tmp = ((int)tmpSize) + 1;
+                                // Applying again in case the game decided to change the modifier. Since this is an OnGUI it'll still only happen if the GUI is open though.
+                                ch.Descriptor().State.Size = tmpSize;
+                            }
+                            var names = Enum.GetNames(typeof(Size)).Prepend("None").Select(name => name.localize()).ToArray();
+                            ActionSelectionGrid(
+                                ref tmp,
+                                names,
+                                3,
+                               (s) => {
+                                   // if == 0 then "None" is selected
+                                   if (tmp > 0) {
+                                       var newSize = (Size)(tmp - 1);
+                                       ch.Descriptor().State.Size = newSize;
+                                       Main.Settings.perSave.characterSizeModifier[ch.HashKey()] = newSize;
+                                       Settings.SavePerSaveSettings();
+                                   }
+                                   else {
+                                       Main.Settings.perSave.characterSizeModifier.Remove(ch.HashKey());
+                                       Settings.SavePerSaveSettings();
+                                       ch.Descriptor().State.Size = ch.Descriptor().OriginalSize;
+                                   }
+                               },
+                                Width(600));
+                        }
+                    }
+                }
+                using (HorizontalScope()) {
+                    Space(100);
                     if (ch.View?.gameObject?.transform?.localScale[0] is float scaleMultiplier) {
                         var lastScale = lastScaleSize.GetValueOrDefault(ch.HashKey(), 1);
                         if (lastScale != scaleMultiplier) {

@@ -55,8 +55,9 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
  
-### ToyBox Rogue - Ver 1.5.10c built for Rogue Trader 1.1.28
-* (***ADDB***) Fixes for new version.
+### ToyBox Rogue - Ver 1.5.10d built for Rogue Trader 1.1.28
+* (***ADDB***) Added Size Change to Party => Stats (this allows changing grid size of companions; < Large = 1x1; Large = 2x2; Huge = 3x3; Gargantum = 4x4
+* (***ADDB***) Fixes for new version (mostly fixing respec).
 * (***ADDB***) Added improved glyph support detection. If you're symbols used to be nice but are now weird then please report that!
 * (***ADDB***) Reworked Ascii Glyphs (for systems where default glyphs aren't supported).
 * (***ADDB***) Ported to SDK style project; Code Cleanup; etc. All in all this should not influence usage experience but should make developing and building for other people easier.
