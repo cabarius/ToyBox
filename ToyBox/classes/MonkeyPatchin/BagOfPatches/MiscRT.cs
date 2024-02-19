@@ -244,6 +244,14 @@ namespace ToyBox.BagOfPatches {
                         PartyEditor.lastScaleSize[cha.HashKey()] = scale;
                     }
                 }
+                foreach (var ID in Main.Settings.perSave.characterSizeModifier.Keys) {
+                    foreach (BaseUnitEntity cha in Game.Instance.State.AllUnits.Where((u) => u.HashKey().Equals(ID))) {
+                        Kingmaker.Enums.Size size;
+                        if (Main.Settings.perSave.characterSizeModifier.TryGetValue(ID, out size)) {
+                            cha.Descriptor().State.Size = size;
+                        }
+                    }
+                }
                 //MultipleClasses.SyncAllGestaltState();
             }
         }
