@@ -163,7 +163,7 @@ namespace ToyBox.BagOfPatches {
                         var user = item.GetBestAvailableUser();
                         var target = RTExtensions.GetCurrentCharacter();
                         Mod.Debug($"user: {user.CharacterName} - target:{target.CharacterName}");
-                        GameCommandHelper.TryUseFromInventory(item, user, target);
+                        item.TryUseFromInventory(user, target);
                     }
                     catch (Exception e) {
                         Mod.Error($"InventorySlotPCView_OnClick_Patch - {e}");

@@ -356,8 +356,9 @@ namespace ToyBox.BagOfPatches {
                         return false;
                     }
                 }
-                bool flag = cargoEntity != null || cargoEntity2 != null;
-                InventoryHelper.ProcessDragEnd(from, to, flag);
+                bool flag = from.Item != null && from.Item.Value.Origin == ItemsItemOrigin.ShipComponents;
+                bool flag2 = cargoEntity != null || cargoEntity2 != null;
+                InventoryHelper.ProcessDragEnd(from, to, flag2, flag);
                 return false;
             }
         }

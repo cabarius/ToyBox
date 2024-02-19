@@ -115,15 +115,24 @@ namespace ToyBox {
         public static void EnterToArea(BlueprintAreaEnterPoint enterPoint) => Game.Instance.LoadArea(enterPoint, AutoSaveMode.None, null);
 
         public static bool CanRespec(this BaseUnitEntity ch) {
-            return RespecCompanion.CanRespec(ch);
+            bool ret = ch != null && !ch.LifeState.IsDead && !ch.IsPet;
+            if (ret) {
+                CharacterLevelLimit component = ch.OriginalBlueprint.GetComponent<CharacterLevelLimit>();
+                int num = ((component != null) ? component.LevelLimit : 0);
+                if (Main.Settings.toggleSetDefaultRespecLevelZero) {
+                    return ch.Progression.CharacterLevel > 0;
+                }
+                else {
+                    return ch.Progression.CharacterLevel > num;
+                }
+            }
+            return ret;
         }
         public static void DoRespec(this BaseUnitEntity ch) {
             ch.Progression.Respec();
             EventBus.RaiseEvent<INewServiceWindowUIHandler>(delegate (INewServiceWindowUIHandler h) {
-                h.HandleOpenCharacterInfoPage(CharInfoPageType.LevelProgression);
+                h.HandleOpenCharacterInfoPage(CharInfoPageType.LevelProgression, ch);
             }, true);
-            SelectionCharacterController selectionCharacter = Game.Instance.SelectionCharacter;
-            selectionCharacter.SetSelected(ch, true, true);
         }
     }
 }
