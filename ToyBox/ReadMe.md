@@ -43,6 +43,9 @@ Here is a summarized list of features. This list only includes a part of the fea
 - **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
  
+### ToyBox Rogue - Ver 1.5.11 built for Rogue Trader 1.1.52
+* (***ADDB***) It's now possible to change the Ranks of Stat Advancements; meaning you can now modify your character creation Stats by using Party => Features.
+
 ### ToyBox Rogue - Ver 1.5.10d built for Rogue Trader 1.1.28
 * (***ADDB***) Added Size Change to Party => Stats (this allows changing grid size of companions; < Large = 1x1; Large = 2x2; Huge = 3x3; Gargantum = 4x4). After saving + reloading the Character Model size will change automatically depending on the new size.
 * (***ADDB***) Fixes for new version (mostly fixing respec).

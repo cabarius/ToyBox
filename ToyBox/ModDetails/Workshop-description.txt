@@ -22,8 +22,8 @@ Note: If you find non-functioning features, please report them.
 Note: Using Mods will disable Achievements. There is an option to re-enable achievements in the Bag of Tricks category of this mod.
 
 [h2]Installation[/h2]
-[url=https://github.com/cabarius/ToyBox/wiki/Installing-Toybox-for-RT-(Steam-Workshop-Edition)]Read the installation Guide here.[/url]
-In addition to the three ways mentioned in the link above, there is also [url=https://steamcommunity.com/workshop/discussions/18446744073709551615/4206994023679864569/?appid=2186680]experimental Workshop Integration[/url].
+Should be automatic for Steam Players as of Game Version 1.1.52.
+Open the mod menu using CTRL+F10 once in-game. (Don't use Shift+F10; that's another Mod Menu which ToyBox does not use).
 
 [url=https://www.reddit.com/r/RogueTraderCRPG/comments/18cxbyo/modding_in_rogue_trader/]Information on Modding in Rogue Trader[/url]
 [url=https://github.com/xADDBx/ToyBox/blob/RT/ToyBox/ReadMe.md]Release Notes[/url]

@@ -27,6 +27,7 @@ using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.ActivatableAbilities;
 using Kingmaker.UnitLogic.Buffs.Blueprints;
+using Kingmaker.UnitLogic.Progression.Features.Advancements;
 using Kingmaker.Utility;
 using Kingmaker.View;
 using Kingmaker.Visual.CharacterSystem;
@@ -59,6 +60,9 @@ namespace ToyBox {
                                                        (bp, ch, n, index) => ch.Progression.Features.Get(bp)?.AddRank(),
                                                        (bp, ch, index) => {
                                                            var feature = ch.Progression.Features.Get(bp);
+                                                           if (bp is BlueprintStatAdvancement) {
+                                                               return feature != null;
+                                                           }
                                                            return feature != null && feature.GetRank() < feature.Blueprint.Ranks;
                                                        });
             // Buffs
