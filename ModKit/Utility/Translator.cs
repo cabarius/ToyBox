@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,7 +9,7 @@ namespace ModKit {
     public static class Translater {
         public static Dictionary<string, string> cachedTranslations = new();
 
-#if true
+#if false
         public static async Task MassTranslate(List<string> strings) {
             using (var client = new HttpClient()) {
                 var fromLanguage = "ru";//Russian
@@ -28,7 +27,7 @@ namespace ModKit {
             }
         }
 
-#else
+//#else
 
         private const int maxQuerySize = 2000;
         public static async Task MassTranslate(List<string> strings) {

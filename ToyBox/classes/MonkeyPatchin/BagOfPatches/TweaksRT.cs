@@ -255,7 +255,7 @@ namespace ToyBox.BagOfPatches {
                         if (button == DialogMessageBoxBase.BoxButton.Yes) {
                             ItemSlot itemSlot = InventoryHelper.s_ItemSlot;
                         }
-                    }, null, 0);
+                    }, null, null, null, 0);
                     return false;
                 }
                 InventoryHelper.DropItemMechanic(item, false);

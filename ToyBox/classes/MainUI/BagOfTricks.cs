@@ -334,7 +334,17 @@ namespace ToyBox {
                            Div(0, 25, 1280);
                        }
                    },
-                   () => Toggle("Disable end turn HotKey".localize(), ref Settings.disableEndTurnHotkey, 500.width()),
+                   () => Toggle("Disable end turn HotKey".localize(), ref Settings.disableEndTurnHotkey, 500.width()), 
+                   () => {
+                       Toggle("Enable Loading with Blueprint Errors".localize().color(RGBA.maroon), ref Settings.enableLoadWithMissingBlueprints);
+                       25.space();
+                       Label($"This {"incredibly dangerous".bold()} setting overrides the default behavior of failing to load saves depending on missing blueprint mods. This desperate action can potentially enable you to recover your saved game, though you'll have to respec at minimum.".localize().orange());
+                   },
+                   () => {
+                       if (Settings.enableLoadWithMissingBlueprints) {
+                           Label("To permanently remove these modded blueprint dependencies, load the damaged saved game, change areas, and then save the game. You can then respec any characters that were impacted.".localize().orange());
+                       }
+                   },
                    () => { }
                 );
 

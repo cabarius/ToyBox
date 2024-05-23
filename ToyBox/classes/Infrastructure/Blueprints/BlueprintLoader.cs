@@ -68,8 +68,8 @@ namespace ToyBox {
                 try {
                     bp = bpCache.Load(entry.Key);
                 }
-                catch {
-                    Mod.Warn($"cannot load GUID: {entry.Key}");
+                catch (Exception ex) {
+                    Mod.Warn($"cannot load GUID: {entry.Key}, Encountered the following error during BlueprintsCache.Load:\n{ex}");
                     continue;
                 }
                 _blueprintsInProcess.Add(bp);

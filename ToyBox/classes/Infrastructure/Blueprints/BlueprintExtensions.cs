@@ -147,8 +147,8 @@ namespace ToyBox {
                     }
                     else {
                         if (uiDataProvider is BlueprintSpellbook spellbook) {
-                            searchKeyCache[blueprint.AssetGuid] = $"{spellbook.Name} {spellbook.name}";
-                            return $"{spellbook.Name} {spellbook.name}";
+                            searchKeyCache[blueprint.AssetGuid] = $"{spellbook.Name} {spellbook.name} {spellbook.AssetGuid}";
+                            return searchKeyCache[blueprint.AssetGuid];
                         }
                         name = uiDataProvider.Name;
                         if (name == "<null>" || name.StartsWith("[unknown key: ")) {
@@ -158,8 +158,8 @@ namespace ToyBox {
                             name += $" : {blueprint.name}";
                         }
                     }
-                    searchKeyCache[blueprint.AssetGuid] = name.StripHTML();
-                    return name.StripHTML();
+                    searchKeyCache[blueprint.AssetGuid] = name.StripHTML() + $" {blueprint.AssetGuid}";
+                    return searchKeyCache[blueprint.AssetGuid];
                 }
                 else if (blueprint is BlueprintItemEnchantment enchantment) {
                     string name;
@@ -176,11 +176,11 @@ namespace ToyBox {
                             name += $" : {blueprint.name}";
                         }
                     }
-                    searchKeyCache[blueprint.AssetGuid] = name.StripHTML();
-                    return name.StripHTML();
+                    searchKeyCache[blueprint.AssetGuid] = name.StripHTML() + $" {blueprint.AssetGuid}";
+                    return searchKeyCache[blueprint.AssetGuid];
                 }
-                searchKeyCache[blueprint.AssetGuid] = blueprint.name.StripHTML();
-                return blueprint.name.StripHTML(); // can we get rid of this?
+                searchKeyCache[blueprint.AssetGuid] = blueprint.name.StripHTML() + $" {blueprint.AssetGuid}";
+                return searchKeyCache[blueprint.AssetGuid];
             }
             catch (Exception ex) {
                 Mod.Debug(ex.ToString());

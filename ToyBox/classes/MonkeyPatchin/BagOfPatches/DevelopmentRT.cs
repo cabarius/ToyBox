@@ -40,16 +40,9 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
 
         [HarmonyPatch(typeof(BlueprintConverter))]
         private static class ForceSuccessfulLoad_Blueprints_Patch {
-            [HarmonyPatch(nameof(BlueprintConverter.ReadJson), new Type[] { typeof(JsonReader), typeof(Type), typeof(object), typeof(JsonSerializer) })]
+            [HarmonyPatch(nameof(BlueprintConverter.ReadJson))]
             [HarmonyPrefix]
-            public static bool ReadJson(
-                    BlueprintConverter __instance,
-                    JsonReader reader,
-                    Type objectType,
-                    object existingValue,
-                    JsonSerializer serializer,
-                    ref object __result
-                ) {
+            public static bool ReadJson(ref object __result, JsonReader reader) {
                 if (!settings.enableLoadWithMissingBlueprints) return true;
                 var text = (string)reader.Value;
                 if (string.IsNullOrEmpty(text) || text == "null") {
