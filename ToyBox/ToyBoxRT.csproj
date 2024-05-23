@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="$(SolutionDir)GamePath.props" Condition="Exists('$(SolutionDir)GamePath.props')" />
 	<PropertyGroup>
         <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -60,7 +60,6 @@
     </ItemGroup>
 	<ItemGroup>
 		<None Include="ReadMe.md" />
-		<None Include="zip-hash-sign.ps1" />
 		<Content Include="Localization\RogueTrader\*.*">
 			<Link>Localization\%(Filename)%(Extension)</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -82,6 +81,9 @@
 	<Target Name="PublishToSteamWorkshop" AfterTargets="Publish">
 		<PublishToWorkshop PathToManifest="$(MSBuildThisFileDirectory)\ModDetails\OwlcatModificationManifest.json" ImageDir="$(MSBuildThisFileDirectory)\ModDetails\" BuildDir="$(MSBuildProjectDirectory)\$(OutputPath)" PathToDescription="$(MSBuildThisFileDirectory)\ModDetails\Workshop-description.txt" GameAppId="2186680" />
 	</Target>
+    <Target Name="ZipOutput" AfterTargets="Build">
+        <ZipDirectory SourceDirectory="$(MSBuildProjectDirectory)\$(OutputPath)" DestinationFile="$(MSBuildProjectDirectory)\$(OutputPath)\..\$(AssemblyName)_$(Configuration).zip" Overwrite="true" />
+    </Target>
 	<Target Name="GenerateCustomPropsFile" BeforeTargets="BeforeBuild" Condition="$(RogueTraderInstallDir) == ''">
 		<Exec Command="findstr /C:&quot;Mono path[0]&quot; &quot;$(RogueTraderData)\Player.log&quot;" IgnoreExitCode="true" ConsoleToMSBuild="true">
 			<Output TaskParameter="ExitCode" PropertyName="ExitCode" />
@@ -96,10 +98,4 @@
 		<WriteLinesToFile File="$(SolutionDir)GamePath.props" Lines="&lt;Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003'&gt; &#xD;&#xA;	&lt;PropertyGroup&gt; &#xD;&#xA;		&lt;RogueTraderInstallDir&gt;$(RogueTraderInstallDir)&lt;/RogueTraderInstallDir&gt;&#xD;&#xA;	&lt;/PropertyGroup&gt;&#xD;&#xA;&lt;/Project&gt;" Overwrite="true" Encoding="utf-8" />
 	</Target>
     <Import Project="$(SolutionDir)ModKit\ModKitSrc.projitems" Label="Shared" />
-    <PropertyGroup>
-        <PostBuildEvent>
-            cd "$(MSBuildProjectDirectory)\$(OutputPath)"
-            powershell.exe -ExecutionPolicy Unrestricted -f "$(MSBuildProjectDirectory)\zip-hash-sign.ps1" Rogue
-        </PostBuildEvent>
-    </PropertyGroup>
 </Project>
