@@ -48,8 +48,7 @@ namespace ToyBox {
                         if (Settings.perSave.charIsLegendaryHero.ContainsKey(ch.HashKey())) {
                             Settings.perSave.charIsLegendaryHero[ch.HashKey()] = val;
                             Settings.SavePerSaveSettings();
-                        }
-                        else {
+                        } else {
                             Settings.perSave.charIsLegendaryHero.Add(ch.HashKey(), val);
                             Settings.SavePerSaveSettings();
                         }
@@ -62,8 +61,7 @@ namespace ToyBox {
             Div(100, 20);
             if (editMultiClass) {
                 MulticlassPicker.OnGUI(ch);
-            }
-            else {
+            } else {
                 var prog = ch.Descriptor().Progression;
                 using (HorizontalScope()) {
                     using (HorizontalScope(Width(600))) {
@@ -161,8 +159,7 @@ namespace ToyBox {
                                 Label(archName.orange(), Width(250));
                                 if (!archName.Contains(className))
                                     Label(className.yellow(), Width(250));
-                            }
-                            else {
+                            } else {
                                 Label(className.orange(), Width(250));
                             }
                         }
@@ -186,8 +183,7 @@ namespace ToyBox {
                                 125
                                 );
                             showedGestalt = true;
-                        }
-                        else Space(125);
+                        } else Space(125);
                         Space(27);
                         using (VerticalScope()) {
                             if (showedGestalt) {

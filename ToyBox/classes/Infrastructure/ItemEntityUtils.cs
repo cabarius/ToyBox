@@ -37,7 +37,7 @@ namespace ToyBox {
         public static bool HasModifierConflicts(this UnitEntityData unit, ItemEntity item) {
             var itemModifiers = item.GetModifierDescriptors();
             return unit.Stats.AllStats.SelectMany(stat => stat.Modifiers)
-                       .Any(m => !m.Stacks 
+                       .Any(m => !m.Stacks
                                  && m.ItemSource != (Loot.selectedSlot?.Item ?? null)
                                  && itemModifiers.Contains(m.ModDescriptor));
         }

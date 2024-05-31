@@ -237,8 +237,7 @@ namespace ToyBox.BagOfPatches {
                         string text = "Invalid action: ";
                         ILevelUpAction levelUpAction2 = levelUpAction;
                         @default.Log(text + ((levelUpAction2 != null) ? levelUpAction2.ToString() : null), Array.Empty<object>());
-                    }
-                    else {
+                    } else {
                         list.Add(levelUpAction);
                         levelUpAction.Apply(__instance.State, unit.Descriptor);
                         __instance.State.OnApplyAction();
@@ -321,8 +320,7 @@ namespace ToyBox.BagOfPatches {
                     if (settings.toggleIgnoreClassRestrictions) {
                         __result = true;
                     }
-                }
-                else {
+                } else {
                     if (settings.toggleIgnoreFeatRestrictions) {
                         __result = true;
                     }
@@ -590,8 +588,7 @@ namespace ToyBox.BagOfPatches {
 
                 if (settings.toggleOptionalFeatSelection) {
                     __result = true;
-                }
-                else if (settings.featsMultiplier != 1) {
+                } else if (settings.featsMultiplier != 1) {
                     var featureSelectorStateVM = __instance.FeatureSelectorStateVM;
                     var selectionState = featureSelectorStateVM.SelectionState;
                     var selectionVM = __instance.FeatureSelectorStateVM;
@@ -613,7 +610,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        #if false
+#if false
         [HarmonyPatch(typeof(CharGenNamePhaseVM))]
         private static class CharGenNamePhaseVMPatch {
             [HarmonyPatch(nameof(CharGenFeatureSelectorPhaseVM.CheckIsCompleted))]
@@ -637,7 +634,7 @@ namespace ToyBox.BagOfPatches {
                 __result = true;
             }
         }
-        #endif
+#endif
 
 #if false
         [HarmonyPatch(typeof(ProgressionData), nameof(ProgressionData.CalculateLevelEntries))]

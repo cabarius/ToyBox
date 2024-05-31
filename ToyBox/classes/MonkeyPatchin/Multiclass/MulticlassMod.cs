@@ -151,7 +151,7 @@ namespace ToyBox.Multiclass {
             set => settings.toggleMulticlass = value;
         }
         #region Utilities
-        
+
         private static void ForEachAppliedMulticlass(LevelUpState state, UnitDescriptor unit, Action action) {
             var options = MulticlassOptions.Get(state.IsCharGen() ? null : unit);
             var selectedClass = state.SelectedClass;
@@ -160,7 +160,7 @@ namespace ToyBox.Multiclass {
             Mod.Trace($"    mythic: {state.IsMythicClassSelected}");
             Mod.Trace($"    options: {options}");
             foreach (var characterClass in Main.multiclassMod.AllClasses) {
-                if (characterClass != stateReplacer.SelectedClass 
+                if (characterClass != stateReplacer.SelectedClass
                     //&& characterClass.IsMythic == selectedClass.IsMythic 
                     && options.Contains(characterClass)) {
                     var classes = unit?.Progression.Classes;
@@ -194,8 +194,7 @@ namespace ToyBox.Multiclass {
                         nullable = progression.m_MythicLevel;
                         var level = classData.Level;
                         progression.m_MythicLevel = nullable.HasValue ? new int?(nullable.GetValueOrDefault() + level) : new int?();
-                    }
-                    else {
+                    } else {
                         nullable = progression.m_CharacterLevel;
                         var level = classData.Level;
                         progression.m_CharacterLevel = nullable.HasValue ? new int?(nullable.GetValueOrDefault() + level) : new int?();

@@ -77,8 +77,7 @@ namespace ToyBox {
                 ) {
                 if (Browser.DetailToggle(text, blueprint, feature != null ? feature : blueprint, (int)titleWidth))
                     browser.ReloadData();
-            }
-            else
+            } else
                 Label(text, Width((int)titleWidth));
 
             var lastRect = GUILayoutUtility.GetLastRect();
@@ -106,13 +105,11 @@ namespace ToyBox {
                     increase.BlueprintActionButton(ch, blueprint, () => todo.Add(() => increase!.action(blueprint, ch, repeatCount)), 60);
                     Space(17);
                     remainingWidth -= 190;
-                }
-                else {
+                } else {
                     Space(190);
                     remainingWidth -= 190;
                 }
-            }
-            else {
+            } else {
                 Space(190);
                 remainingWidth -= 190;
             }
@@ -132,8 +129,7 @@ namespace ToyBox {
                     if (Settings.showAssetIDs)
                         ClipboardLabel(blueprint.AssetGuid.ToString(), AutoWidth());
                     Label(blueprint.Description.StripHTML().MarkedSubstring(browser.SearchText).green(), Width(remainingWidth - 100));
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Mod.Warn($"Error in blueprint: {blueprint.AssetGuid}");
                     Mod.Warn($"         name: {blueprint.name}");
                     Mod.Error(e);
@@ -187,8 +183,7 @@ namespace ToyBox {
                                 20.space();
                                 Label($"{selectionEntry.data.Source.Blueprint.GetDisplayName()}",
                                       250.width());
-                            }
-                            else
+                            } else
                                 354.space();
                             if (ch != null) {
                                 if (characterHasEntry)
@@ -301,8 +296,7 @@ namespace ToyBox {
                     Toggle("Show Tree".localize(), ref _showTree, Width(250));
                 }
                 treeEditor.OnGUI(ch, updateTree);
-            }
-            else {
+            } else {
                 browser.OnGUI(
                     fact,
                     () => {

@@ -631,8 +631,7 @@ namespace ToyBox {
                                     revealer.DefaultRadius = true;
                                     revealer.UseDefaultFowBorder = true;
                                     revealer.Radius = 1.0f;
-                                }
-                                else {
+                                } else {
                                     revealer.DefaultRadius = false;
                                     revealer.UseDefaultFowBorder = false;
                                     // TODO: is this right?

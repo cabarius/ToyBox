@@ -7,7 +7,7 @@ namespace ToyBox {
         public readonly LevelUpState State;
         public readonly BlueprintCharacterClass? SelectedClass;
         public readonly int NextClassLevel;
-        
+
         public StateReplacer(LevelUpState state) {
             State = state;
             SelectedClass = state.SelectedClass;

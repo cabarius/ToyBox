@@ -59,11 +59,9 @@ namespace ToyBox.BagOfPatches {
                 var attributeMax = settings.characterCreationAbilityPointsMax;
                 if (!__instance.Available) {
                     __result = false;
-                }
-                else if (settings.toggleIgnoreAttributeCap) {
+                } else if (settings.toggleIgnoreAttributeCap) {
                     __result = true;
-                }
-                else {
+                } else {
                     if (attributeMax <= 18) {
                         attributeMax = 18;
                     }
@@ -98,8 +96,7 @@ namespace ToyBox.BagOfPatches {
                 var attributeValue = __instance.StatValues[attribute];
                 if (attributeValue <= 7) {
                     __result = -2;
-                }
-                else if (attributeValue >= 17) {
+                } else if (attributeValue >= 17) {
                     __result = -4;
                 }
             }

@@ -155,10 +155,8 @@ namespace ToyBox {
                             worldPosition.x + offset.x,
                             worldPosition.y,
                             worldPosition.z + offset.z);
-                    }
-                    catch {
-                    }
-                    finally {
+                    } catch {
+                    } finally {
                         Game.Instance.EntityCreator.SpawnUnit(unit, spawnPosition, Quaternion.identity, Game.Instance.State.LoadedAreaState.MainState);
                     }
                 }
@@ -170,8 +168,7 @@ namespace ToyBox {
                 if ((partyCharacters != null ? (partyCharacters.Select(r => r.Value).SequenceEqual(Game.Instance.Player.Party) ? 1 : 0) : 1) != 0)
                     return;
                 GlobalMapView.Instance.ChangePartyOnMap();
-            }
-            else {
+            } else {
                 foreach (var temp in Game.Instance.Player.RemoteCompanions.ToTempList())
                     temp.IsInGame = false;
                 Game.Instance.Player.FixPartyAfterChange();
@@ -222,8 +219,7 @@ namespace ToyBox {
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 if (!ch.Descriptor().Abilities.HasFact(ability)) return true;
             }
             return false;
@@ -279,8 +275,7 @@ namespace ToyBox {
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 ch.Descriptor().AddFact(ability);
             }
         }
@@ -329,8 +324,7 @@ namespace ToyBox {
             var playerPosition = Game.Instance.Player.GlobalMap.CurrentPosition;
             if (friendlyorhostile) {
                 Game.Instance.Player.GlobalMap.LastActivated.CreateArmy(ArmyFaction.Crusaders, bp, playerPosition);
-            }
-            else {
+            } else {
                 Game.Instance.Player.GlobalMap.LastActivated.CreateArmy(ArmyFaction.Demons, bp, playerPosition);
             }
         }

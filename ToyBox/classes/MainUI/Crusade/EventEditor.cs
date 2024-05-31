@@ -94,11 +94,9 @@ namespace ToyBox.classes.MainUI {
                                             ActionButton("Cancel".localize(), () => {
                                                 task.Cancel();
                                             }, 120.width());
-                                        }
-                                        else
+                                        } else
                                             123.space();
-                                    }
-                                    else
+                                    } else
                                         249.space();
                                     25.space();
                                     var taskBlueprint = task.Event.EventBlueprint as BlueprintKingdomProject;

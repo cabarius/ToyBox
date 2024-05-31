@@ -625,8 +625,7 @@ namespace ToyBox.BagOfPatches {
                 foreach (var instr in instructions) {
                     if (instr.Calls(HasMotionThisTick_Method)) {
                         yield return new CodeInstruction(OpCodes.Call, CanRollPerception_Method);
-                    }
-                    else {
+                    } else {
                         yield return instr;
                     }
                 }
@@ -676,8 +675,7 @@ namespace ToyBox.BagOfPatches {
             private static bool Prefix(AkSoundEngineController __instance) {
                 if (Settings.toggleContinueAudioOnLostFocus) {
                     return false;
-                }
-                else {
+                } else {
                     return true;
                 }
             }
@@ -700,8 +698,7 @@ namespace ToyBox.BagOfPatches {
                     revealer.DefaultRadius = false;
                     revealer.UseDefaultFowBorder = false;
                     revealer.Radius = FogOfWarController.VisionRadius * Settings.fowMultiplier;
-                }
-                else {
+                } else {
                     revealer.DefaultRadius = true;
                     revealer.UseDefaultFowBorder = true;
                     revealer.Radius = 1.0f;

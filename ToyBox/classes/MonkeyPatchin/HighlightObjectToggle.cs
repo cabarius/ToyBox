@@ -51,8 +51,7 @@ namespace ToyBox.classes.MonkeyPatchin {
                         });
                         return false;
                     }
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     Mod.Error(ex);
                 }
                 return true;
@@ -66,8 +65,7 @@ namespace ToyBox.classes.MonkeyPatchin {
                     if (Main.Settings.highlightObjectsToggle) {
                         return false;
                     }
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     Mod.Error(ex);
                 }
                 return true;

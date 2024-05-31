@@ -64,8 +64,7 @@ namespace ToyBox.classes.MainUI {
                         ch.Brain.RestoreAvailableActions();
                         ActionBrowser.ResetSearch();
                     }
-                }
-                else
+                } else
                     Label("Blueprints".orange().bold() + " loading: " + BlueprintLoader.Shared.progress.ToString("P2").cyan().bold());
             }
 

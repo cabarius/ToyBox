@@ -75,8 +75,7 @@ namespace ToyBox {
                      int itemIndex;
                      if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
                          itemIndex = SearchAndPick.ParamSelected[index];
-                     }
-                     else {
+                     } else {
                          itemIndex = BlueprintListUI.ParamSelected[index];
                      }
                      var value = bp.ParametrizedSelectionItems(itemIndex)?.Param;
@@ -86,8 +85,7 @@ namespace ToyBox {
                     int itemIndex;
                     if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
                         itemIndex = SearchAndPick.ParamSelected[index];
-                    }
-                    else {
+                    } else {
                         itemIndex = BlueprintListUI.ParamSelected[index];
                     }
                     var value = bp.ParametrizedSelectionItems(itemIndex)?.Param;
@@ -99,8 +97,7 @@ namespace ToyBox {
                     int itemIndex;
                     if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
                         itemIndex = SearchAndPick.ParamSelected[index];
-                    }
-                    else {
+                    } else {
                         itemIndex = BlueprintListUI.ParamSelected[index];
                     }
                     var value = bp.ParametrizedSelectionItems(itemIndex)?.Param;
@@ -112,8 +109,7 @@ namespace ToyBox {
                     int itemIndex;
                     if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
                         itemIndex = SearchAndPick.ParamSelected[index];
-                    }
-                    else {
+                    } else {
                         itemIndex = BlueprintListUI.ParamSelected[index];
                     }
                     var value = bp.ParametrizedSelectionItems(itemIndex)?.Param;
@@ -126,8 +122,7 @@ namespace ToyBox {
                      int itemIndex;
                      if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
                          itemIndex = SearchAndPick.ParamSelected[index];
-                     }
-                     else {
+                     } else {
                          itemIndex = BlueprintListUI.ParamSelected[index];
                      }
                      var source = new FeatureSource();
@@ -157,8 +152,7 @@ namespace ToyBox {
                     int itemIndex;
                     if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
                         itemIndex = SearchAndPick.ParamSelected[index];
-                    }
-                    else {
+                    } else {
                         itemIndex = BlueprintListUI.ParamSelected[index];
                     }
                     var value = bp.FeatureSelectionItems(itemIndex);
@@ -228,12 +222,10 @@ namespace ToyBox {
 
                                                                  if (spellbook.IsMythic) {
                                                                      spellbook.AddMythicLevel();
-                                                                 }
-                                                                 else {
+                                                                 } else {
                                                                      spellbook.AddBaseLevel();
                                                                  }
-                                                             }
-                                                             catch (Exception e) { Mod.Error(e); }
+                                                             } catch (Exception e) { Mod.Error(e); }
                                                          },
                                                          (bp, ch, index) => ch.Descriptor().Spellbooks.Any(sb => sb.Blueprint == bp && sb.CasterLevel < bp.MaxSpellLevel));
             // Abilities

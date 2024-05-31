@@ -152,7 +152,7 @@ namespace ToyBox {
             Notable |
             NonUsable |
             Scroll |
-            Wand | 
+            Wand |
             Potion |
             Recipe |
             Unlearned |
@@ -161,7 +161,7 @@ namespace ToyBox {
             UnreadDocuments |
             UsableWithoutUMD |
             CurrentEquipped |
-            NonZeroPW | 
+            NonZeroPW |
             UnlearnedScrolls,
     }
 
@@ -190,8 +190,7 @@ namespace ToyBox {
             WeightValueUp |
             RarityDown
     }
-    public enum ExpandedFilterType
-    {
+    public enum ExpandedFilterType {
         QuickslotUtilities = 14,
         UnlearnedRecipes = 15,
         UnreadDocuments = 16,
@@ -201,16 +200,14 @@ namespace ToyBox {
         UnlearnedScrolls = 20,
     }
 
-    public enum ExpandedSorterType
-    {
+    public enum ExpandedSorterType {
         WeightValueUp = 11,
         WeightValueDown = 12,
         RarityUp = 13,
         RarityDown = 14
     }
 
-    public enum SpellbookFilter
-    {
+    public enum SpellbookFilter {
         NoFilter,
         AOE,
         Touch,
@@ -220,8 +217,7 @@ namespace ToyBox {
         SupportsMetamagic
     }
 
-    public static class EnumHelper
-    {
+    public static class EnumHelper {
         public static IEnumerable<InventorySearchCriteria> ValidInventorySearchCriteria
             = Enum.GetValues(typeof(InventorySearchCriteria)).Cast<InventorySearchCriteria>().Where(i => i != InventorySearchCriteria.Default);
 
@@ -236,7 +232,7 @@ namespace ToyBox {
         public static bool IsRarityCategory(this ItemSortCategories category) => category == ItemSortCategories.RarityUp || category == ItemSortCategories.RarityDown;
         public static bool IsValid(this ItemSortCategories category) => category != ItemSortCategories.Default && (Main.Settings.UsingLootRarity || !category.IsRarityCategory());
 
-        public static IEnumerable<ItemSortCategories> ValidSorterCategories 
+        public static IEnumerable<ItemSortCategories> ValidSorterCategories
             = Enum.GetValues(typeof(ItemSortCategories)).Cast<ItemSortCategories>().Where(category => category.IsValid());
     }
 }

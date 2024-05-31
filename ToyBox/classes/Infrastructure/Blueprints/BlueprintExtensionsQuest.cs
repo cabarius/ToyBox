@@ -50,7 +50,7 @@ namespace ToyBox {
                 this.elements = elements;
             }
         }
-        public static bool IsActive(this IntrestingnessEntry entry) => 
+        public static bool IsActive(this IntrestingnessEntry entry) =>
             (entry.checker?.IsActive() ?? false)
             || (entry?.elements.Any(element => element.IsActive()) ?? false)
             || (entry?.elements?.Count > 0 && entry.source is ActionsHolder) // Kludge until we get more clever about analyzing dialog state.  This lets Lathimas show up as active
@@ -94,7 +94,7 @@ namespace ToyBox {
                                .Select(w => w.Source);
             var result = new HashSet<IntrestingnessEntry>();
             var elements = new HashSet<IntrestingnessEntry>();
-            
+
             // dialog
             var dialogInteractions = spawnInterations.OfType<SpawnerInteractionDialog>().ToList();
             // dialog interation conditions
@@ -117,7 +117,7 @@ namespace ToyBox {
                                                           .Where(cueRef => cueRef.Get() != null)
                                                           .Select(cueRef => new IntrestingnessEntry(unit, cueRef.Get(), cueRef.Get().Conditions)));
             result.UnionWith(dialogCueConditions.ToHashSet());
-            
+
             // actions
             var actionInteractions = spawnInterations.OfType<SpawnerInteractionActions>();
             // action interaction conditions
@@ -130,7 +130,7 @@ namespace ToyBox {
                                    .Where(ai => ai.Actions?.Get() != null)
                                    .SelectMany(ai => ai.Actions.Get().Actions.Actions
                                                    .Where(a => a is Conditional)
-                                                   .Select(a =>  new IntrestingnessEntry(unit, ai.Actions.Get(), (a as Conditional).ConditionsChecker)));
+                                                   .Select(a => new IntrestingnessEntry(unit, ai.Actions.Get(), (a as Conditional).ConditionsChecker)));
             result.Union(actionConditions.ToHashSet());
             // action elements
             var actionElements = actionInteractions

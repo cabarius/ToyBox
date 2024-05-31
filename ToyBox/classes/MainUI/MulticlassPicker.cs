@@ -97,8 +97,7 @@ namespace ToyBox {
                                 archetypeOptions.Add(chArchetype);
                                 options.SetArchetypeOptions(cl, archetypeOptions);
                             }
-                        }
-                        else options.Remove(cl);
+                        } else options.Remove(cl);
                         var action = v ? "Add".localize().green() : "Del".localize().yellow();
                         Mod.Trace($"PickerRow - {action} class: {cl.HashKey()} - {options} -> {options.Contains(cl)}");
                         changed = true;
@@ -113,8 +112,7 @@ namespace ToyBox {
                         try {
                             var text = "due to existing archetype, %, this multiclass option will only be applied during respec.".localize().Split('%');
                             UI.Label($"{text[0]}{chArchetype.Name.yellow()}{text[1]}".orange());
-                        }
-                        catch {
+                        } catch {
                             UI.Label($"due to existing archetype, {chArchetype.Name.yellow()}, this multiclass option will only be applied during respec.".orange());
                         }
                     }
@@ -171,22 +169,18 @@ namespace ToyBox {
                                             try {
                                                 var text = "due to existing archetype, %, this multiclass option will only be applied during respec.".localize().Split('%');
                                                 UI.Label($"{text[0]}{chArchetype.Name.yellow()}{text[1]}".orange());
-                                            }
-                                            catch {
+                                            } catch {
                                                 UI.Label($"due to existing archetype, {chArchetype.Name.yellow()}, this multiclass option will only be applied during respec.".orange());
                                             }
-                                        }
-                                        else {
+                                        } else {
                                             try {
                                                 var text = "due to existing class, %, this multiclass option will only be applied during respec.".localize().Split('%');
                                                 UI.Label($"{text[0]}{cd.CharacterClass.Name.yellow()}{text[1]}".orange());
-                                            }
-                                            catch {
+                                            } catch {
                                                 UI.Label($"due to existing class, {chArchetype.Name.yellow()}, this multiclass option will only be applied during respec.".orange());
                                             }
                                         }
-                                    }
-                                    else if (showGestaltToggle && archetype == chArchetype) {
+                                    } else if (showGestaltToggle && archetype == chArchetype) {
                                         using (UI.HorizontalScope()) {
                                             UI.Space(-155);
                                             UI.ActionToggle("gestalt".localize().grey(), () => ch.IsClassGestalt(cd.CharacterClass),

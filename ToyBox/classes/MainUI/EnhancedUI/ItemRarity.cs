@@ -123,8 +123,7 @@ namespace ToyBox {
                 //if (enchantValue > 0) Main.Log($"blueprint enchantValue: {enchantValue}");
                 rating = Math.Max(itemRating, bpRating);
                 rating = Math.Max(rating, costRating);
-            }
-            catch {
+            } catch {
                 // ignored
             }
             //var rating = item.EnchantmentValue * rarityScaling;
@@ -183,8 +182,7 @@ namespace ToyBox {
                 MapObjectView MOV = mapPart.Owner.View as MapObjectView;
                 InteractionLootPart lootPart = (MOV.Data.Interactions[0] as InteractionLootPart);
                 DoHide(lootPart.Loot, localMapLootMarkerPCView);
-            }
-            else if (mapPart == null) {
+            } else if (mapPart == null) {
                 if (markerVm.m_Marker is not UnitLocalMapMarker unitMarker) return;
                 UnitEntityView unit = unitMarker.m_Unit;
                 UnitEntityData data = unit.Data;
@@ -203,8 +201,7 @@ namespace ToyBox {
             }
             if (highest <= Settings.maxRarityToHide) {
                 localMapLootMarkerPCView.transform.localScale = new Vector3(0, 0, 0);
-            }
-            else {
+            } else {
                 localMapLootMarkerPCView.transform.localScale = new Vector3(1, 1, 1);
             }
         }

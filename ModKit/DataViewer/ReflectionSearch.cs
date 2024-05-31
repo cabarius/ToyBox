@@ -179,8 +179,7 @@ namespace ModKit.DataViewer {
                             }
                         });
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Mod.Log(depth, $"caught - {e}");
                 }
                 node.Matches = foundMatch;
@@ -199,32 +198,28 @@ namespace ModKit.DataViewer {
                         foreach (var child in node.GetItemNodes())
                             //Main.Log(depth + 1, $"item: {child.Name}"); 
                             newTodo.Add(child);
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         Mod.Log(depth, $"caught - {e}");
                     }
                     try {
                         foreach (var child in node.GetComponentNodes())
                             //Main.Log(depth + 1, $"comp: {child.Name}"); 
                             newTodo.Add(child);
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         Mod.Log(depth, $"caught - {e}");
                     }
                     try {
                         foreach (var child in node.GetPropertyNodes())
                             //Main.Log(depth + 1, $"prop: {child.Name}");
                             newTodo.Add(child);
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         Mod.Log(depth, $"caught - {e}");
                     }
                     try {
                         foreach (var child in node.GetFieldNodes())
                             //Main.Log(depth + 1, $"field: {child.Name}");
                             newTodo.Add(child);
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         Mod.Log(depth, $"caught - {e}");
                     }
                 }

@@ -32,8 +32,7 @@ namespace ToyBox {
             if (ch == null || ch.CharacterName == "Knight Commander" || ch.CharacterName == "Player Character") {
                 options = Main.Settings.multiclassSettings.GetValueOrDefault(CharGenKey, new MulticlassOptions());
                 //Mod.Debug($"MulticlassOptions.Get - chargen - options: {options}");
-            }
-            else {
+            } else {
                 if (ch.HashKey() == null) return null;
                 options = Main.Settings.perSave.multiclassSettings.GetValueOrDefault(ch.HashKey(), new MulticlassOptions());
                 //Mod.Debug($"MulticlassOptions.Get - {ch.CharacterName} - set: {options}");
@@ -67,7 +66,7 @@ namespace ToyBox {
         }
         public static void Set(UnitDescriptor ch, MulticlassOptions options) {
             //modLogger.Log($"stack: {System.Environment.StackTrace}");
-            if (ch == null || ch.CharacterName == "Knight Commander" || ch.CharacterName == "Player Character") 
+            if (ch == null || ch.CharacterName == "Knight Commander" || ch.CharacterName == "Player Character")
                 Main.Settings.multiclassSettings[CharGenKey] = options;
             else {
                 if (ch.HashKey() == null) return;

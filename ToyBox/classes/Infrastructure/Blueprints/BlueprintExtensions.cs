@@ -61,38 +61,32 @@ namespace ToyBox {
                 bool isEmpty = true;
                 try {
                     isEmpty = string.IsNullOrEmpty(uiDataProvider.Name);
-                }
-                catch (NullReferenceException) {
+                } catch (NullReferenceException) {
                     Mod.Debug($"Error while getting name for {uiDataProvider}");
                 }
                 if (isEmpty) {
                     name = blueprint.name;
-                }
-                else {
+                } else {
                     if (blueprint is BlueprintSpellbook spellbook)
                         return $"{spellbook.Name} - {spellbook.name}";
                     name = formatter(uiDataProvider.Name);
                     if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                         name = formatter(blueprint.name);
-                    }
-                    else if (Settings.showDisplayAndInternalNames) {
+                    } else if (Settings.showDisplayAndInternalNames) {
                         name += $" : {blueprint.name.color(RGBA.darkgrey)}";
                     }
                 }
                 return name;
-            }
-            else if (blueprint is BlueprintItemEnchantment enchantment) {
+            } else if (blueprint is BlueprintItemEnchantment enchantment) {
                 string name;
                 var isEmpty = string.IsNullOrEmpty(enchantment.Name);
                 if (isEmpty) {
                     name = formatter(blueprint.name);
-                }
-                else {
+                } else {
                     name = formatter(enchantment.Name);
                     if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                         name = formatter(blueprint.name);
-                    }
-                    else if (Settings.showDisplayAndInternalNames) {
+                    } else if (Settings.showDisplayAndInternalNames) {
                         name += $" : {blueprint.name.color(RGBA.darkgrey)}";
                     }
                 }
@@ -107,46 +101,39 @@ namespace ToyBox {
                     bool isEmpty = true;
                     try {
                         isEmpty = string.IsNullOrEmpty(uiDataProvider.Name);
-                    }
-                    catch (NullReferenceException) {
+                    } catch (NullReferenceException) {
                         Mod.Debug($"Error while getting name for {uiDataProvider}");
                     }
                     if (isEmpty) {
                         name = blueprint.name;
-                    }
-                    else {
+                    } else {
                         if (uiDataProvider is BlueprintSpellbook spellbook)
                             return $"{spellbook.Name} {spellbook.name} {spellbook.AssetGuid}";
                         name = uiDataProvider.Name;
                         if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                             name = blueprint.name;
-                        }
-                        else if (Settings.showDisplayAndInternalNames || forceDisplayInternalName) {
+                        } else if (Settings.showDisplayAndInternalNames || forceDisplayInternalName) {
                             name += $" : {blueprint.name}";
                         }
                     }
                     return name.StripHTML() + $" {blueprint.AssetGuid}";
-                }
-                else if (blueprint is BlueprintItemEnchantment enchantment) {
+                } else if (blueprint is BlueprintItemEnchantment enchantment) {
                     string name;
                     var isEmpty = string.IsNullOrEmpty(enchantment.Name);
                     if (isEmpty) {
                         name = blueprint.name;
-                    }
-                    else {
+                    } else {
                         name = enchantment.Name;
                         if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                             name = blueprint.name;
-                        }
-                        else if (Settings.showDisplayAndInternalNames) {
+                        } else if (Settings.showDisplayAndInternalNames) {
                             name += $" : {blueprint.name}";
                         }
                     }
                     return name.StripHTML() + $" {blueprint.AssetGuid}";
                 }
                 return blueprint.name.StripHTML() + $" {blueprint.AssetGuid}";
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Mod.Debug(ex.ToString());
                 Mod.Debug($"-------{blueprint}-----{blueprint.AssetGuid}");
                 return "";
@@ -159,46 +146,39 @@ namespace ToyBox {
                     bool isEmpty = true;
                     try {
                         isEmpty = string.IsNullOrEmpty(uiDataProvider.Name);
-                    }
-                    catch (NullReferenceException) {
+                    } catch (NullReferenceException) {
                         Mod.Debug($"Error while getting name for {uiDataProvider}");
                     }
                     if (isEmpty) {
                         name = blueprint.name;
-                    }
-                    else {
+                    } else {
                         if (blueprint is BlueprintSpellbook spellbook)
                             return $"{spellbook.Name} - {spellbook.name}";
                         name = uiDataProvider.Name;
                         if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                             name = blueprint.name;
-                        }
-                        else if (Settings.showDisplayAndInternalNames) {
+                        } else if (Settings.showDisplayAndInternalNames) {
                             name += blueprint.name;
                         }
                     }
                     return name;
-                }
-                else if (blueprint is BlueprintItemEnchantment enchantment) {
+                } else if (blueprint is BlueprintItemEnchantment enchantment) {
                     string name;
                     var isEmpty = string.IsNullOrEmpty(enchantment.Name);
                     if (isEmpty) {
                         name = blueprint.name;
-                    }
-                    else {
+                    } else {
                         name = enchantment.Name;
                         if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                             name = blueprint.name;
-                        }
-                        else if (Settings.showDisplayAndInternalNames) {
+                        } else if (Settings.showDisplayAndInternalNames) {
                             name += blueprint.name;
                         }
                     }
                     return name;
                 }
                 return blueprint.name;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Mod.Debug(ex.ToString());
                 Mod.Debug($"-------{blueprint}-----{blueprint.AssetGuid}");
                 return "";
@@ -214,8 +194,7 @@ namespace ToyBox {
                     if (value.HasValue && value.GetValueOrDefault()) {
                         modifiers.Add(property); //.Substring(2));
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Mod.Warn($"${bp.name}.{property} thew an exception: {e.Message}");
                     BadList.Add(bp.AssetGuid);
                     break;

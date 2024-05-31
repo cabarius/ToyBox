@@ -39,8 +39,7 @@ namespace ModKit {
                 if (target != null) {
                     onDetailGUI(target);
                     return true;
-                }
-                else {
+                } else {
                     return false;
                 }
             }
@@ -171,14 +170,12 @@ namespace ModKit {
                             if (isCollating) {
                                 Label("Collating...".localize().cyan().bold(), AutoWidth());
                                 25.space();
-                            }
-                            else if (_doCopyToEnd) {
+                            } else if (_doCopyToEnd) {
                                 Label("Copying...".localize().cyan().bold(), AutoWidth());
                                 25.space();
                             }
                         }
-                    }
-                    else {
+                    } else {
                         if (_searchText != searchTextPassedFromParent) {
                             needsReloadData = true;
                             _searchText = searchTextPassedFromParent;
@@ -207,8 +204,7 @@ namespace ModKit {
                                 if (_currentPage >= 1) {
                                     if (_currentPage == 1) {
                                         _currentPage = _pageCount;
-                                    }
-                                    else {
+                                    } else {
                                         _currentPage -= 1;
                                     }
                                     _updatePages = true;
@@ -218,8 +214,7 @@ namespace ModKit {
                                 if (_currentPage > _pageCount) return;
                                 if (_currentPage == _pageCount) {
                                     _currentPage = 1;
-                                }
-                                else {
+                                } else {
                                     _currentPage += 1;
                                 }
                                 _updatePages = true;
@@ -237,8 +232,7 @@ namespace ModKit {
                 }
                 if (useCustomNotRowGUI) {
                     customNotRowGUI(definitions, _currentDict);
-                }
-                else {
+                } else {
                     foreach (var def in definitions) {
                         if (showItemDiv) {
                             Div(indent);
@@ -297,8 +291,7 @@ namespace ModKit {
                                 _finishedCopyToEnd = false;
                                 cachedSearchResults.Clear();
                                 filteredDefinitions = tempFilteredDefinitions;
-                            }
-                            else {
+                            } else {
                                 // If the search already finished we want to copy all results as fast as possible
                                 if (_finishedSearch && cachedSearchResults.Count < 1000) {
                                     filteredDefinitions.AddRange(cachedSearchResults);
@@ -341,15 +334,12 @@ namespace ModKit {
                         if (ShowAll) {
                             if (startedLoadingAvailable) {
                                 definitions = _currentDict.Keys.ToList();
-                            }
-                            else if (availableIsStatic) {
+                            } else if (availableIsStatic) {
                                 definitions = _availableCache;
-                            }
-                            else {
+                            } else {
                                 definitions = available();
                             }
-                        }
-                        else {
+                        } else {
                             definitions = _currentDict.Keys.ToList();
                         }
                         if (!isCollating) {
@@ -358,8 +348,7 @@ namespace ModKit {
                             isCollating = true;
                             _needsRedoCollation = false;
                             Task.Run(() => Collate(definitions, collator, sortKeys));
-                        }
-                        else {
+                        } else {
                             _collationCancellationTokenSource.Cancel();
                         }
                     }
@@ -368,20 +357,16 @@ namespace ModKit {
                         IEnumerable<Definition> definitions;
                         if (doCollation && !_collationKeyIsNullOrAllOrDoesNotExist) {
                             definitions = collatedDefinitions[collationKey];
-                        }
-                        else {
+                        } else {
                             if (ShowAll) {
                                 if (startedLoadingAvailable) {
                                     definitions = _currentDict.Keys.ToList();
-                                }
-                                else if (availableIsStatic) {
+                                } else if (availableIsStatic) {
                                     definitions = _availableCache;
-                                }
-                                else {
+                                } else {
                                     definitions = available();
                                 }
-                            }
-                            else {
+                            } else {
                                 definitions = _currentDict.Keys.ToList();
                             }
                         }
@@ -393,8 +378,7 @@ namespace ModKit {
                             }
                             isSearching = true;
                             needsReloadData = false;
-                        }
-                        else {
+                        } else {
                             _searchCancellationTokenSource.Cancel();
                         }
                     }
@@ -437,8 +421,7 @@ namespace ModKit {
                             lock (cachedSearchResults) {
                                 cachedSearchResults.Enqueue(def);
                             }
-                        }
-                        else if (searchKey != null) {
+                        } else if (searchKey != null) {
                             var text = searchKey(def).ToLower();
                             if (terms.All(term => text.Matches(term))) {
                                 lock (cachedSearchResults) {
@@ -447,8 +430,7 @@ namespace ModKit {
                             }
                         }
                     }
-                }
-                else {
+                } else {
                     lock (cachedSearchResults) {
                         cachedSearchResults = new Queue<Definition>(definitions);
                     }
@@ -490,8 +472,7 @@ namespace ModKit {
                     _pageCount = (int)Math.Ceiling((double)_matchCount / SearchLimit);
                     _currentPage = Math.Min(_currentPage, _pageCount);
                     _currentPage = Math.Max(1, _currentPage);
-                }
-                else {
+                } else {
                     _pageCount = 1;
                     _currentPage = 1;
                 }

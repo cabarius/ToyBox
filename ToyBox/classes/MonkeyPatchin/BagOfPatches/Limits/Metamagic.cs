@@ -41,8 +41,7 @@ namespace ToyBox.BagOfPatches {
                     var component = metamagicFeature.GetComponent<AddMetamagicFeat>();
                     if (component == null) {
                         Mod.Trace(string.Format("Trying to add metamagic feature without metamagic component: {0}", (object)metamagicFeature));
-                    }
-                    else {
+                    } else {
                         __instance.KnownMetamagics.Add(metamagicFeature);
                         var metamagic = component.Metamagic;
                         if (___m_SpellLevel < 0 || ___m_SpellLevel >= 10 || ___m_SpellLevel + component.Metamagic.DefaultCost() > 10 || __instance.SpellMetamagics.Contains(metamagicFeature) || (__instance.Spell.AvailableMetamagic & metamagic) != metamagic)

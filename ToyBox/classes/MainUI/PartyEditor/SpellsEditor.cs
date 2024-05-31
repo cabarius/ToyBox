@@ -40,8 +40,7 @@ namespace ToyBox {
                         Label($"Mythic Merging".localize().cyan(), AutoWidth());
                         25.space();
                         Label("When you get standalone mythic spellbooks you can merge them here by select.".localize().green());
-                    }
-                    else {
+                    } else {
                         Label($"Merge Mythic:".localize().cyan(), 175.width());
                         25.space();
                         foreach (var cl in mergeableClasses) {
@@ -60,8 +59,7 @@ namespace ToyBox {
                 if (editSpellbooks) {
                     spellbookEditCharacter = ch;
                     SpellBookBrowserOnGUI(ch, spellbooks, todo);
-                }
-                else {
+                } else {
                     var spellBrowser = SpellBrowserDict.GetValueOrDefault(ch, null);
                     if (spellBrowser == null) {
                         spellBrowser = new Browser<BlueprintAbility, AbilityData>(Mod.ModKitSettings.searchAsYouType);
@@ -82,8 +80,7 @@ namespace ToyBox {
                                     var knownCount = spellbook.GetKnownSpells(lvl).Count;
                                     var countText = knownCount > 0 ? $" ({knownCount})".white() : "";
                                     return levelText + countText;
-                                }
-                                else {
+                                } else {
                                     return "All Spells".localize();
                                 }
                             },
@@ -125,12 +122,10 @@ namespace ToyBox {
                             if (Settings.showFromAllSpellbooks || (spellbook.Blueprint.MaxSpellLevel + 1) == selectedSpellbookLevel) {
                                 if ((spellbook.Blueprint.MaxSpellLevel + 1) == selectedSpellbookLevel) {
                                     availableSpells = new List<BlueprintAbility>(CasterHelpers.GetAllSpells(-1));
-                                }
-                                else {
+                                } else {
                                     availableSpells = new List<BlueprintAbility>(CasterHelpers.GetAllSpells(selectedSpellbookLevel));
                                 }
-                            }
-                            else {
+                            } else {
                                 availableSpells = new List<BlueprintAbility>(spellbook.Blueprint.SpellList.GetSpells(selectedSpellbookLevel));
                             }
                             if (!((spellbook.Blueprint.MaxSpellLevel + 1) == selectedSpellbookLevel)) {
@@ -170,8 +165,7 @@ namespace ToyBox {
                                         if (SelectedNewSpellLvl >= 0) {
                                             if (SelectedNewSpellLvl == 0) {
                                                 SelectedNewSpellLvl = spellbook.Blueprint.MaxSpellLevel;
-                                            }
-                                            else {
+                                            } else {
                                                 SelectedNewSpellLvl -= 1;
                                             }
                                         }
@@ -179,8 +173,7 @@ namespace ToyBox {
                                     ActionButton("+", () => {
                                         if (SelectedNewSpellLvl == spellbook.MaxSpellLevel) {
                                             SelectedNewSpellLvl = 1;
-                                        }
-                                        else {
+                                        } else {
                                             SelectedNewSpellLvl += 1;
                                         }
                                     }, AutoWidth());
@@ -193,8 +186,7 @@ namespace ToyBox {
                             ReflectionTreeView.OnDetailGUI(blueprint);
                         }, 50, false, true, 100, 300, "", true);
                 }
-            }
-            else {
+            } else {
                 SpellBookBrowserOnGUI(ch, spellbooks, todo, true);
             }
             return todo;

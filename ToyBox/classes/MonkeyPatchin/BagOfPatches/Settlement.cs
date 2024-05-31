@@ -45,7 +45,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(SettlementState), nameof(SettlementState.CanBuild), new Type[] { typeof(BlueprintSettlementBuilding) })]
         public static class SettlementState_CanBuild_Patch {
             public static void Postfix(ref bool __result) {
-                if (settings.toggleIgnoreSettlementRestrictions) 
+                if (settings.toggleIgnoreSettlementRestrictions)
                     __result = true;
             }
         }

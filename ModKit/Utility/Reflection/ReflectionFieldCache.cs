@@ -91,8 +91,7 @@ namespace ModKit.Utility {
                 var il = method.GetILGenerator();
                 if (Info.IsStatic) {
                     il.Emit(OpCodes.Ldsfld, Info);
-                }
-                else {
+                } else {
                     il.Emit(OpCodes.Ldarg_0);
                     il.Emit(OpCodes.Ldfld, Info);
                 }
@@ -114,8 +113,7 @@ namespace ModKit.Utility {
                 var il = methodBuilder.GetILGenerator();
                 if (Info.IsStatic) {
                     il.Emit(OpCodes.Ldsflda, Info);
-                }
-                else {
+                } else {
                     il.Emit(OpCodes.Ldarg_0);
                     il.Emit(OpCodes.Ldflda, Info);
                 }
@@ -141,8 +139,7 @@ namespace ModKit.Utility {
                 if (Info.IsStatic) {
                     il.Emit(OpCodes.Ldarg_1);
                     il.Emit(OpCodes.Stsfld, Info);
-                }
-                else {
+                } else {
                     il.Emit(OpCodes.Ldarg_0);
                     il.Emit(OpCodes.Ldarg_1);
                     il.Emit(OpCodes.Stfld, Info);

@@ -70,7 +70,7 @@ namespace ToyBox.Multiclass {
                     var levelEntry = progressionData.GetLevelEntry(lvl);
                     //Mod.Debug($"    LevelUpHelper_UpdateProgression_Patch - {string.Join(", ", levelEntry.Features.Select(f => f.name.yellow()))}");
 
-    LevelUpHelper.AddFeaturesFromProgression(state, unit, levelEntry.Features, (FeatureSource)progression, lvl);
+                    LevelUpHelper.AddFeaturesFromProgression(state, unit, levelEntry.Features, (FeatureSource)progression, lvl);
                 }
                 return false;
             }
@@ -190,8 +190,7 @@ namespace ToyBox.Multiclass {
                         if (blueprintSpellsTable != null) {
                             classLevel1 = spellbook1.MythicLevel - 1;
                             classLevel2 = spellbook1.MythicLevel;
-                        }
-                        else {
+                        } else {
                             PFLog.Default.Error("Mythic Spellbook {0} doesn't contains SpellKnownForSpontaneous table!",
                                                 blueprint2);
                         }
@@ -214,8 +213,7 @@ namespace ToyBox.Multiclass {
                         spellSelectionData.SetExtraSpells(0, maxSpellLevel);
                         spellSelectionData.ExtraByStat = true;
                         spellSelectionData.UpdateMaxLevelSpells(unit);
-                    }
-                    else {
+                    } else {
                         spellSelectionData.SetExtraSpells(spellbook1.Blueprint.SpellsPerLevel, maxSpellLevel);
                     }
                 }
@@ -260,7 +258,7 @@ namespace ToyBox.Multiclass {
             }
         }
         [HarmonyPatch(typeof(UnitHelper), nameof(UnitHelper.CopyInternal))]
-        private static class UnitProgressionData_CopyFrom_Patch { 
+        private static class UnitProgressionData_CopyFrom_Patch {
             private static void Postfix(UnitEntityData unit, UnitEntityData __result) {
                 if (!settings.toggleMulticlass) return;
                 // When upgrading, this method will be used to copy a UnitEntityData, which involves copying UnitProgressionData

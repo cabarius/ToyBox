@@ -72,8 +72,7 @@ namespace ToyBox {
                                             node.Expanded = ToggleState.Off;
                                         }
                                         node.Expanded = expandAll ? ToggleState.On : collapseAll ? ToggleState.Off : node.Expanded;
-                                    }
-                                    else {
+                                    } else {
                                         node.Expanded = ToggleState.None;
                                     }
                                     Mod.Trace($"{node.Expanded} {titleText}");
@@ -83,16 +82,14 @@ namespace ToyBox {
                                             foreach (var child in node.ChildNodes.OrderBy(n => n.Level))
                                                 draw(child);
                                         }
-                                    }
-                                    else {
+                                    } else {
                                         GUILayout.FlexibleSpace();
                                     }
                                 }
                             }
                         }
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 _selectedCharacter = null;
                 _featuresTree = null;
                 Mod.Error(e);
@@ -142,8 +139,7 @@ namespace ToyBox {
                             if (node != null || normalNodes.TryGetValue(feature, out node)) {
                                 node.Source = selection.Blueprint;
                                 node.Level = level;
-                            }
-                            else {
+                            } else {
                                 // missing child
                                 normalNodes.Add(feature,
                                     new FeatureNode(string.Empty, level, feature, selection.Blueprint) { IsMissing = true });
@@ -156,11 +152,9 @@ namespace ToyBox {
                 foreach (var node in normalNodes.Values.Concat(parametrizedNodes).ToList()) {
                     if (node.Source == null) {
                         RootNodes.Add(node);
-                    }
-                    else if (normalNodes.TryGetValue(node.Source, out var parent)) {
+                    } else if (normalNodes.TryGetValue(node.Source, out var parent)) {
                         parent.ChildNodes.Add(node);
-                    }
-                    else {
+                    } else {
                         // missing parent
                         parent = new FeatureNode(string.Empty, 0, node.Source, null) { IsMissing = true };
                         parent.ChildNodes.Add(node);

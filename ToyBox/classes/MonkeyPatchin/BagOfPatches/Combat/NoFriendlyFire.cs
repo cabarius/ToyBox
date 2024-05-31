@@ -64,8 +64,7 @@ namespace ToyBox.BagOfPatches {
                                 }
                                 return true;
                             });
-                        }
-                        else {
+                        } else {
                             targets = targets.Where(target => !target.Descriptor.IsPartyOrPet());
                         }
                     }

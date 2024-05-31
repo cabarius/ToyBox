@@ -113,8 +113,7 @@ namespace ToyBox {
                     messageLog?.AddMessage(message);
                     tacticalCombatLog?.AddMessage(message);
                 };
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Mod.Error(e);
                 throw e;
             }
@@ -159,14 +158,12 @@ namespace ToyBox {
                     File.Delete(oldToyBoxPath + "ToyBox.dll");
                     File.Delete(oldToyBoxPath + "ToyBox.pdb");
                     // Directory.Delete(oldToyBoxPath, true);
-                }
-                else {
+                } else {
                     if (!File.Exists(thisSettingsPath)) {
                         Mod.Log("No old ToyBox version found... creating default settings".yellow());
                     }
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Mod.Error(e);
             }
             Settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
@@ -200,8 +197,7 @@ namespace ToyBox {
                         }
                     }
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Mod.Error(e);
             }
             return null;
@@ -267,8 +263,7 @@ namespace ToyBox {
                     () => {
                         if (BlueprintLoader.Shared.IsLoading) {
                             Label("Blueprints".orange().bold() + " loading: " + BlueprintLoader.Shared.progress.ToString("P2").cyan().bold());
-                        }
-                        else Space(25);
+                        } else Space(25);
                     },
                     (oldTab, newTab) => {
                         if (partyTabID == -1) {
@@ -288,8 +283,7 @@ namespace ToyBox {
                     s => s.localize(),
                     tabs
                     );
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Console.Write($"{e}");
                 _caughtException = e;
                 ReflectionSearch.Shared.Stop();

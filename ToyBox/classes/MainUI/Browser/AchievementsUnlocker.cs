@@ -67,8 +67,7 @@ namespace ToyBox {
                             }
                         }, Width(116));
                         Space(70);
-                    }
-                    else {
+                    } else {
                         Space(190);
                     }
                     remainingWidth -= 190;

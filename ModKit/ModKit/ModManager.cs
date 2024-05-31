@@ -27,7 +27,7 @@ namespace ModKit {
     public class ModManager<TCore, TSettings>
         where TCore : class, new()
         where TSettings : UnityModManager.ModSettings, new() {
-    #region Fields & Properties
+        #region Fields & Properties
 
         private UnityModManager.ModEntry.ModLogger _logger;
         private List<IModEventHandler> _eventHandlers;
@@ -42,9 +42,9 @@ namespace ModKit {
 
         public bool Patched { get; private set; }
 
-    #endregion
+        #endregion
 
-    #region Toggle
+        #region Toggle
 
         public void Enable(UnityModManager.ModEntry modEntry, Assembly assembly) {
             _logger = modEntry.Logger;
@@ -80,8 +80,7 @@ namespace ModKit {
                             try {
                                 var patchProcessor = harmonyInstance.CreateClassProcessor(type);
                                 patchProcessor.Patch();
-                            }
-                            catch (Exception e) {
+                            } catch (Exception e) {
                                 Error(e);
                             }
                         }
@@ -99,8 +98,7 @@ namespace ModKit {
 
                 process.Log("Raising events: OnEnable()");
                 for (var i = 0; i < _eventHandlers.Count; i++) _eventHandlers[i].HandleModEnable();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Error(e);
                 Disable(modEntry, true);
                 throw;
@@ -123,8 +121,7 @@ namespace ModKit {
                 for (var i = _eventHandlers.Count - 1; i >= 0; i--)
                     try {
                         _eventHandlers[i].HandleModDisable();
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         Error(e);
                     }
                 _eventHandlers = null;
@@ -142,8 +139,7 @@ namespace ModKit {
                         foreach (var patch in patches)
                             try {
                                 harmonyInstance.Unpatch(method, patch.PatchMethod);
-                            }
-                            catch (Exception e) {
+                            } catch (Exception e) {
                                 Error(e);
                             }
                     }
@@ -160,9 +156,9 @@ namespace ModKit {
             process.Log("Disabled.");
         }
 
-    #endregion
+        #endregion
 
-    #region Settings
+        #region Settings
 
         public void ResetSettings() {
             if (Enabled) {
@@ -176,9 +172,9 @@ namespace ModKit {
             ModKitSettings.Save();
         }
 
-    #endregion
+        #endregion
 
-    #region Loggers
+        #region Loggers
 
         public void Critical(string str) => _logger.Critical(str);
 
@@ -211,7 +207,7 @@ namespace ModKit {
         [Conditional("DEBUG")]
         public void Debug(object obj) => _logger.Log(obj?.ToString() ?? "null");
 
-    #endregion
+        #endregion
 
         private class ProcessLogger : IDisposable {
             private readonly Stopwatch _stopWatch = new();

@@ -63,23 +63,19 @@ namespace ToyBox.Inventory {
 
             if (expanded_filter == ExpandedFilterType.QuickslotUtilities) {
                 __result = item.Blueprint is BlueprintItemEquipmentUsable blueprint && blueprint.Type != UsableItemType.Potion && blueprint.Type != UsableItemType.Scroll;
-            }
-            else if (expanded_filter == ExpandedFilterType.UnlearnedRecipes) {
+            } else if (expanded_filter == ExpandedFilterType.UnlearnedRecipes) {
                 CopyRecipe recipe = item.Blueprint.GetComponent<CopyRecipe>();
                 __result = recipe != null && recipe.CanCopy(item, null);
-            }
-            else if (expanded_filter == ExpandedFilterType.UnreadDocuments) {
+            } else if (expanded_filter == ExpandedFilterType.UnreadDocuments) {
                 ItemPartShowInfoCallback cb = item.Get<ItemPartShowInfoCallback>();
                 __result = cb != null && (!cb.m_Settings.Once || !cb.m_Triggered);
-            }
-            else if (expanded_filter == ExpandedFilterType.UsableWithoutUMD) {
+            } else if (expanded_filter == ExpandedFilterType.UsableWithoutUMD) {
                 UnitEntityData unit = WrathExtensions.GetCurrentCharacter();
                 __result = item.Blueprint is BlueprintItemEquipmentUsable blueprint && (blueprint.Type == UsableItemType.Scroll || blueprint.Type == UsableItemType.Wand) && unit != null && !blueprint.IsUnitNeedUMDForUse(unit);
-            }
-            else if (expanded_filter == ExpandedFilterType.CurrentEquipped) {
+            } else if (expanded_filter == ExpandedFilterType.CurrentEquipped) {
                 UnitEntityData unit = SelectedCharacterObserver.Shared.SelectedUnit ?? WrathExtensions.GetCurrentCharacter();
                 if (unit != null) {
-                    if (item.Blueprint is BlueprintItemEquipment && !(item.Blueprint is BlueprintItemEquipmentUsable)) 
+                    if (item.Blueprint is BlueprintItemEquipment && !(item.Blueprint is BlueprintItemEquipmentUsable))
                         __result = item.CanBeEquippedBy(unit);
                 }
 #if false
@@ -94,18 +90,14 @@ namespace ToyBox.Inventory {
                     __result = weapon_match || shield_match || armour_match;
                 }
 #endif
-            }
-            else if (expanded_filter == ExpandedFilterType.NonZeroPW) {
+            } else if (expanded_filter == ExpandedFilterType.NonZeroPW) {
                 __result = item.Blueprint.SellPrice > 0 && item.Blueprint.Weight > 0.0f;
-            }
-            else if (expanded_filter == ExpandedFilterType.UnlearnedScrolls)
-            {
+            } else if (expanded_filter == ExpandedFilterType.UnlearnedScrolls) {
                 var scroll = item.Blueprint.GetComponent<CopyScroll>();
                 var unit = Kingmaker.Game.Instance.SelectionCharacter.CurrentSelectedCharacter;
                 var canCopy = scroll?.CanCopy(item, unit) ?? false;
                 __result = unit != null && canCopy;
-            }
-            else {
+            } else {
                 // Original call - proceed as normal.
                 return true;
             }
@@ -198,18 +190,14 @@ namespace ToyBox.Inventory {
 
             if (expanded_type == ExpandedSorterType.WeightValueUp) {
                 items.Sort((ItemEntity a, ItemEntity b) => CompareByWeightValue(a, b, filter));
-            }
-            else if (expanded_type == ExpandedSorterType.WeightValueDown) {
+            } else if (expanded_type == ExpandedSorterType.WeightValueDown) {
                 items.Sort((ItemEntity a, ItemEntity b) => CompareByWeightValue(a, b, filter));
                 items.Reverse();
-            }
-            else if (expanded_type == ExpandedSorterType.RarityUp) {
+            } else if (expanded_type == ExpandedSorterType.RarityUp) {
                 items.Sort((a, b) => RarityCompare(a, b, false, filter, ItemsFilter.CompareByPrice));
-            }
-            else if (expanded_type == ExpandedSorterType.RarityDown) {
-                items.Sort((a,b) => RarityCompare(a, b, true, filter, ItemsFilter.CompareByPrice));
-            }
-            else {
+            } else if (expanded_type == ExpandedSorterType.RarityDown) {
+                items.Sort((a, b) => RarityCompare(a, b, true, filter, ItemsFilter.CompareByPrice));
+            } else {
                 return true;
             }
 
@@ -221,7 +209,7 @@ namespace ToyBox.Inventory {
         private static class ItemsFilter_IsMatchSearchRequest_Patch {
 
             public static bool Prefix(ref bool __result, ItemEntity item, string searchRequest) {
-                if (string.IsNullOrEmpty(searchRequest) || item ==  null) {
+                if (string.IsNullOrEmpty(searchRequest) || item == null) {
                     __result = true;
                     return false;
                 }

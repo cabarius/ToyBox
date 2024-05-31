@@ -90,15 +90,15 @@ namespace ToyBox.Multiclass {
                     .Where(m => m.Name == "First")
                     .Single(m => m.GetParameters().Length == 1)
                     .MakeGenericMethod(typeof(ProgressionVM));
-                var enumerableFirstOrDefault =         typeof(Enumerable)
+                var enumerableFirstOrDefault = typeof(Enumerable)
                                                        .GetMethods()
                                                        .Where(m => m.Name == "FirstOrDefault")
                                                        .Single(m => m.GetParameters().Length == 1)
                                                        .MakeGenericMethod(typeof(ProgressionVM));
                 foreach (CodeInstruction c in instructions) {
                     if (c.opcode == OpCodes.Call && (c.operand as MethodInfo) == enumerableFirstMethed) {
-                            c.operand = enumerableFirstOrDefault;
-                            Mod.Trace($"ProgressionVms.First found and replaced: {c.ToString()}");
+                        c.operand = enumerableFirstOrDefault;
+                        Mod.Trace($"ProgressionVms.First found and replaced: {c.ToString()}");
                     }
                     yield return c;
                 }
@@ -187,7 +187,7 @@ namespace ToyBox.Multiclass {
                 }
             }
         }
-        #if false
+#if false
         [HarmonyPatch(typeof(CharGenClassSelectorItemVM), nameof(CharGenClassSelectorItemVM.GetArchetypesList), new Type[] { typeof(BlueprintCharacterClass) })]
         private static class CharGenClassSelectorItemVM_GetArchetypesList_Patch {
             public static List<NestedSelectionGroupEntityVM> archetypes;
@@ -195,7 +195,7 @@ namespace ToyBox.Multiclass {
                 archetypes = __result;
             }
         }
-        #endif
+#endif
         [HarmonyPatch(typeof(NestedSelectionGroupEntityVM), nameof(NestedSelectionGroupEntityVM.SetSelected), new Type[] { typeof(bool) })]
         private static class NestedSelectionGroupEntityVM_SetSelected_Patch {
             private static bool Prefix(NestedSelectionGroupEntityVM __instance, ref bool state) {
@@ -253,7 +253,7 @@ namespace ToyBox.Multiclass {
                 if (archetype != null) {
                     __instance.LevelUpController.RemoveArchetype(archetype);
                     if (!__instance.LevelUpController.AddArchetype(archetype)) {
-                        MainThreadDispatcher.Post(delegate(object _) {
+                        MainThreadDispatcher.Post(delegate (object _) {
                             __instance.SelectedArchetypeVM.Value = null;
                         }, null);
                     }
@@ -353,7 +353,7 @@ namespace ToyBox.Multiclass {
                 var classSkills = classData.Archetypes.SelectMany(a => a.ClassSkills)
                     .Concat(classData.CharacterClass.ClassSkills).Distinct().ToArray();
                 //this.SelectedClassVM.Value.Class.Name + " — " + this.SelectedArchetypeVM.Value.Archetype.Name;
-                var archetypeName = classData.ArchetypesName(); 
+                var archetypeName = classData.ArchetypesName();
                 if (!string.IsNullOrEmpty(archetypeName)) {
                     __instance.ClassDisplayName.Value = string.Join(" ", classData.CharacterClass.Name, $"({archetypeName})");
                 }

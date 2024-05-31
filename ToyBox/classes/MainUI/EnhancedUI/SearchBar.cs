@@ -17,7 +17,7 @@ namespace ToyBox {
 
         public SearchBar(Transform parent, string placeholder, bool withDropdown = true, string name = "EnhancedInventory_SearchBar") {
             var prefab_transform = UIHelpers.SearchViewPrototype;
-                //Game.Instance.UI.MainCanvas.transform.Find("ChargenPCView/ContentWrapper/DetailedViewZone/ChargenFeaturesDetailedPCView/FeatureSelectorPlace/FeatureSelectorView/FeatureSearchView");
+            //Game.Instance.UI.MainCanvas.transform.Find("ChargenPCView/ContentWrapper/DetailedViewZone/ChargenFeaturesDetailedPCView/FeatureSelectorPlace/FeatureSelectorView/FeatureSearchView");
 
             if (prefab_transform == null) {
                 var err = "Error: Unable to locate search bar prefab, it's likely a patch has changed the UI setup, or you are in an unexpected situation. Please report this bug!";
@@ -33,8 +33,7 @@ namespace ToyBox {
                 Dropdown = GameObject.transform.Find("FieldPlace/SearchField/SearchBackImage/Dropdown").GetComponent<TMP_Dropdown>();
                 DropdownButton = GameObject.transform.Find("FieldPlace/SearchField/SearchBackImage/Dropdown/GenerateButtonPlace").GetComponent<OwlcatButton>();
                 DropdownIconObject = GameObject.transform.Find("FieldPlace/SearchField/SearchBackImage/Dropdown/GenerateButtonPlace/GenerateButton/Icon").gameObject;
-            }
-            else
+            } else
                 Object.Destroy(GameObject.transform.Find("FieldPlace/SearchField/SearchBackImage/Dropdown").gameObject);
             PlaceholderText = GameObject.transform.Find("FieldPlace/SearchField/SearchBackImage/Placeholder/Label").GetComponent<TextMeshProUGUI>();
             InputField = GameObject.transform.Find("FieldPlace/SearchField/SearchBackImage/InputField").GetComponent<TMP_InputField>();

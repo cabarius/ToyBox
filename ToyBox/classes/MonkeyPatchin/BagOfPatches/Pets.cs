@@ -50,8 +50,7 @@ namespace ToyBox.BagOfPatches {
                 if (!settings.toggleAllowMythicPets) return true;
                 if (experience < 1) {
                     PFLog.Default.Error(string.Format("Current mythic level of {0} is {1}, trying to raise to {2}! Aborting", (object)__instance.Owner, (object)__instance.MythicLevel, (object)(__instance.MythicExperience + experience)));
-                }
-                else {
+                } else {
                     __instance.MythicExperience += experience;
                     if (__instance.MythicExperience > 10)
                         PFLog.Default.Error(string.Format("Current mythic level of {0} is {1}, trying to raise to {2}! Can't do this", (object)__instance.Owner, (object)__instance.MythicLevel, (object)(__instance.MythicExperience + experience)));

@@ -21,9 +21,8 @@ namespace ToyBox {
 
                             __result = false;
                             return;
-                        }
-                        else if (__instance.Enchantments.Select(x => x.Blueprint.ToReference<BlueprintItemEnchantmentReference>()).Except(other.Enchantments.Select(x => x.Blueprint.ToReference<BlueprintItemEnchantmentReference>())).Any()) //And this catches the rest
-                            {
+                        } else if (__instance.Enchantments.Select(x => x.Blueprint.ToReference<BlueprintItemEnchantmentReference>()).Except(other.Enchantments.Select(x => x.Blueprint.ToReference<BlueprintItemEnchantmentReference>())).Any()) //And this catches the rest
+                              {
 
                             return;
                         }

@@ -54,7 +54,7 @@ namespace ToyBox.Inventory {
                 KnownFilterViews.Add(__instance);
             __instance.ReloadFilterOptions();
         }
-        [HarmonyPatch(nameof(ItemsFilterSearchPCView.SetActive), new Type[] { typeof(bool)})]
+        [HarmonyPatch(nameof(ItemsFilterSearchPCView.SetActive), new Type[] { typeof(bool) })]
         [HarmonyPrefix]
         public static bool SetActive(ItemsFilterSearchPCView __instance, bool value) {
             if (!Settings.toggleEnhancedInventory || !Settings.toggleDontClearSearchWhenLoseFocus) return true;

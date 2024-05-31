@@ -40,8 +40,7 @@ namespace ModKit {
             if (!disclosureStyle) {
                 title = value ? title.bold() : title.color(RGBA.medgrey).bold();
                 if (Private.UI.CheckBox(title, value, isEmpty, toggleStyle, options)) { value = !value; changed = true; }
-            }
-            else {
+            } else {
                 if (Private.UI.DisclosureToggle(title, value, isEmpty, options)) { value = !value; changed = true; }
             }
             return changed;
@@ -181,8 +180,7 @@ namespace ModKit {
             if (bit != newBit) {
                 if (exclusive) {
                     bitfield = (newBit ? 1 << offset : 0);
-                }
-                else {
+                } else {
                     bitfield ^= (1 << offset);
                 }
             }

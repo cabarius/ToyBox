@@ -73,13 +73,11 @@ namespace ToyBox {
                 ActionButton("Add".localize(), () => { charToAdd = ch; }, Width(150));
                 Space(25);
                 buttonCount++;
-            }
-            else if (player.ActiveCompanions.Contains(ch)) {
+            } else if (player.ActiveCompanions.Contains(ch)) {
                 ActionButton("Remove".localize(), () => { charToRemove = ch; }, Width(150));
                 Space(25);
                 buttonCount++;
-            }
-            else if (!player.AllCharacters.Contains(ch)) {
+            } else if (!player.AllCharacters.Contains(ch)) {
                 recruitableCount++;
                 ActionButton("Recruit".localize().cyan(), () => { charToRecruit = ch; }, Width(150));
                 Space(25);
@@ -98,8 +96,7 @@ namespace ToyBox {
             if (ch.CanRespec()) {
                 respecableCount++;
                 ActionButton("Respec".localize().cyan(), () => { Actions.ToggleModWindow(); ch.DoRespec(); }, Width(150));
-            }
-            else {
+            } else {
                 Space(153);
             }
             if (buttonCount >= 0)
@@ -167,8 +164,7 @@ namespace ToyBox {
                                 ch.Descriptor().CustomName = name;
                                 Main.SetNeedsResetGameUI();
                             }
-                        }
-                        else
+                        } else
                             if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), Width(230))) {
                             ch.Descriptor().CustomName = name;
                             Main.SetNeedsResetGameUI();
@@ -176,8 +172,7 @@ namespace ToyBox {
                         if (nameEditState != oldEditState) {
                             Mod.Log($"EditState changed: {oldEditState} -> {nameEditState}");
                         }
-                    }
-                    else {
+                    } else {
                         if (isWide)
                             Label(ch.CharacterName.orange().bold(), MinWidth(100), MaxWidth(400));
                         else
@@ -199,10 +194,8 @@ namespace ToyBox {
                             ActionButton("+1", () => {
                                 progression.AdvanceExperienceTo(xpTable.GetBonus(nextLevel + 1), true);
                             }, Width(63));
-                        }
-                        else { Label("max".localize(), Width(63)); }
-                    }
-                    else { Space(66); }
+                        } else { Label("max".localize(), Width(63)); }
+                    } else { Space(66); }
                     Space(10);
                     var nextML = progression.MythicExperience;
                     if (nextML <= mythicLevel || !isOnTeam)
@@ -214,10 +207,8 @@ namespace ToyBox {
                             ActionButton("+1", () => {
                                 progression.AdvanceMythicExperience(progression.MythicExperience + 1, true);
                             }, Width(63));
-                        }
-                        else { Label("max".localize(), Width(63)); }
-                    }
-                    else { Space(66); }
+                        } else { Label("max".localize(), Width(63)); }
+                    } else { Space(66); }
                     Space(30);
                     Wrap(IsNarrow, NarrowIndent, 0);
                     var prevSelectedChar = selectedCharacter;
@@ -225,8 +216,7 @@ namespace ToyBox {
                     if (DisclosureToggle($"{classData.Count} " + "Classes".localize(), ref showClasses, 140)) {
                         if (showClasses) {
                             selectedCharacter = ch; selectedToggle = ToggleChoice.Classes; Mod.Trace($"selected {ch.CharacterName}");
-                        }
-                        else { selectedToggle = ToggleChoice.None; }
+                        } else { selectedToggle = ToggleChoice.None; }
                     }
                     var showStats = ch == selectedCharacter && selectedToggle == ToggleChoice.Stats;
                     if (DisclosureToggle("Stats".localize(), ref showStats, 95)) {
@@ -252,8 +242,7 @@ namespace ToyBox {
                     }
                     var showSpells = ch == selectedCharacter && selectedToggle == ToggleChoice.Spells;
                     if (DisclosureToggle($"{spellCount} " + "Spells".localize(), ref showSpells, 150)) {
-                        if (showSpells) { selectedCharacter = ch; selectedToggle = ToggleChoice.Spells; }
-                        else { selectedToggle = ToggleChoice.None; }
+                        if (showSpells) { selectedCharacter = ch; selectedToggle = ToggleChoice.Spells; } else { selectedToggle = ToggleChoice.None; }
                     }
                     var showAI = ch == selectedCharacter && selectedToggle == ToggleChoice.AI;
                     ReflectionTreeView.DetailToggle("Inspect".localize(), ch, ch, 75);

@@ -55,8 +55,7 @@ namespace ToyBox {
                 portraitData = new PortraitData(customID);
                 if (portraitData.DirectoryExists()) {
                     _portraitsByID[customID] = CustomPortraitsManager.CreatePortraitData(customID);
-                }
-                else {
+                } else {
                     loaded = false;
                 }
             }
@@ -66,8 +65,7 @@ namespace ToyBox {
                 if (targetWidth == 0) {
                     w = (int)(sprite.rect.width * scaling);
                     h = (int)(sprite.rect.height * scaling);
-                }
-                else {
+                } else {
                     w = targetWidth;
                     h = (int)(targetWidth * (sprite.rect.height / sprite.rect.width));
                 }
@@ -76,8 +74,7 @@ namespace ToyBox {
                         if (GUILayout.Button(sprite.texture, rarityStyle, w.width(), h.height())) {
                             newPortraitName = customID;
                         }
-                    }
-                    else {
+                    } else {
                         GUILayout.Label(sprite.texture, rarityStyle, w.width(), h.height());
                     }
                     Label(customID);
@@ -92,8 +89,7 @@ namespace ToyBox {
                 if (targetWidth == 0) {
                     w = (int)(sprite.rect.width * scaling);
                     h = (int)(sprite.rect.height * scaling);
-                }
-                else {
+                } else {
                     w = targetWidth;
                     h = (int)(targetWidth * (sprite.rect.height / sprite.rect.width));
                 }
@@ -102,8 +98,7 @@ namespace ToyBox {
                         if (GUILayout.Button(sprite.texture, rarityStyle, w.width(), h.height())) {
                             newBlueprintPortrait = portrait;
                         }
-                    }
-                    else {
+                    } else {
                         GUILayout.Label(sprite.texture, rarityStyle, w.width(), h.height());
                     }
                     Label(BlueprintExtensions.GetTitle(portrait), MinWidth(200), AutoWidth());
@@ -118,8 +113,7 @@ namespace ToyBox {
                     if (ch.UISettings.Portrait.IsCustom) {
                         Label("Current Custom Portrait".localize());
                         OnPortraitGUI(ch.UISettings.Portrait.CustomId, 0.25f, false);
-                    }
-                    else {
+                    } else {
                         Label("Current Blueprint Portrait".localize());
                         OnPortraitGUI(ch.UISettings.PortraitBlueprint, 0.25f, false, (int)(0.25f * 692));
                     }
@@ -134,8 +128,7 @@ namespace ToyBox {
                                     ch.UISettings.SetPortrait(new PortraitData(newPortraitName));
                                     Mod.Debug($"Changed portrait of {ch.CharacterName} to {newPortraitName}");
                                     unknownID = false;
-                                }
-                                else {
+                                } else {
                                     Mod.Warn($"No portrait with name {newPortraitName}");
                                     unknownID = true;
                                 }
@@ -231,8 +224,7 @@ namespace ToyBox {
                 var text = "Shift Alignment % by".localize()?.Split('%');
                 if (text.Length < 2) {
                     Label($"Shift Alignment {alignment.Acronym().color(alignment.Color()).bold()} {(charAlignment.VectorRaw * 50).ToString().Cyan()} by", 340.width());
-                }
-                else {
+                } else {
                     Label($"{text?[0]}{alignment.Acronym().color(alignment.Color()).bold()} {(charAlignment.VectorRaw * 50).ToString().Cyan()}{text?[1]}", 340.width());
                 }
                 5.space();
@@ -315,8 +307,7 @@ namespace ToyBox {
                                        ch.Descriptor().State.Size = newSize;
                                        Main.Settings.perSave.characterSizeModifier[ch.HashKey()] = newSize;
                                        Settings.SavePerSaveSettings();
-                                   }
-                                   else {
+                                   } else {
                                        Main.Settings.perSave.characterSizeModifier.Remove(ch.HashKey());
                                        Settings.SavePerSaveSettings();
                                        ch.Descriptor().State.Size = ch.Descriptor().OriginalSize;
@@ -474,8 +465,7 @@ namespace ToyBox {
                         }, Width(75));
                         statEditorStorage[key] = storedValue;
                     }
-                }
-                catch (Exception) {
+                } catch (Exception) {
                     // Mod.Error(ex);
                 }
             }

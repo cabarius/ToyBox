@@ -142,8 +142,7 @@ namespace ToyBox {
                 MechanicsContext context = new MechanicsContext((UnitEntityData)null, mainChar.Value.Descriptor, bp, (MechanicsContext)null, (TargetWrapper)null);
                 return context?.SelectUIData(UIDataType.Description)?.Description ?? "";
 #endif
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Console.Write($"{e}");
 #if DEBUG
                 return "ERROR".red().bold() + $": caught exception {e}";

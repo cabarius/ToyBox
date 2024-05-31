@@ -59,8 +59,7 @@ namespace ModKit {
                     IsDefault = _local == null;
                 }
 
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Mod.Error("Could not load localization files!");
                 Mod.Warn(ex.ToString());
             }
@@ -71,8 +70,7 @@ namespace ModKit {
                 FilePath = _localFolderPath + "en";
                 IsDefault = true;
                 _local = null;
-            }
-            else {
+            } else {
                 if (!(_local?.LanguageCode == locale)) {
                     FilePath = _localFolderPath + Mod.ModKitSettings.uiCultureCode;
                     _local = Import();
@@ -116,12 +114,10 @@ namespace ModKit {
                     lang.HomePage = "https://github.com/cabarius/ToyBox/";
                     Language.Serialize(lang, FilePath + _fileEnding);
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 if (onError != null) {
                     onError(e);
-                }
-                else {
+                } else {
                     Mod.Error(e.ToString());
                 }
             }
@@ -151,8 +147,7 @@ namespace ModKit {
                 }
                 if (File.Exists(FilePath + _fileEnding)) {
                     File.Delete(FilePath + _fileEnding);
-                }
-                else {
+                } else {
                     _LanguageCache.Add(Mod.ModKitSettings.uiCultureCode);
                 }
                 var toSerialize = Mod.ModKitSettings.uiCultureCode == "en" ? _localDefault : _local;
@@ -162,8 +157,7 @@ namespace ModKit {
                     foreach (var k in _localDefault.Strings.Keys) {
                         toSerialize.Strings.Add(k, "");
                     }
-                }
-                else {
+                } else {
                     var notToSerialize = Mod.ModKitSettings.uiCultureCode == "en" ? _local : _localDefault;
                     if (notToSerialize != null) {
                         foreach (var k in notToSerialize.Strings.Keys) {
@@ -179,12 +173,10 @@ namespace ModKit {
                 toSerialize.HomePage = "https://github.com/cabarius/ToyBox/";
                 Language.Serialize(toSerialize, FilePath + _fileEnding);
                 return true;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 if (onError != null) {
                     onError(e);
-                }
-                else {
+                } else {
                     Mod.Error(e.ToString());
                 }
             }

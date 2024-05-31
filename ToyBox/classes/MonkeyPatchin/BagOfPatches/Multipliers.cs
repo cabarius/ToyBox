@@ -192,8 +192,7 @@ namespace ToyBox.BagOfPatches {
                             duration = GetNewBuffDuration((TimeSpan)duration);
                         }
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Mod.Error(e);
                 }
 
@@ -216,8 +215,7 @@ namespace ToyBox.BagOfPatches {
                             //Mod.Warn($"BuffCollection_AddBuff2_patch - buff: {blueprint.name} duration: {oldDuration} => {duration} - ticks: {duration.Value.Ticks} * {settings.buffDurationMultiplierValue}");
                         }
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     //Mod.Error($"BuffCollection_AddBuff2_patch - duration: {duration} - ticks: {duration.Value.Ticks} * {settings.buffDurationMultiplierValue} => {adjusted}");
                     Mod.Error(e);
                 }
@@ -228,7 +226,7 @@ namespace ToyBox.BagOfPatches {
 
         private static TimeSpan GetNewBuffDuration(TimeSpan originalDuration) {
             // deal with large value edge cases, assume that any value over half of Max Ticks divided by our multiplier should be left alone
-            if (originalDuration == TimeSpan.MaxValue 
+            if (originalDuration == TimeSpan.MaxValue
                 || (double)originalDuration.Ticks > (((double)TimeSpan.MaxValue.Ticks) / (2.0f * (double)settings.buffDurationMultiplierValue))
                 )
                 return originalDuration;
@@ -253,8 +251,7 @@ namespace ToyBox.BagOfPatches {
                             duration = new Rounds((int)(duration.Value.Value * settings.buffDurationMultiplierValue));
                         }
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Mod.Error(e);
                 }
             }

@@ -533,8 +533,7 @@ namespace ModKit.DataViewer {
             if (TryGetParentValue(out var parentValue)) {
                 _isException = false;
                 Value = parentValue.GetFieldValue<TParentInst, TNode>(Name);
-            }
-            else {
+            } else {
                 _isException = true;
                 Value = default;
             }
@@ -549,8 +548,7 @@ namespace ModKit.DataViewer {
                 try {
                     _isException = false;
                     Value = parentValue.GetPropertyValue<TParentInst, TNode>(Name);
-                }
-                catch {
+                } catch {
                     _isException = true;
                     Value = default;
                 }
@@ -568,8 +566,7 @@ namespace ModKit.DataViewer {
             if (TryGetParentValue(out var parentValue)) {
                 _isException = false;
                 Value = parentValue.GetFieldValue<TUnderlying, TNode>(Name);
-            }
-            else {
+            } else {
                 _isException = true;
                 Value = default;
             }
@@ -584,8 +581,7 @@ namespace ModKit.DataViewer {
                 try {
                     _isException = false;
                     Value = parentValue.GetPropertyValue<TUnderlying, TNode>(Name);
-                }
-                catch {
+                } catch {
                     _isException = true;
                     Value = default;
                 }
@@ -603,8 +599,7 @@ namespace ModKit.DataViewer {
             if (TryGetParentValue(out var parentValue)) {
                 _isException = false;
                 Value = parentValue.GetFieldValue<TParentInst, TNode>(Name);
-            }
-            else {
+            } else {
                 _isException = true;
                 Value = default;
             }
@@ -619,8 +614,7 @@ namespace ModKit.DataViewer {
                 try {
                     _isException = false;
                     Value = parentValue.GetPropertyValue<TParentInst, TNode>(Name);
-                }
-                catch {
+                } catch {
                     _isException = true;
                     Value = default;
                 }

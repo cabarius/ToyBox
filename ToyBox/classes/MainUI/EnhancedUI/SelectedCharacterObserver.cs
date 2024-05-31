@@ -13,7 +13,7 @@ using ModKit;
 namespace ToyBox.classes.MainUI.Inventory {
     internal class SelectedCharacterObserver : IGlobalSubscriber, ISubscriber {
 
-    public static SelectedCharacterObserver Shared { get; private set; } = new();
+        public static SelectedCharacterObserver Shared { get; private set; } = new();
         private IDisposable m_SelectedUnitUpdate;
         public UnitEntityData SelectedUnit = null;
         public delegate void NotifyDelegate();
@@ -21,7 +21,7 @@ namespace ToyBox.classes.MainUI.Inventory {
 
         public SelectedCharacterObserver() {
             EventBus.Subscribe((object)this);
-            m_SelectedUnitUpdate = Game.Instance.SelectionCharacter.SelectedUnit.Subscribe(delegate(UnitReference u) {
+            m_SelectedUnitUpdate = Game.Instance.SelectionCharacter.SelectedUnit.Subscribe(delegate (UnitReference u) {
                 SelectedUnit = u;
                 Mod.Debug($"SelectedCharacterObserver - selected character changed to {SelectedUnit?.CharacterName.orange() ?? "null"} notifierCount: {Notifiers?.GetInvocationList()?.Length}");
                 Notifiers?.Invoke();

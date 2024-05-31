@@ -52,8 +52,7 @@ namespace ToyBox.BagOfPatches {
                 if (state) {
                     Game.Instance.CameraController.Follower.Release();
                     Game.Instance.UI.GetCameraRig().ScrollTo(vector3);
-                }
-                else {
+                } else {
                     ClickGroundHandler.MoveSelectedUnitsToPoint(vector3);
                 }
                 return false;
@@ -187,8 +186,7 @@ namespace ToyBox.BagOfPatches {
                                 if (frame.FindChild("Right")?.gameObject?.transform is Transform tr) tr.localScale = new Vector3(1.5f / zoom, 1, 1);
 #pragma warning restore CS0618 // Type or member is obsolete
                             }
-                        }
-                        else {
+                        } else {
                             // TODO: Factor the above into a helper function and take zoom as a paremeter so we can call it to reset everything back to normal when we turn off Enhanced Map
                             var zoomVector = new Vector3(1, 1, 1.0f);
                             Zoom = 1.0f;
@@ -196,8 +194,7 @@ namespace ToyBox.BagOfPatches {
                             mapBlock.localScale = new Vector3(1, 1, 1);
                         }
                     }
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     Mod.Debug("Exception in LocalMapBaseViewPatch.SetDrawResult: " + ex.ToString());
                 }
                 return false;
@@ -287,8 +284,7 @@ namespace ToyBox.BagOfPatches {
                 }
                 if (eventState == MouseEventState.Short && time - eventStartTime > 100) {
                     eventState = MouseEventState.Long;
-                }
-                else if (eventState == MouseEventState.Long) {
+                } else if (eventState == MouseEventState.Long) {
                     forwardEvent = true; // once we are in long click then start sending updates
                     eventStartPosition = adjustedPoint; // update start position so that Click will have the right value after a long drag
                 }
@@ -319,11 +315,9 @@ namespace ToyBox.BagOfPatches {
                         && markerVM.m_Marker is AddLocalMapMarker.Runtime marker) {
                         var unit = marker.Owner;
                         UpdateMarker(__instance, unit);
-                    }
-                    else if (__instance.ViewModel is LocalMapUnitMarkerVM unitMarkerVM) {
+                    } else if (__instance.ViewModel is LocalMapUnitMarkerVM unitMarkerVM) {
                         UpdateMarker(__instance, unitMarkerVM.m_Unit);
-                    }
-                    else if (__instance.ViewModel is LocalMapCharacterMarkerVM characterMarkerVM) {
+                    } else if (__instance.ViewModel is LocalMapCharacterMarkerVM characterMarkerVM) {
                         UpdateMarker(__instance, characterMarkerVM.m_Unit);
                     }
                 }
@@ -342,8 +336,7 @@ namespace ToyBox.BagOfPatches {
                     //Mod.Debug($"adding Mark to {unit.CharacterName.orange()}");
                     var mark = markerView.transform;
                     markImage.color = new Color(1, 1f, 0);
-                }
-                else {
+                } else {
                     //                    attentionMark?.SetActive(false);
                     markImage.color = new Color(1, 1, 1);
                 }

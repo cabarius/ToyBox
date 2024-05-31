@@ -45,8 +45,7 @@ namespace ToyBox.BagOfPatches {
                         foreach (var ability in unit.Abilities) {
                             if (ability.Blueprint.AssetGuidThreadSafe == "c78506dd0e14f7c45a599990e4e65038") { //Setting charge ability to first slot
                                 unit.UISettings.SetSlot(unit, ability, 0);
-                            }
-                            else if (index < __instance.Slots.Count && ability.Blueprint.Type != AbilityType.CombatManeuver && ability.Blueprint.Type != AbilityType.Physical) {
+                            } else if (index < __instance.Slots.Count && ability.Blueprint.Type != AbilityType.CombatManeuver && ability.Blueprint.Type != AbilityType.Physical) {
                                 unit.UISettings.SetSlot(unit, ability, index++);
                             }
                         }
@@ -62,8 +61,7 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleMakeSummmonsControllable) {
                     try {
                         __result.AddRange(Game.Instance.Player.Group.Select(u => u).Where(u => u.IsSummoned()));
-                    }
-                    catch {}
+                    } catch { }
                 }
             }
         }
@@ -136,8 +134,7 @@ namespace ToyBox.BagOfPatches {
                     if (settings.summonLevelModifier1 != 0) {
                         level = Math.Max(0, Math.Min(level + (int)settings.summonLevelModifier1, 20));
                     }
-                }
-                else if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.summonTweakTarget2)) {
+                } else if (UnitEntityDataUtils.CheckUnitEntityData(initiator, settings.summonTweakTarget2)) {
                     if (settings.summonDurationMultiplier2 != 1) {
                         duration = new Rounds(Convert.ToInt32(duration.Value * settings.summonDurationMultiplier2));
                     }

@@ -29,8 +29,7 @@ namespace ToyBox.BagOfPatches {
         }
 
         [HarmonyPatch(typeof(LocalizedString), nameof(LocalizedString.GetActualKey))]
-        public class Patch_ActualKeyBug
-        {
+        public class Patch_ActualKeyBug {
             [HarmonyPatch]
             [HarmonyPostfix]
             public static string Postfix(string original) => original ?? "";

@@ -7,8 +7,7 @@ using Kingmaker.Blueprints;
 using ModKit;
 
 namespace ToyBox {
-        public class ConflictingGroupIdReferences
-    {
+    public class ConflictingGroupIdReferences {
         public string Name;
         public List<BlueprintGuid> Etudes = new();
     }

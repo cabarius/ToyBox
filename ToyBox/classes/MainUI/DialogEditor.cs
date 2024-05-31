@@ -141,8 +141,7 @@ namespace ToyBox {
                     if (answer.NextCue is CueSelection nextCueSelection && nextCueSelection.Cues.Any()) {
                         Browser.DetailToggle(text, nextCueSelection, nextCueSelection);
                         Browser.OnDetailGUI(nextCueSelection, (_) => nextCueSelection.OnGUI("Next".localize()));
-                    }
-                    else
+                    } else
                         Label(text);
                     var checkStrings = PreviewUtilities.FormatConditionsAsList(answer);
                     foreach (var checkString in checkStrings) {
@@ -198,8 +197,7 @@ namespace ToyBox {
         private static void OnTitleGUI(string? title) {
             if (title != null) {
                 Label(title.cyan(), Indent.width());
-            }
-            else
+            } else
                 Indent.space();
         }
     }

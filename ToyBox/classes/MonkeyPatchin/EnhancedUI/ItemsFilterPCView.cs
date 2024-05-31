@@ -31,8 +31,7 @@ namespace ToyBox.Inventory {
                 if (!ItemsFilterSearchPCViewPatch.KnownFilterViews.Contains(__instance.m_SearchView))
                     ItemsFilterSearchPCViewPatch.KnownFilterViews.Add(__instance.m_SearchView);
                 __instance.m_Sorter.value = EnhancedInventory.SorterMapper.From((int)val);
-            }
-            else
+            } else
                 __instance.m_Sorter.value = (int)val;
         }
 

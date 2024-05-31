@@ -395,8 +395,7 @@ namespace ToyBox.Multiclass {
                             archetypeOptions.AddExclusive(viewModel.Archetype);
                         else
                             archetypeOptions.Remove(viewModel.Archetype);
-                    }
-                    else if (chArchetype != null) {
+                    } else if (chArchetype != null) {
                         // this is the case where the user clicks on the class and the character already has an archetype in this class
                         if (value)
                             archetypeOptions.AddExclusive(chArchetype);
@@ -416,8 +415,7 @@ namespace ToyBox.Multiclass {
                 charGenClassPhaseVM.OnSelectorClassChanged(viewModel);
                 if (viewModel.IsArchetype) {
                     charGenClassPhaseVM.OnSelectorArchetypeChanged(viewModel.Archetype);
-                }
-                else {
+                } else {
                     charGenClassPhaseVM.LevelUpController.RemoveArchetype(viewModel.Archetype);
                     charGenClassPhaseVM.UpdateClassInformation();
                 }
@@ -451,8 +449,7 @@ namespace ToyBox.Multiclass {
                     multicheckbox.gameObject.SetActive(true);
                     MulticlassCheckBoxHelper.UpdateCheckbox(__instance);
                     PerSaveSettings.observers += (perSave) => MulticlassCheckBoxHelper.UpdateCheckbox(__instance);
-                }
-                else {
+                } else {
                     multicheckbox.gameObject.SetActive(true);
                     MulticlassCheckBoxHelper.UpdateCheckbox(__instance);
                 }

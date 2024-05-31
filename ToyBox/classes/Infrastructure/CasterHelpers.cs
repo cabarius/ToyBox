@@ -26,8 +26,7 @@ namespace ToyBox.classes.Infrastructure {
                     classInfo.CharacterClass == BlueprintRoot.Instance.Progression.MythicCompanionClass) {
                     if (mythicSpellbook == null) {
                         mythicLevel += classInfo.Level;
-                    }
-                    else {
+                    } else {
                         casterLevelDictionary[mythicSpellbook] += classInfo.Level;
                     }
                 }
@@ -59,8 +58,7 @@ namespace ToyBox.classes.Infrastructure {
 
                 if (casterLevelDictionary.ContainsKey(classInfo.Spellbook)) {
                     casterLevelDictionary[classInfo.Spellbook] += casterLevel;
-                }
-                else {
+                } else {
                     casterLevelDictionary[classInfo.Spellbook] = casterLevel;
                 }
             }
@@ -123,8 +121,7 @@ namespace ToyBox.classes.Infrastructure {
                     .Where(x => ((BlueprintSpellbook)x).MythicSpellList != null)
                     .SelectMany(x => ((BlueprintSpellbook)x).MythicSpellList.GetSpells(level));
                 toLearn = normal.Concat(mythic).Distinct().ToList();
-            }
-            else {
+            } else {
                 toLearn = spellbook.Blueprint.SpellList.GetSpells(level);
             }
 
@@ -146,8 +143,7 @@ namespace ToyBox.classes.Infrastructure {
                 level = PartyEditor.SelectedNewSpellLvl;
             if (abilities != null) {
                 abilities.ForEach(x => selectedSpellbook.AddIfUnknown(level, x));
-            }
-            else {
+            } else {
                 AddAllSpellsOfSelectedLevel(selectedSpellbook, level);
             }
         }
@@ -281,8 +277,7 @@ namespace ToyBox.classes.Infrastructure {
         public static List<BlueprintAbility> GetAllSpells(int level) {
             if (AllSpellsCache.TryGetValue(level, out var spells)) {
                 return spells;
-            }
-            else {
+            } else {
                 if (level == -1) {
                     var abilities = BlueprintExtensions.GetBlueprints<BlueprintAbility>();
                     spells = new List<BlueprintAbility>();
@@ -291,8 +286,7 @@ namespace ToyBox.classes.Infrastructure {
                             spells.Add(ability);
                         }
                     }
-                }
-                else {
+                } else {
                     var spellbooks = BlueprintExtensions.GetBlueprints<BlueprintSpellbook>();
                     if (spellbooks == null) return null;
                     Mod.Log($"spellbooks: {spellbooks.Count()}");
