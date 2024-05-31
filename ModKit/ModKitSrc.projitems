@@ -5,8 +5,8 @@
     <HasSharedItems>true</HasSharedItems>
     <SharedGUID>7d3f9428-c134-47fe-9d04-305b4d330401</SharedGUID>
     <TargetFramework>net472</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>ModKit</Import_RootNamespace>
