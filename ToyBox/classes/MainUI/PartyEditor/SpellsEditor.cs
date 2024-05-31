@@ -14,11 +14,7 @@ using ToyBox.classes.Infrastructure;
 using UnityEngine;
 using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
-#if Wrath
 using Kingmaker.Blueprints.Classes.Spells;
-#elif RT
-using Kingmaker.Code.UnitLogic;
-#endif
 
 namespace ToyBox {
     public partial class PartyEditor {
@@ -39,7 +35,6 @@ namespace ToyBox {
                     selectedSpellBookChanged = SelectionGrid(ref selectedSpellbook, titles, Math.Min(titles.Length, 7), AutoWidth());
                     if (selectedSpellbook >= names.Length) selectedSpellbook = 0;
                     DisclosureToggle("Edit".localize().orange().bold(), ref editSpellbooks);
-#if Wrath
                     Space(-50);
                     var mergeableClasses = ch.MergableClasses().ToList();
                     if (spellbook.IsStandaloneMythic || mergeableClasses.Count() == 0) {
@@ -61,7 +56,6 @@ namespace ToyBox {
                             Label("Warning: This is irreversible. Please save before continuing!".localize().Orange());
                         }
                     }
-#endif
                 }
                 spellbook = spellbooks.ElementAt(selectedSpellbook);
                 if (editSpellbooks) {
@@ -108,7 +102,6 @@ namespace ToyBox {
                             ActionButton("+1 CL", () => CasterHelpers.AddCasterLevel(spellbook), AutoWidth());
                         }
                         // removes opposition schools; these are not cleared when removing facts; to add new opposition schools, simply add the corresponding fact again
-#if Wrath
                         if (spellbook.OppositionSchools.Any()) {
                             ActionButton("Clear Opposition Schools".localize(), () => {
                                 spellbook.OppositionSchools.Clear();
@@ -122,7 +115,6 @@ namespace ToyBox {
                                 ch.Facts.RemoveAll<UnitFact>(r => r.Blueprint.GetComponent<AddOppositionDescriptor>(), true);
                             }, AutoWidth());
                         }
-#endif
                     }
                     var unorderedSpells = selectedSpellbookLevel <= spellbook.Blueprint.MaxSpellLevel ? spellbook.GetKnownSpells(selectedSpellbookLevel) : spellbook.GetAllKnownSpells();
                     var spells = unorderedSpells.OrderBy(d => d.Name).ToList();

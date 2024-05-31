@@ -23,12 +23,8 @@ using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
 using ToyBox.BagOfPatches;
 using Kingmaker.UnitLogic.ActivatableAbilities;
-#if Wrath
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
-#elif RT 
-using Kingmaker.UnitLogic.Mechanics.Facts;
-#endif
 
 namespace ToyBox {
     public class FactsEditor {
@@ -57,10 +53,8 @@ namespace ToyBox {
         private static readonly Dictionary<UnitEntityData, Browser<BlueprintFeature, Feature>> FeatureBrowserDict = new();
         private static readonly Dictionary<UnitEntityData, Browser<BlueprintBuff, Buff>> BuffBrowserDict = new();
         private static readonly Dictionary<UnitEntityData, Browser<BlueprintUnitFact, UnitFact>> AbilityBrowserDict = new();
-#if Wrath
         private static readonly Browser<BlueprintFeature, FeatureSelectionEntry> FeatureSelectionBrowser = new(Mod.ModKitSettings.searchAsYouType) { IsDetailBrowser = true };
         private static readonly Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new(Mod.ModKitSettings.searchAsYouType) { IsDetailBrowser = true };
-#endif
         public static void BlueprintRowGUI<Item, Definition>(Browser<Definition, Item> browser,
                                                              Item feature,
                                                              Definition blueprint,
@@ -79,9 +73,7 @@ namespace ToyBox {
                 text = text.Cyan().Bold();
             }
             if (blueprint is BlueprintFeatureSelection featureSelection
-#if Wrath
                 || blueprint is BlueprintParametrizedFeature parametrizedFeature
-#endif
                 ) {
                 if (Browser.DetailToggle(text, blueprint, feature != null ? feature : blueprint, (int)titleWidth))
                     browser.ReloadData();
@@ -149,14 +141,9 @@ namespace ToyBox {
             }
         }
         public static void BlueprintDetailGUI<Item, Definition, k, v>(Definition blueprint, Item feature, UnitEntityData ch, Browser<k, v> browser)
-#if Wrath
             where Item : UnitFact
-#elif RT
-            where Item : MechanicEntityFact
-#endif
             where Definition : BlueprintUnitFact {
             // TODO: RT
-#if Wrath
             if (ch == null) {
                 FeatureSelectionBrowser.ShowAll = true;
                 ParameterizedFeatureBrowser.ShowAll = true;
@@ -302,14 +289,9 @@ namespace ToyBox {
                     });
                     break;
             }
-#endif
         }
         public static List<Action> OnGUI<Item, Definition>(UnitEntityData ch, Browser<Definition, Item> browser, List<Item> fact, string name)
-#if Wrath
             where Item : UnitFact
-#elif RT
-            where Item : MechanicEntityFact
-#endif
             where Definition : BlueprintUnitFact {
             bool updateTree = false;
             List<Action> todo = new();
@@ -344,10 +326,8 @@ namespace ToyBox {
                             reloadData |= Toggle("Search Descriptions".localize(), ref Settings.searchDescriptions);
                             if (reloadData) {
                                 browser.ResetSearch();
-#if Wrath
                                 FeatureSelectionBrowser.ResetSearch();
                                 ParameterizedFeatureBrowser.ResetSearch();
-#endif
                             }
                         }
                     },

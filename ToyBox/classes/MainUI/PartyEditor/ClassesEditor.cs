@@ -18,10 +18,8 @@ using UnityEngine;
 using static Kingmaker.Utility.UnitDescription.UnitDescription;
 using static ModKit.UI;
 using Alignment = Kingmaker.Enums.Alignment;
-#if Wrath
 using Kingmaker.Blueprints.Classes.Spells;
 using ToyBox.Multiclass;
-#endif
 
 namespace ToyBox {
     public partial class PartyEditor {
@@ -32,11 +30,9 @@ namespace ToyBox {
                 Toggle("Multiple Classes On Level-Up".localize(), ref Settings.toggleMulticlass);
                 if (Settings.toggleMulticlass) {
                     Space(40);
-#if Wrath
                     if (DisclosureToggle("Config".localize().orange().bold(), ref editMultiClass)) {
                         multiclassEditCharacter = selectedCharacter;
                     }
-#endif
                     Space(53);
                     Label("Experimental - See 'Level Up + Multiclass' for more options and info".localize().green());
                 }
@@ -65,9 +61,7 @@ namespace ToyBox {
             }
             Div(100, 20);
             if (editMultiClass) {
-#if Wrath
                 MulticlassPicker.OnGUI(ch);
-#endif
             }
             else {
                 var prog = ch.Descriptor().Progression;
@@ -79,11 +73,7 @@ namespace ToyBox {
                         Space(25);
                         Label("level".localize().green() + $": {prog.CharacterLevel}", Width(100f));
                         ActionButton(">", () => prog.CharacterLevel = Math.Min(
-#if Wrath
                                                     prog.MaxCharacterLevel,
-#elif RT
-                                                    int.MaxValue, // TODO: is this right?
-#endif
                                                     prog.CharacterLevel + 1),
                                      AutoWidth());
                     }
@@ -155,11 +145,9 @@ namespace ToyBox {
                     Label("This sets your mythic experience to match the current value of mythic level. Note that mythic experience is 1 point per level".localize().green());
                 }
                 var classCount = classData.Count(x => !x.CharacterClass.IsMythic);
-#if Wrath
                 var gestaltCount = classData.Count(cd => !cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));
                 var mythicCount = classData.Count(x => x.CharacterClass.IsMythic);
                 var mythicGestaltCount = classData.Count(cd => cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));
-#endif
                 foreach (var cd in classData) {
                     var showedGestalt = false;
                     Div(100, 20);
@@ -184,7 +172,6 @@ namespace ToyBox {
                         var maxLevel = cd.CharacterClass.Progression.IsMythic ? 10 : 20;
                         ActionButton(">", () => cd.Level = Math.Min(maxLevel, cd.Level + 1), AutoWidth());
                         Space(23);
-#if Wrath
                         if (ch.IsClassGestalt(cd.CharacterClass)
                             || !cd.CharacterClass.IsMythic && classCount - gestaltCount > 1
                             || cd.CharacterClass.IsMythic && mythicCount - mythicGestaltCount > 1
@@ -211,7 +198,6 @@ namespace ToyBox {
                             }
                             Label(cd.CharacterClass.Description.StripHTML().green(), AutoWidth());
                         }
-#endif
                     }
                 }
             }

@@ -14,10 +14,8 @@ using Kingmaker.Localization;
 using Kingmaker.Utility;
 using Kingmaker.UI;
 using Kingmaker.UI.Common;
-#if Wrath
 using Kingmaker.UI.GlobalMap;
 using Kingmaker.Globalmap;
-#endif
 using static ToyBox.UIHelpers;
 
 namespace ToyBox {
@@ -25,22 +23,13 @@ namespace ToyBox {
         public static WidgetPaths_1_0 WidgetPaths;
         public static Transform Settings => SceneManager.GetSceneByName("UI_LoadingScreen_Scene").GetRootGameObjects().FirstOrDefault(gameObject => gameObject.name.StartsWith("CommonPCView")).ChildTransform("Canvas/SettingsView");
         public static Transform SaveLoadScreen => SceneManager.GetSceneByName("UI_LoadingScreen_Scene").GetRootGameObjects().FirstOrDefault(gameObject => gameObject.name.StartsWith("CommonPCView")).ChildTransform("FadeCanvas/SaveLoadView");
-#if Wrath
         public static Transform UIRoot => UIUtility.IsGlobalMap() ? GlobalMapUI.Instance.transform : StaticCanvas.Instance.transform;
         public static Transform ServiceWindow => UIUtility.IsGlobalMap() ? UIRoot.Find("ServiceWindowsConfig").transform : UIRoot.Find("ServiceWindowsPCView");
-#elif RT
-        public static Transform UIRoot => throw new NotImplementedException(); // StaticCanvas.Instance.transform;
-        public static Transform ServiceWindow => UIRoot.Find("ServiceWindowsPCView");
-#endif
         // We deal with two different cases for finding our UI bits (thanks Owlcat!)
         // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView
         // GlobalMapPCView(Clone)/StaticCanvas/ServiceWindowsConfig
-#if Wrath
         public static Transform SearchViewPrototype
             => Game.Instance?.UI?.MainCanvas?.transform?.Find("ChargenPCView/ContentWrapper/DetailedViewZone/ChargenFeaturesDetailedPCView/FeatureSelectorPlace/FeatureSelectorView/FeatureSearchView") ?? Game.Instance?.UI?.MainMenu?.transform?.Find("ChargenPCView/ContentWrapper/DetailedViewZone/ChargenFeaturesDetailedPCView/FeatureSelectorPlace/FeatureSelectorView/FeatureSearchView");
-#elif RT
-        public static Transform SearchViewPrototype => throw new NotImplementedException();
-#endif
         // MainMenuPCView/Canvas/ChargenPCView/ContentWrapper/DetailedViewZone/ChargenFeaturesDetailedPCView/FeatureSelectorPlace/FeatureSelectorView/FeatureSearchView/ FieldPlace/SearchField
         // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView/Background/Windows/ParentThing/Equipment/RightBlock/FeatureSelectorView(Clone)/FeatureSearchView/ FieldPlace/SearchField
 

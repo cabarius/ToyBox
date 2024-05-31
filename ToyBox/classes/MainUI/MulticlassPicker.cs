@@ -6,9 +6,7 @@ using Kingmaker.Utility;
 using ModKit;
 using System.Linq;
 using System.Linq.Expressions;
-#if Wrath
 using ToyBox.Multiclass;
-#endif
 
 namespace ToyBox {
     public class MulticlassPicker {

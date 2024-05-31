@@ -130,9 +130,7 @@ namespace ToyBox {
             var bps = GetBlueprints<BPType>();
             return bps?.Where(bp => guids.Contains(bp.AssetGuid));
         }
-#if Wrath        
         public IEnumerable<BPType> GetBlueprintsByGuids<BPType>(IEnumerable<string> guids) where BPType : BlueprintFact => GetBlueprintsByGuids<BPType>(guids.Select(g => BlueprintGuid.Parse(g)));
-#endif        
     }
 
     public static class BlueprintLoader<BPType> {

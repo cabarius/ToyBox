@@ -26,9 +26,7 @@ using Kingmaker.Blueprints.Root.Strings;
 using Kingmaker.UI.Common;
 using UnityEngine;
 using System;
-#if Wrath
 using Kingmaker.Blueprints.Classes.Selection;
-#endif
 
 namespace ToyBox {
     public enum UnitSelectType {
@@ -68,7 +66,6 @@ namespace ToyBox {
             }
         }
 
-#if Wrath
         public static void Kill(UnitEntityData unit) => unit.Descriptor.Damage = unit.Descriptor.Stats.HitPoints.ModifiedValue + unit.Descriptor.Stats.TemporaryHitPoints.ModifiedValue;
 
         public static void ForceKill(UnitEntityData unit) => unit.Descriptor.State.ForceKill = true;
@@ -83,18 +80,6 @@ namespace ToyBox {
             else
                 Mod.Warn("Unit is null!");
         }
-#elif RT
-        public static void Kill(UnitEntityData unit) => unit.Health.Damage = unit.Stats.GetStat(StatType.HitPoints) + unit.Stats.GetStat(StatType.TemporaryHitPoints);
-
-        public static void Charm(UnitEntityData unit) {
-            if (unit != null) {
-                // TODO: can we still do this?
-                // unit.SetFaction() = Game.Instance.BlueprintRoot.PlayerFaction;
-            }
-            else
-                Mod.Warn("Unit is null!");
-        }
-#endif
         public static void AddToParty(UnitEntityData unit) {
             Charm(unit);
             Game.Instance.Player.AddCompanion(unit);
@@ -103,11 +88,8 @@ namespace ToyBox {
             var currentMode = Game.Instance.CurrentMode;
             Game.Instance.Player.AddCompanion(unit);
             if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
-#if Wrath
                 var pets = unit.Pets;
-#endif
                 unit.IsInGame = true;
-#if Wrath
                 unit.Position = Game.Instance.Player.MainCharacter.Value.Position;
                 unit.LeaveCombat();
                 Charm(unit);
@@ -119,16 +101,6 @@ namespace ToyBox {
                 foreach (var pet in pets) {
                     pet.Entity.Position = unit.Position;
                 }
-#elif RT
-                unit.Position = Game.Instance.Player.MainCharacter.Entity.Position;
-                unit.CombatState.LeaveCombat();
-                Charm(unit);
-                var unitPartCompanion = unit.GetAll<UnitPartCompanion>();
-                Game.Instance.Player.AddCompanion(unit);
-                if (unit.IsDetached) {
-                    Game.Instance.Player.AttachPartyMember(unit);
-                }
-#endif
             }
         }
         public static void RecruitCompanion(UnitEntityData unit) {
@@ -138,22 +110,12 @@ namespace ToyBox {
             //unit.HoldingState.RemoveEntityData(unit);  
             //player.AddCompanion(unit);
             if (currentMode == GameModeType.Default || currentMode == GameModeType.Pause) {
-#if Wrath
                 var pets = unit.Pets;
-#elif RT
-                var pets = Game.Instance.Player.PartyAndPets.Where(u => u.IsPet && u.OwnerEntity == unit);
-#endif
                 unit.IsInGame = true;
                 unit.Position = Shodan.MainCharacter.Position;
-#if Wrath
                 unit.LeaveCombat();
-#elif RT
-                unit.CombatState.LeaveCombat();
-#endif
                 Charm(unit);
-#if Wrath
                 unit.SwitchFactions(Shodan.MainCharacter.Faction);
-#endif
                 //unit.GroupId = Game.Instance.Player.MainCharacter.Value.GroupId;
                 //Game.Instance.Player.CrossSceneState.AddEntityData(unit);
                 if (unit.IsDetached) {
@@ -161,18 +123,14 @@ namespace ToyBox {
                 }
                 foreach (var pet in pets) {
                     pet
-#if Wrath
                             .Entity!
-#endif
                             .Position = unit.Position;
                 }
             }
         }
         public static bool IsPartyOrPet(this UnitDescriptor unit) {
             if (unit?
-#if Wrath
                     .Unit?
-#endif
                     .OriginalBlueprint == null
                 || Game.Instance.Player?.AllCharacters == null
                 || Game.Instance.Player?.AllCharacters.Count == 0) {
@@ -181,9 +139,7 @@ namespace ToyBox {
 
             return Game.Instance.Player.AllCharacters
                        .Any(x => x.OriginalBlueprint == unit
-#if Wrath
                                                         .Unit
-#endif
                                      .OriginalBlueprint
                                  && (x.Master == null
                                      || x.Master.OriginalBlueprint == null

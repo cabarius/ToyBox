@@ -8,9 +8,7 @@ using Kingmaker.Items;
 using Kingmaker.Designers.EventConditionActionSystem.Conditions;
 using ModKit;
 using Kingmaker.ElementsSystem;
-#if Wrath
 using Kingmaker.Kingdom.Settlements;
-#endif
 using Kingmaker.UnitLogic;
 using System;
 using System.Collections.Generic;
@@ -22,7 +20,6 @@ namespace ToyBox.BagOfPatches {
     internal static class Unrestricted {
         public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
-#if Wrath
         [HarmonyPatch(typeof(EquipmentRestrictionAlignment), nameof(EquipmentRestrictionAlignment.CanBeEquippedBy))]
         public static class EquipmentRestrictionAlignment_CanBeEquippedBy_Patch {
             public static void Postfix(ref bool __result) {
@@ -31,7 +28,6 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-#endif
         [HarmonyPatch(typeof(EquipmentRestrictionClass), nameof(EquipmentRestrictionClass.CanBeEquippedBy))]
         public static class EquipmentRestrictionClassNew_CanBeEquippedBy_Patch {
             public static void Postfix(ref bool __result) {
@@ -90,7 +86,6 @@ namespace ToyBox.BagOfPatches {
             }
         }
 #endif
-#if Wrath        
         internal static readonly Dictionary<string, bool> PlayerAlignmentIsOverrides = new() {
             { "fdc9eb3b03cf8ef4ca6132a04970fb41", false },  // DracoshaIntro_MythicAzata_dialog - Cue_0031
         };
@@ -104,11 +99,9 @@ namespace ToyBox.BagOfPatches {
                 else __result = true;
             }
         }
-#endif
 
         [HarmonyPatch(typeof(BlueprintAnswerBase))]
         public static class BlueprintAnswerBasePatch {
-#if Wrath
             [HarmonyPatch(nameof(BlueprintAnswerBase.IsAlignmentRequirementSatisfied), MethodType.Getter)]
             [HarmonyPostfix]
             public static void IsAlignmentRequirementSatisfied(BlueprintAnswerBase __instance, ref bool __result) {
@@ -124,15 +117,6 @@ namespace ToyBox.BagOfPatches {
                     __result = true;
                 }
             }
-#elif RT
-            [HarmonyPatch(nameof(BlueprintAnswerBase.IsSoulMarkRequirementSatisfied))]
-            [HarmonyPostfix]
-            public static void IsSoulMarkRequirementSatisfied(BlueprintAnswerBase __instance, ref bool __result) {
-                if (settings.toggleDialogRestrictions) {
-                    __result = true;
-                }
-            }
-#endif
 
         }
 
@@ -144,7 +128,6 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-#if Wrath        
         [HarmonyPatch(typeof(Spellbook), nameof(Spellbook.CasterLevel), MethodType.Getter)]
         public static class Spellbook_CasterLevel_Patch {
             public static void Postfix(ref int __result, Spellbook __instance) {
@@ -153,7 +136,6 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-#endif
         
         [HarmonyPatch(typeof(Modifier), nameof(Modifier.Stacks), MethodType.Getter)]
         public static class ModifiableValue_UpdateValue_Patch {

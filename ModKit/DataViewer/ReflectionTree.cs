@@ -393,11 +393,7 @@ namespace ModKit.DataViewer {
                                                                                                child.Name)).ToList();
             // TODO: generalize this and implement custom data extractors
             if (Value is BlueprintReferenceBase bpRefBase) {
-#if Wrath
                 var customNode = new CustomNode<SimpleBlueprint>("Cached", bpRefBase.GetBlueprint(), NodeType.Property);
-#elif RT
-                var customNode = new CustomNode<BlueprintScriptableObject>("Cached", bpRefBase.GetBlueprint(), NodeType.Property);
-#endif
                 _propertyNodes.Add(customNode);
             }
             _propertyNodes.Sort((x, y) => x.Name.CompareTo(y.Name));

@@ -203,8 +203,6 @@ namespace ToyBox.BagOfPatches {
         private static class SpendSkillPoint_Check_Patch {
             [HarmonyPrefix]
             public static bool Check(ref bool __result, SpendSkillPoint __instance, LevelUpState state, UnitDescriptor unit) {
-                Mod.Log($"1:{StatTypeHelper.Skills.Contains(__instance.Skill)} - {(unit.Stats.GetStat(__instance.Skill).BaseValue < state.NextCharacterLevel)} - {(state.SkillPointsRemaining > 0)}");
-                Mod.Log($"2:{settings.toggleIgnoreSkillCap} - {settings.toggleIgnoreSkillPointsRemaining}");
                 if (!settings.toggleIgnoreSkillCap && !settings.toggleIgnoreSkillPointsRemaining) return true;
                 __result = true;
                 if (!StatTypeHelper.Skills.Contains(__instance.Skill)) {

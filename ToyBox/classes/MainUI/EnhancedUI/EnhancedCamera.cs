@@ -37,11 +37,9 @@ namespace ToyBox {
                        25.space();
                        Toggle("Free Camera".localize(), ref Settings.toggleFreeCamera);
                    },
-#if Wrath
                    () => {
                        Toggle("Alt + Mouse Wheel To Adjust Clip Plane".localize(), ref Settings.toggleUseAltMouseWheelToAdjustClipPlane);
                    },
-#endif
                    () => Label("Rotation Options".localize().cyan()),
                    () => {
                        50.space();

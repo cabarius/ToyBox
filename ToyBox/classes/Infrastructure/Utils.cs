@@ -17,8 +17,6 @@ using Newtonsoft.Json;
 using UnityEngine;
 using Attribute = System.Attribute;
 using LocalizationManager = Kingmaker.Localization.LocalizationManager;
-#if Wrath
-#endif
 
 namespace ToyBox {
 
@@ -209,7 +207,6 @@ namespace ToyBox {
         public static Dictionary<string, string> GetCustomAttributes<T>(this T model) where T : class {
             Dictionary<string, string> result = new Dictionary<string, string>();
 
-#if Wrath
             PropertyInfo[] props = typeof(T).GetProperties(BindingFlags.NonPublic);
             foreach (var prop in props) {
                 var text = prop.GetCustomAttributes(true).OfType<InfoBoxAttribute>().Select(info => info.Text);
@@ -257,7 +254,6 @@ namespace ToyBox {
                     }
                 }
             }
-#endif
             return result;
         }
         public static T GetAttributeFrom<T>(this object instance, string propertyName) where T : Attribute {
@@ -389,11 +385,7 @@ namespace ToyBox {
     }
 
     public static class LocalizationUtils {
-#if Wrath
         public static void AddLocalizedString(this string value) => LocalizationManager.CurrentPack.PutString(value, value);
-#elif RT
-        public static void AddLocalizedString(this string value) => Kingmaker.Localization.LocalizationManager.Instance.CurrentPack.PutString(value, value);
-#endif
         public static LocalizedString LocalizedStringInGame(this string key) => new LocalizedString() { Key = key };
 
     }

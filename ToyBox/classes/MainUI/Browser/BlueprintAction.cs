@@ -25,7 +25,6 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-#if Wrath
 using Kingmaker.AI.Blueprints.Considerations;
 using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints.Classes.Selection;
@@ -33,7 +32,6 @@ using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Kingdom;
 using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.Crusade.GlobalMagic;
-#endif
 namespace ToyBox {
     public abstract class BlueprintAction {
         public delegate void Perform(SimpleBlueprint bp, UnitEntityData? ch = null, int count = 1, int listValue = 0);
@@ -46,11 +44,7 @@ namespace ToyBox {
             if (actionsForType == null) {
                 actionsForType = new Dictionary<Type, BlueprintAction[]>();
                 BlueprintActions.InitializeActions();
-#if Wrath
                 BlueprintActions.InitializeActionsWrath();
-#elif RT
-                BlueprintActions.InitializeActionsRT();
-#endif
             }
 
             actionsForType.TryGetValue(type, out var result);
@@ -140,11 +134,7 @@ namespace ToyBox {
                                                        (bp, ch, index) => !ch.Facts.List.Select(f => f.Blueprint).Contains(bp));
 
             BlueprintAction.Register<BlueprintUnitFact>("Remove".localize(),
-#if Wrath
                                                        (bp, ch, n, index) => ch.RemoveFact(bp),
-#elif RT
-                                                        (bp, ch, n, index) => ch.Facts.Remove(bp),
-#endif
                                                         (bp, ch, index) => ch.Facts.List.Select(f => f.Blueprint).Contains(bp));
 
             //BlueprintAction.Register<BlueprintArchetype>(
@@ -186,14 +176,12 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintEtude>("Start".localize(),
                                                      (bp, ch, n, index) => Game.Instance.Player.EtudesSystem.StartEtude(bp),
                                                      (bp, ch, index) => Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp));
-#if Wrath  // TODO: confirm that Unstart doesn't exist in RT
             // They don't seem to exist in the Beta; We might be able to port the code from Wrath if unstart isn't added
             // Though that may be buggy
             BlueprintAction.Register<BlueprintEtude>("Unstart".localize(),
                                                      (bp, ch, n, index) =>
                                                          Game.Instance.Player.EtudesSystem.UnstartEtude(bp),
                                                      (bp, ch, index) => !Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp));
-#endif
             BlueprintAction.Register<BlueprintEtude>("Complete".localize(),
                                                      (bp, ch, n, index) => Game.Instance.Player.EtudesSystem.MarkEtudeCompleted(bp),
                                                      (bp, ch, index) => !Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp) &&
@@ -224,11 +212,7 @@ namespace ToyBox {
                     cutscenePlayerData.Stop();
                     cutscenePlayerData.PreventDestruction = false;
                 }
-#if Wrath
                 var state = ContextData<SpawnedUnitData>.Current?.State;
-#elif RT
-                SceneEntitiesState state = null; // TODO: do we need this?
-#endif
                 CutscenePlayerView.Play(bp, null, true, state).PlayerData.PlayActionId = bp.name;
             });
         }

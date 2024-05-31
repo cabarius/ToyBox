@@ -31,7 +31,6 @@ using ModKit.DataViewer;
 using Kingmaker;
 using ModKit.Utility.Extensions;
 using Kingmaker.UnitLogic;
-#if Wrath
 using Kingmaker.Armies.Blueprints;
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
@@ -39,9 +38,6 @@ using Kingmaker.Craft;
 using Kingmaker.Kingdom.Blueprints;
 using Kingmaker.AI.Blueprints.Considerations;
 using Kingmaker.Crusade.GlobalMagic;
-#elif RT 
-using Kingmaker.Globalmap.Blueprints.SectorMap;
-#endif
 using static ToyBox.BlueprintExtensions;
 
 namespace ToyBox {
@@ -68,9 +64,7 @@ namespace ToyBox {
         public static UnitReference selectedUnit;
         public static Browser<SimpleBlueprint, SimpleBlueprint> SearchAndPickBrowser = new(Mod.ModKitSettings.searchAsYouType);
         public static int[] ParamSelected = new int[1000];
-#if Wrath
         public static Dictionary<BlueprintParametrizedFeature, string[]> paramBPValueNames = new() { };
-#endif
         public static Dictionary<BlueprintFeatureSelection, string[]> selectionBPValuesNames = new() { };
 
         private static readonly NamedTypeFilter[] blueprintTypeFilters = new NamedTypeFilter[] {
@@ -85,34 +79,24 @@ namespace ToyBox {
             //new NamedTypeFilter<SimpleBlueprint>("All", null, bp => bp.CollationNames(bp.m_AllElements?.Select(e => e.name.Split('$')[1].TrimEnd(digits)).ToArray() ?? new string[] {})),
             new NamedTypeFilter<BlueprintFact>("Facts", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintFeature>("Features", null, bp => bp.CollationNames( 
-#if Wrath
                                                       bp.Groups.Select(g => g.ToString()).ToArray()
-#endif
                                                       )),
-#if Wrath
             new NamedTypeFilter<BlueprintParametrizedFeature>("ParamFeatures", null, bp => new List<string?> {bp.ParameterType.ToString() }),
             new NamedTypeFilter<BlueprintFeatureSelection>("Feature Selection", null, bp => bp.CollationNames(bp.Group.ToString(), bp.Group2.ToString())),
-#endif
             new NamedTypeFilter<BlueprintCharacterClass>("Classes", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintProgression>("Progression", null, bp => bp.Classes.Select(cl => cl.Name).ToList()),
             new NamedTypeFilter<BlueprintArchetype>("Archetypes", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintAbility>("Abilities", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintAbility>("Spells", bp => bp.IsSpell, bp => bp.CollationNames(bp.School.ToString())),
-#if Wrath
 
             new NamedTypeFilter<BlueprintGlobalMagicSpell>("Global Spells", null, bp => bp.CollationNames()),
-#endif
             new NamedTypeFilter<BlueprintBrain>("Brains", null, bp => bp.CollationNames()),
-#if Wrath
             new NamedTypeFilter<BlueprintAiAction>("AIActions", null, bp => bp.CollationNames()),
             new NamedTypeFilter<Consideration>("Considerations", null, bp => bp.CollationNames()),
-#endif
             new NamedTypeFilter<BlueprintAbilityResource>("Ability Rsrc", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintSpellbook>("Spellbooks", null, bp => bp.CollationNames(bp.CharacterClass.Name.ToString())),
             new NamedTypeFilter<BlueprintBuff>("Buffs", null, bp => bp.CollationNames()),
-#if Wrath
             new NamedTypeFilter<BlueprintKingdomBuff>("Kingdom Buffs", null, bp => bp.CollationNames()),
-#endif
             new NamedTypeFilter<BlueprintItem>("Item", null,  (bp) => {
                 if (bp.m_NonIdentifiedNameText?.ToString().Length > 0) return bp.CollationNames(bp.m_NonIdentifiedNameText);
                 return bp.CollationNames(bp.ItemType.ToString());
@@ -120,16 +104,10 @@ namespace ToyBox {
             new NamedTypeFilter<BlueprintItemEquipment>("Equipment", null, (bp) =>  bp.CollationNames(bp.ItemType.ToString(), $"{bp.GetCost().ToBinString("⊙".yellow())}")),
             new NamedTypeFilter<BlueprintItemEquipment>("Equip (rarity)", null, (bp) => new List<string?> {bp.Rarity().GetString() }),
             new NamedTypeFilter<BlueprintItemWeapon>("Weapons", null, (bp) => {
-#if Wrath
                 var type = bp.Type;
                 var category = type?.Category;
                 if (category != null) return bp.CollationNames(category.ToString(), $"{bp.GetCost().ToBinString("⊙".yellow())}");
                 if (type != null) return bp.CollationNames(type.NameSafe(), $"{bp.GetCost().ToBinString("⊙".yellow())}");
-#elif RT
-                var family = bp.Family;
-                var category = bp.Category;
-                return bp.CollationNames(family.ToString(), category.ToString(), $"{bp.GetCost().ToBinString("⊙".yellow())}");
-#endif
                 return bp.CollationNames("?", $"{bp.GetCost().ToBinString("⊙".yellow())}");
                 }),
             new NamedTypeFilter<BlueprintItemArmor>("Armor", null, (bp) => {
@@ -138,9 +116,7 @@ namespace ToyBox {
                 return bp.CollationNames("?", $"{bp.GetCost().ToBinString("⊙".yellow())}");
                 }),
             new NamedTypeFilter<BlueprintItemEquipmentUsable>("Usable", null, bp => bp.CollationNames(bp.SubtypeName, $"{bp.GetCost().ToBinString("⊙".yellow())}")),
-#if Wrath
             new NamedTypeFilter<BlueprintIngredient>("Ingredient", null, bp => bp.CollationNames()),
-#endif
             new NamedTypeFilter<BlueprintUnit>("Units", null, bp => bp.CollationNames(bp.Type?.Name ?? bp.Race?.Name ?? "?", $"CR{bp.CR}")),
             new NamedTypeFilter<BlueprintUnit>("Units CR", null, bp => bp.CollationNames($"CR {bp.CR}")),
             new NamedTypeFilter<BlueprintRace>("Races", null, bp => bp.CollationNames()),
@@ -148,21 +124,8 @@ namespace ToyBox {
             //new NamedTypeFilter<BlueprintAreaPart>("Area Parts", null, bp => bp.CollationName()),
             new NamedTypeFilter<BlueprintAreaEnterPoint>("Area Entry", null, bp =>bp.CollationNames(bp.m_Area.NameSafe())),
             //new NamedTypeFilter<BlueprintAreaEnterPoint>("AreaEntry ", null, bp => bp.m_Tooltip.ToString()),
-#if Wrath
             new NamedTypeFilter<BlueprintGlobalMapPoint>("Map Points", null, bp => bp.CollationNames(bp.GlobalMapZone.ToString())),
             new NamedTypeFilter<BlueprintGlobalMap>("Global Map"),
-#elif RT
-            new NamedTypeFilter<BlueprintStarSystemMap>(
-                    "System Map", null,
-                    bp => {
-                        var starNames = bp.Stars.Select(r => $"☀ {r.Star.Get().NameForAcronym}");
-                        var planetNames = bp.Planets.Select(p => $"◍ {p.Get().Name}");
-                        return bp.CollationNames(starNames.Concat(planetNames).ToArray());
-                    }
-                ),
-            new NamedTypeFilter<BlueprintSectorMapPoint>("Sector Map Points", null,  bp => bp.CollationNames(bp.Name.Split(' '))),
-
-#endif
             new NamedTypeFilter<Cutscene>("Cut Scenes", null, bp => bp.CollationNames(bp.Priority.ToString())),
             //new NamedTypeFilter<BlueprintMythicInfo>("Mythic Info"),
             new NamedTypeFilter<BlueprintQuest>("Quests", null, bp => bp.CollationNames(bp.m_Type.ToString())),
@@ -177,12 +140,10 @@ namespace ToyBox {
                 return new List<string?> { "-" };
                 }),
             new NamedTypeFilter<BlueprintAnswer>("Answer", null, bp => bp.CaptionCollationNames()),
-#if Wrath
             new NamedTypeFilter<BlueprintCrusadeEvent>("Crusade Events", null, bp => bp.CollationNames()),
 
             new NamedTypeFilter<BlueprintArmyPreset>("Armies", null, bp => bp.CollationNames()),
             new NamedTypeFilter<BlueprintLeaderSkill>("ArmyGeneralSkill", null, bp =>  bp.CollationNames()),
-#endif
 #if false
             new NamedTypeFilter<BlueprintItemEquipment>("Equip (ench)", null, (bp) => {
                 try {
@@ -385,9 +346,7 @@ namespace ToyBox {
                                 titleWidth = (remainingWidth / (IsWide ? 3 : 4));
                                 var text = title.MarkedSubstring(Settings.searchText);
                                 if (bp is BlueprintFeatureSelection featureSelection
-#if Wrath
                                 || bp is BlueprintParametrizedFeature parametrizedFeature
-#endif
     ) {
                                     if (Browser.DetailToggle(text, bp, bp, (int)titleWidth))
                                         SearchAndPickBrowser.ReloadData();

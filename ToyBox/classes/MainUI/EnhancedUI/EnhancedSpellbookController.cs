@@ -30,9 +30,6 @@ using ModKit;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UI._ConsoleUI.InputLayers.InGameLayer;
 using Kingmaker;
-#if RT
-
-#endif
 
 namespace ToyBox {
     public class DummyKnownSpellsView : SpellbookKnownSpellsPCView {

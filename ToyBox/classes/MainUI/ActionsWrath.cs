@@ -27,13 +27,11 @@ using UnityModManagerNet;
 using Kingmaker.Designers;
 using ToyBox.classes.Infrastructure;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.Spellbook;
-#if Wrath
 using Kingmaker.Armies;
 using Kingmaker.Armies.Blueprints;
 using Kingmaker.Kingdom;
 using Kingmaker.Armies.TacticalCombat.Parts;
 using ToyBox.BagOfPatches;
-#endif
 namespace ToyBox {
     public static partial class Actions {
         public static Settings settings => Main.Settings;

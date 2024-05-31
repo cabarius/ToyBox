@@ -20,15 +20,9 @@ using Kingmaker.Blueprints.Area;
 using Kingmaker.Designers;
 using System.Linq;
 using Kingmaker.Cheats;
-#if Wrath
 using Kingmaker.Globalmap.State;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
-#elif RT
-using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap.PC;
-using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap.Utils;
-using Kingmaker.PubSubSystem.Core;
-#endif
 
 namespace ToyBox {
     public static partial class Teleport {

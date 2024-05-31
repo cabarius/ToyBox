@@ -83,22 +83,14 @@ namespace ToyBox {
                                     175.space();
                                     Label($"Interestingness Coefficient: ".grey() + RichTextExtensions.Cyan(coefficient.ToString()));
                                     50.space();
-#if Wrath
                                     ReflectionTreeView.DetailToggle("Unit", u.Parts.Parts, u.Parts.Parts, 100);
-#elif RT
-                                    ReflectionTreeView.DetailToggle("Unit", u.Parts.m_Parts, u.Parts.m_Parts,100);
-#endif
                                     25.space();
                                     var dialogs = u.GetDialog();
                                     if (dialogs.Any())
                                         ReflectionTreeView.DetailToggle("Dialog", u, dialogs.Count == 1 ? dialogs.First() : dialogs, 100);
                                 },
                                 (u, _) => {
-#if Wrath
                                     ReflectionTreeView.OnDetailGUI(u.Parts.Parts);
-#elif RT
-                                    ReflectionTreeView.OnDetailGUI(u.Parts.m_Parts);
-#endif
                                     ReflectionTreeView.OnDetailGUI(u);
                                     var entries = u.GetUnitInteractionConditions();
                                     var checkerEntries = entries.Where(e => e.HasConditions && (ShowInactive || e.IsActive()));

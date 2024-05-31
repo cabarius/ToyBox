@@ -33,20 +33,12 @@ namespace ToyBox {
             RGBA.cyan,
             RGBA.darkgrey,
             
-#if RT
-            RGBA.yellow,
-            RGBA.lime,
-#endif
             RGBA.red
         };
         private static readonly string[] questColors = new string[] {
             "gray",
             "cyan",
             "white",
-#if RT
-            "yellow",
-            "lime",
-#endif
             "red"
         };
 
@@ -220,7 +212,6 @@ namespace ToyBox {
             Space(25);
         }
         public static void DrawTeleports(QuestObjective objective) {
-#if Wrath
             using (HorizontalScope(MaxWidth(850))) {
                 var areas = objective.Blueprint.Areas;
                 var locations = objective.Blueprint.Locations;
@@ -247,7 +238,6 @@ namespace ToyBox {
 #endif
                 }
             }
-#endif
         }
     }
 }

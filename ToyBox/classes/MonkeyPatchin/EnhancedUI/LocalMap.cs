@@ -16,21 +16,12 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-#if Wrath
 using Kingmaker.UI._ConsoleUI.Overtips;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Markers;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
-#elif RT
-using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap;
-using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap.Common.Markers;
-using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap.PC;
-using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap;
-using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap.Utils;
-using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap.Markers;
-#endif
 
 namespace ToyBox.BagOfPatches {
     internal static class LocalMapPatches {
@@ -43,7 +34,6 @@ namespace ToyBox.BagOfPatches {
         public static Vector3 FrameRotation = Vector3.zero;
         [HarmonyPatch(typeof(LocalMapVM))]
         internal static class LocalMapVMPatch {
-#if Wrath
             public static Vector3 prevLocalPos = new Vector2();
 
             [HarmonyPatch(nameof(OnClick), new Type[] { typeof(Vector2), typeof(bool) })]
@@ -68,7 +58,6 @@ namespace ToyBox.BagOfPatches {
                 }
                 return false;
             }
-#endif
             [HarmonyPatch(nameof(LocalMapVM.SetMarkers))]
             [HarmonyPrefix]
             private static bool SetMarkers(LocalMapVM __instance) {
@@ -84,9 +73,6 @@ namespace ToyBox.BagOfPatches {
                     if (unit.View != null
                         && unit.View.enabled
                         && !unit
-#if RT
-                            .LifeState
-#endif
                             .IsHiddenBecauseDead
                         && LocalMapModel.IsInCurrentArea(unit.Position)
                         ) {
@@ -95,20 +81,13 @@ namespace ToyBox.BagOfPatches {
                     }
 
                 foreach (var units in Shodan.MainCharacter
-#if RT
-                                            .CombatGroup
-#endif
                                             .Memory.UnitsList) {
                     Mod.Debug($"Checking {units.Unit.CharacterName}");
                     if (!units.Unit.IsPlayerFaction
                         && (units.Unit.IsVisibleForPlayer || units.Unit.InterestingnessCoefficent() > 0)
                         && !units.Unit.Descriptor()
-#if Wrath
                                  .State.IsDead
                         && !units.Unit.State.Features.IsUntargetable.Value
-#elif RT
-                                 .LifeState.IsDead
-#endif
                         && LocalMapModel.IsInCurrentArea(units.Unit.Position)
                        ) {
                         __instance.MarkersVm.Add(new LocalMapUnitMarkerVM(units));
@@ -118,7 +97,6 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-#if Wrath
         // Modifies Local Map View to zoom the map for easier reading
         // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView/Background/Windows/LocalMapPCView/ContentGroup/MapBlock
         [HarmonyPatch(typeof(LocalMapBaseView))]
@@ -320,7 +298,6 @@ namespace ToyBox.BagOfPatches {
             }
         }
 #endif
-#endif
 
 
         [HarmonyPatch(typeof(LocalMapMarkerPCView), nameof(LocalMapMarkerPCView.BindViewImplementation))]
@@ -333,13 +310,8 @@ namespace ToyBox.BagOfPatches {
                 if (__instance.ViewModel.MarkerType == LocalMapMarkType.Loot)
                     __instance.AddDisposable(__instance.ViewModel.IsVisible.Subscribe(value => {
                         (__instance as LocalMapLootMarkerPCView)?
-#if Wrath
                             .Hide();
-#elif RT
-                            .gameObject.SetActive(value);
-#endif
                     }));
-#if Wrath // TODO: fix this once we get UnityExplorer        
                 if (Settings.toggleShowInterestingNPCsOnLocalMap) {
                     if (__instance.ViewModel is LocalMapCommonMarkerVM markerVM
                         && markerVM.m_Marker is AddLocalMapMarker.Runtime marker) {
@@ -353,7 +325,6 @@ namespace ToyBox.BagOfPatches {
                         UpdateMarker(__instance, characterMarkerVM.m_Unit);
                     }
                 }
-#endif
             }
 
             // Helper Function - Not a Patch
@@ -381,7 +352,6 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPostfix]
             public static void BindViewImplementation(UnitOvertipView __instance) {
                 if (!Settings.toggleShowInterestingNPCsOnLocalMap) return;
-#if Wrath // TODO: fix this once we get UnityExplorer        
                 if (__instance.ViewModel is EntityOvertipVM entityOvertipVM) {
                     var interestingness = entityOvertipVM.Unit.InterestingnessCoefficent();
                     var charName = __instance.transform.Find("OverUnit/NonCombatOvertip/CharacterName").GetComponent<TextMeshProUGUI>();
@@ -390,19 +360,11 @@ namespace ToyBox.BagOfPatches {
                     else
                         charName.color = new Color(0.1098f, 0.098f, 0.0784f);
                 }
-#endif
             }
-#if Wrath
             [HarmonyPatch(nameof(UnitOvertipView.UpdateInternal))]
             [HarmonyPostfix]
             public static void UpdateInternal(UnitOvertipView __instance, Vector3 canvasPosition) {
-#elif RT
-            [HarmonyPatch(nameof(UnitOvertipView.UpdateVisibility))]
-            [HarmonyPostfix]
-            public static void UpdateInternal(UnitOvertipView __instance) {
-#endif
                 if (!Settings.toggleShowInterestingNPCsOnLocalMap || __instance is null) return;
-#if Wrath // TODO: fix this once we get UnityExplorer        
                 if (__instance.ViewModel is EntityOvertipVM entityOvertipVM) {
                     var interestingness = entityOvertipVM.Unit.InterestingnessCoefficent();
                     var charName = __instance.transform.Find("OverUnit/NonCombatOvertip/CharacterName").GetComponent<TextMeshProUGUI>();
@@ -411,7 +373,6 @@ namespace ToyBox.BagOfPatches {
                     else
                         charName.color = new Color(0.1098f, 0.098f, 0.0784f);
                 }
-#endif
             }
         }
 #if false

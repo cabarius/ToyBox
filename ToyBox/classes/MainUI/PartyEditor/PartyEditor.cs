@@ -10,11 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Kingmaker.Cheats;
-#if RT
-using Kingmaker.Blueprints;
-using Kingmaker.UnitLogic.Levelup.Components;
-using Kingmaker.Code.UnitLogic;
-#endif
 using static ModKit.UI;
 
 namespace ToyBox {
@@ -84,11 +79,7 @@ namespace ToyBox {
                 Space(25);
                 buttonCount++;
             }
-#if Wrath
             else if (!player.AllCharacters.Contains(ch)) {
-#elif RT
-            else if (!player.AllCharactersAndStarships.Contains(ch)) {
-#endif
                 recruitableCount++;
                 ActionButton("Recruit".localize().cyan(), () => { charToRecruit = ch; }, Width(150));
                 Space(25);
@@ -104,7 +95,6 @@ namespace ToyBox {
                 Space(25);
                 buttonCount++;
             }
-#if Wrath
             if (ch.CanRespec()) {
                 respecableCount++;
                 ActionButton("Respec".localize().cyan(), () => { Actions.ToggleModWindow(); ch.DoRespec(); }, Width(150));
@@ -112,7 +102,6 @@ namespace ToyBox {
             else {
                 Space(153);
             }
-#endif
             if (buttonCount >= 0)
                 Space(178 * (2 - buttonCount));
 #if false
@@ -159,11 +148,7 @@ namespace ToyBox {
             ReflectionTreeView.OnDetailGUI("All");
             List<Action> todo = new();
             foreach (var ch in characterList) {
-#if Wrath
                 var classData = ch.Progression.Classes;
-#elif RT
-                var classData = ch.Progression.AllCareerPaths.ToList();
-#endif
                 // TODO - understand the difference between ch.Progression and ch.Descriptor().Progression
                 var progression = ch.Descriptor().Progression;
                 var xpTable = progression.ExperienceTable;
@@ -175,28 +160,17 @@ namespace ToyBox {
                 using (HorizontalScope()) {
                     var name = ch.CharacterName;
                     if (Game.Instance.Player.AllCharacters.Contains(ch)
-#if RT
-                        || Game.Instance.Player.m_AllCharactersAndStarships.Contains(ch)
-#endif
                         ) {
                         var oldEditState = nameEditState;
                         if (isWide) {
                             if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), MinWidth(100), MaxWidth(400))) {
-#if Wrath
                                 ch.Descriptor().CustomName = name;
-#elif RT
-                                ch.Description.CustomName = name;
-#endif
                                 Main.SetNeedsResetGameUI();
                             }
                         }
                         else
                             if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), Width(230))) {
-#if Wrath
                             ch.Descriptor().CustomName = name;
-#elif RT
-                            ch.Description.CustomName = name;
-#endif
                             Main.SetNeedsResetGameUI();
                         }
                         if (nameEditState != oldEditState) {
@@ -229,7 +203,6 @@ namespace ToyBox {
                         else { Label("max".localize(), Width(63)); }
                     }
                     else { Space(66); }
-#if Wrath
                     Space(10);
                     var nextML = progression.MythicExperience;
                     if (nextML <= mythicLevel || !isOnTeam)
@@ -245,7 +218,6 @@ namespace ToyBox {
                         else { Label("max".localize(), Width(63)); }
                     }
                     else { Space(66); }
-#endif
                     Space(30);
                     Wrap(IsNarrow, NarrowIndent, 0);
                     var prevSelectedChar = selectedCharacter;
@@ -278,13 +250,11 @@ namespace ToyBox {
                     if (DisclosureToggle("Abilities".localize(), ref showAbilities, 125)) {
                         if (showAbilities) { selectedCharacter = ch; selectedToggle = ToggleChoice.Abilities; } else { selectedToggle = ToggleChoice.None; }
                     }
-#if Wrath
                     var showSpells = ch == selectedCharacter && selectedToggle == ToggleChoice.Spells;
                     if (DisclosureToggle($"{spellCount} " + "Spells".localize(), ref showSpells, 150)) {
                         if (showSpells) { selectedCharacter = ch; selectedToggle = ToggleChoice.Spells; }
                         else { selectedToggle = ToggleChoice.None; }
                     }
-#endif
                     var showAI = ch == selectedCharacter && selectedToggle == ToggleChoice.AI;
                     ReflectionTreeView.DetailToggle("Inspect".localize(), ch, ch, 75);
                     Wrap(!isWide, NarrowIndent - 20);
@@ -325,11 +295,9 @@ namespace ToyBox {
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities) {
                     todo = FactsEditor.OnGUI(ch, ch.Descriptor().Abilities.Enumerable, ch.Descriptor.ActivatableAbilities.Enumerable);
                 }
-#if Wrath
                 if (ch == selectedCharacter && selectedToggle == ToggleChoice.Spells) {
                     todo = OnSpellsGUI(ch, spellbooks);
                 }
-#endif
                 if (selectedCharacter != GetEditCharacter()) {
                     editingCharacterIndex = characterList.IndexOf(selectedCharacter);
                 }
@@ -354,11 +322,7 @@ namespace ToyBox {
             if (charToRecruit != null) { UnitEntityDataUtils.RecruitCompanion(charToRecruit); }
             if (charToRemove != null) { UnitEntityDataUtils.RemoveCompanion(charToRemove); }
             if (charToUnrecruit != null) {
-#if Wrath
                 charToUnrecruit.Ensure<UnitPartCompanion>().SetState(CompanionState.None); charToUnrecruit.Remove<UnitPartCompanion>();
-#elif RT
-                charToUnrecruit.GetCompanionOptional()?.SetState(CompanionState.None); charToUnrecruit.Remove<UnitPartCompanion>();
-#endif
             }
         }
     }

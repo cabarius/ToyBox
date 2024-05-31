@@ -21,11 +21,7 @@ namespace ToyBox {
                 availableAchievements = Game.Instance?.Player?
                     .Achievements?
                     .m_Achievements?
-#if Wrath
                     .Where(ach => !ach.Data.ExcludedFromCurrentPlatform)
-#elif RT
-                    .Where(ach => !ach.Data.SteamId.IsNullOrEmpty())
-#endif
                     .ToList();
                 if (availableAchievements != null && availableAchievements?.Count > 0)
                     unlocked = availableAchievements.Where(ach => ach.IsUnlocked).ToList();
@@ -40,11 +36,7 @@ namespace ToyBox {
             AchievementBrowser.OnGUI(unlocked,
                 () => availableAchievements,
                 current => current,
-#if Wrath
                 achievement => $"{achievement.Data.AchievementName} {achievement.Data.GetDescription()} {achievement.Data.name}",
-#elif RT
-                achievement => $"{achievement.Data.SteamId} {achievement.Data.GetDescription()} {achievement.Data.name}",
-#endif                
                 achievement => new[] { achievement.Data.name },
                 () => {
                     using (VerticalScope()) {

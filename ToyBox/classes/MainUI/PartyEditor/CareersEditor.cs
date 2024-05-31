@@ -19,15 +19,12 @@ using UnityEngine;
 using static Kingmaker.Utility.UnitDescription.UnitDescription;
 using static ModKit.UI;
 using Alignment = Kingmaker.Enums.Alignment;
-#if Wrath
 using Kingmaker.Blueprints.Classes.Spells;
 using ToyBox.Multiclass;
-#endif
 
 namespace ToyBox {
     public partial class PartyEditor {
         public static void OnClassesGUI(UnitEntityData ch, List<(BlueprintCareerPath path, int level)> careerPaths, UnitEntityData selectedCharacter) {
-#if Wrath
             Div(100, 20);
             using (HorizontalScope()) {
                 Space(100);
@@ -41,9 +38,7 @@ namespace ToyBox {
                     Label("Experimental - See 'Level Up + Multiclass' for more options and info".green());
                 }
             }
-#endif
             using (HorizontalScope()) {
-#if Wrath
                 Space(100);
                 ActionToggle("Allow Levels Past 20",
                     () => {
@@ -64,14 +59,11 @@ namespace ToyBox {
                     AutoWidth());
                 Space(380);
                 Label("Tick this to let your character exceed the level 20 level cap like the Legend mythic path".green());
-#endif
             }
             Div(100, 20);
 
             if (editMultiClass) {
-#if Wrath
                 MulticlassPicker.OnGUI(ch);
-#endif
             }
             else {
                 var prog = ch.Descriptor().Progression;
@@ -83,11 +75,7 @@ namespace ToyBox {
                         Space(25);
                         Label("level".localize().green() + $": {prog.CharacterLevel}", Width(100f));
                         ActionButton(">", () => prog.CharacterLevel = Math.Min(
-#if Wrath
                                                     prog.MaxCharacterLevel, 
-#elif RT
-                                                    int.MaxValue, // TODO: is this right?
-#endif
                                                     prog.CharacterLevel + 1),
                                      AutoWidth());
                     }
@@ -160,11 +148,9 @@ namespace ToyBox {
                 }
 #endif
                 var classCount = careerPaths.Count();
-#if Wrath
                 var gestaltCount = classData.Count(cd => !cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));
                 var mythicCount = classData.Count(x => x.CharacterClass.IsMythic);
                 var mythicGestaltCount = classData.Count(cd => cd.CharacterClass.IsMythic && ch.IsClassGestalt(cd.CharacterClass));
-#endif
                 foreach (var cd in careerPaths) {
                     var showedGestalt = false;
                     Div(100, 20);
@@ -180,7 +166,6 @@ namespace ToyBox {
                         var maxLevel = 20;
                         //ActionButton(">", () => cd.level = Math.Min(maxLevel, cd.level + 1), AutoWidth());
                         Space(23);
-#if Wrath
                         if (ch.IsClassGestalt(cd.CharacterClass)
                             || !cd.CharacterClass.IsMythic && classCount - gestaltCount > 1
                             || cd.CharacterClass.IsMythic && mythicCount - mythicGestaltCount > 1
@@ -207,7 +192,6 @@ namespace ToyBox {
                             }
                             Label(cd.CharacterClass.Description.StripHTML().green(), AutoWidth());
                         }
-#endif
                     }
                 }
             }

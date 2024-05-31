@@ -224,9 +224,6 @@ namespace ToyBox {
         public bool toggleDisableCorruption = false;
         public float enduringSpellsTimeThreshold = 60f;
         public float greaterEnduringSpellsTimeThreshold = 5f;
-#if RT
-        public bool disableWarpRandomEncounter = false;
-#endif
 
         // Loot 
         public bool toggleColorLootByRarity = false;
@@ -246,9 +243,7 @@ namespace ToyBox {
         public RarityType lootChecklistFilterRarity = RarityType.None;
         public RarityType maxRarityToHide = RarityType.None;
         public bool toggleCustomBulkSell = false;
-#if Wrath        
         public BulkSellSettings bulkSellSettings = new();
-#endif
         // Enhanced Inventory
         public bool toggleEnhancedInventory = false;
         public bool togglEquipSlotInventoryFiltering = false;
@@ -368,7 +363,6 @@ namespace ToyBox {
         public UnitSelectType rollWithDisadvantage = UnitSelectType.Off;
         public UnitSelectType alwaysRoll1 = UnitSelectType.Off;
         public UnitSelectType neverRoll1 = UnitSelectType.Off;
-#if Wrath
         public UnitSelectType alwaysRoll10 = UnitSelectType.Off;
         public UnitSelectType alwaysRoll20 = UnitSelectType.Off;
         public UnitSelectType alwaysRoll20OutOfCombat = UnitSelectType.Off;
@@ -379,18 +373,6 @@ namespace ToyBox {
         public UnitSelectType roll20Initiative = UnitSelectType.Off;
         public UnitSelectType skillsTake10 = UnitSelectType.Off;
         public UnitSelectType skillsTake20 = UnitSelectType.Off;
-#elif RT
-        public UnitSelectType alwaysRoll1OutOfCombat = UnitSelectType.Off;
-        public UnitSelectType alwaysRoll50 = UnitSelectType.Off;
-        public UnitSelectType alwaysRoll100 = UnitSelectType.Off;
-        public UnitSelectType neverRoll100 = UnitSelectType.Off;
-        public UnitSelectType roll1Initiative = UnitSelectType.Off;
-        public UnitSelectType roll5Initiative = UnitSelectType.Off;
-        public UnitSelectType roll10Initiative = UnitSelectType.Off;
-        public UnitSelectType skillsTake1 = UnitSelectType.Off;
-        public UnitSelectType skillsTake25 = UnitSelectType.Off;
-        public UnitSelectType skillsTake50 = UnitSelectType.Off;
-#endif
 
         // Summons
         public bool toggleMakeSummmonsControllable = false;
@@ -480,12 +462,10 @@ namespace ToyBox {
         // Dictionary of Name/IsLegendaryHero for configuration per party member
         public SerializableDictionary<string, bool> charIsLegendaryHero = new();
 
-#if Wrath
         public Multiclass.ProgressionPolicy multiclassHitPointPolicy = 0;
         public Multiclass.ProgressionPolicy multiclassSavingThrowPolicy = 0;
         public Multiclass.ProgressionPolicy multiclassBABPolicy = 0;
         public Multiclass.ProgressionPolicy multiclassSkillPointPolicy = 0;
-#endif
 
         public bool toggleTakeHighestHitDie = true;
         public bool toggleTakeHighestSkillPoints = true;

@@ -138,19 +138,11 @@ namespace ToyBox {
         }
 
         private EtudeInfo PrepareNewEtudeData(BlueprintEtude blueprintEtude) {
-#if RT
-            if (blueprintEtude.Parent == null)
-                EtudesEditor.rootEtudeId = blueprintEtude.AssetGuid;
-#endif
             var etudeInfo = new EtudeInfo {
                 Name = blueprintEtude.name,
                 Blueprint = blueprintEtude,
                 ParentId = blueprintEtude.Parent?.Get()?.AssetGuid ?? BlueprintGuid.Empty,
-#if Wrath
                 AllowActionStart = blueprintEtude.AllowActionStart,
-#elif RT
-                AllowActionStart = blueprintEtude.CanPlay(),
-#endif
                 CompleteParent = blueprintEtude.CompletesParent,
                 Comment = blueprintEtude.Comment,
                 Priority = blueprintEtude.Priority

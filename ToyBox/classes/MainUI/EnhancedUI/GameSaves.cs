@@ -15,15 +15,7 @@ namespace ToyBox {
         private static IEnumerable<SaveInfo> _allSaves = null;
         private static IEnumerable<SaveInfo> _currentSaves = null;
         public static string? SearchKey(this SaveInfo info) =>
-#if Wrath
             $"{info.Name}{info.Area.AreaName.ToString()}{info.Campaign.Title}{info.DlcCampaign.Campaign.Title}{info.Description}{info.FileName}";
-#elif RT
-            $"{info.Name
-            }{info.Area.AreaName.ToString()
-            }{info.Description
-            }{info.FileName
-            }";
-#endif
         public static IComparable?[] SortKey(this SaveInfo info) => new IComparable[] {
             info.PlayerCharacterName,
             info.GameSaveTime
@@ -81,10 +73,6 @@ namespace ToyBox {
                                            var isCurrent = _currentSaves.Contains(info);
                                            var characterName = isCurrent ? info.PlayerCharacterName.orange() : info.PlayerCharacterName;
                                            Label(characterName, 400.width());
-#if RT
-                                           25.space();
-                                           Label($"Level: {info.PlayerCharacterRank}");
-#endif
                                            25.space();
                                            Label($"{info.Area.AreaName.StringValue()}".cyan(), 400.width());
                                            if (Settings.toggleShowGameIDs) {

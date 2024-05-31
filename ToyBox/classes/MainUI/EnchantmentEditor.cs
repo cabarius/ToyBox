@@ -196,9 +196,7 @@ namespace ToyBox.classes.MainUI {
                                 Label("rating: ".localize() + $"{item.Rating().ToString().orange().bold()} (" + "bp".localize() + $":{item.Blueprint.Rating().ToString().orange().bold()})".cyan());
                                 using (HorizontalScope()) {
                                     var modifers = bp.Attributes();
-#if Wrath
                                     if (item.IsEpic) modifers = modifers.Prepend("epic ");
-#endif
                                     Label(string.Join(" ", modifers).cyan(), AutoWidth());
                                     //if (bp is BlueprintItemWeapon bpW) {
                                     //    if (bpW.IsMagic) UI.Label("magic ".cyan(), UI.AutoWidth());
@@ -253,7 +251,6 @@ namespace ToyBox.classes.MainUI {
                                 TargetItemGUI(item);
                             }
                         }
-#if Wrath
                         using (HorizontalScope()) {
                             ActionButton(("Sandal".cyan() + ", yer a Trickster!").localize(), () => {
                                 AddTricksterEnchantmentsTier1(item);
@@ -269,7 +266,6 @@ namespace ToyBox.classes.MainUI {
                                 Label("This applies the Trickster Lore Nature Enchantment Bonus at stage 1/2/3 respectively".localize().green());
                             }
                         }
-#endif
                         Div();
                     }
 
@@ -510,7 +506,6 @@ namespace ToyBox.classes.MainUI {
             if (item == null) return;
             item.RemoveEnchantment(enchantment);
         }
-#if Wrath
         public static void AddTricksterEnchantmentsTier1(ItemEntity item) {
             var tricksterKnowledgeArcanaTier1 = ResourcesLibrary.TryGetBlueprint<BlueprintFeature>("c7bb946de7454df4380c489a8350ba38");
             var tricksterTier1Toy = tricksterKnowledgeArcanaTier1.GetComponent<TricksterArcanaBetterEnhancements>();
@@ -550,11 +545,8 @@ namespace ToyBox.classes.MainUI {
             }
             foreach (var enchantment in item.Enchantments)
                 source.Remove(enchantment.Blueprint);
-#if Wrath
             if (source.Empty<BlueprintItemEnchantment>())
-#elif RT
             if (source.DefaultIfEmpty<BlueprintItemEnchantment>())
-#endif
                 return;
             var blueprint = source.ToList<BlueprintItemEnchantment>().Random<BlueprintItemEnchantment>();
             var itemEntityShield = item as ItemEntityShield;
@@ -573,7 +565,6 @@ namespace ToyBox.classes.MainUI {
                     break;
             }
         }
-#endif
         /// <summary>definitely not useless</summary>
         /// <returns>Key is ItemEnchantments of given item. Value is true, if it is a temporary enchantment.</returns>
         public static Dictionary<ItemEnchantment, bool> GetEnchantments(ItemEntity item) {

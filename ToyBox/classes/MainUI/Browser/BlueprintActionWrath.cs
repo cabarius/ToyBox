@@ -69,7 +69,6 @@ namespace ToyBox {
                                                            var feature = ch.Progression.Features.GetFact(bp);
                                                            return feature != null && feature.GetRank() < feature.Blueprint.Ranks;
                                                        });
-#if Wrath
             // Paramaterized Feature
             BlueprintAction.Register<BlueprintParametrizedFeature>("Add".localize(),
                  (bp, ch, n, index) => {
@@ -121,7 +120,6 @@ namespace ToyBox {
                     var existing = ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
                     return existing != null;
                 });
-#endif
             // Feature Selection
             BlueprintAction.Register<BlueprintFeatureSelection>("Add".localize(),
                  (bp, ch, n, index) => {

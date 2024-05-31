@@ -214,7 +214,6 @@ namespace ToyBox {
                 }
             }
             Div(100, 20, 755);
-#if Wrath
             var alignment = ch.Descriptor().Alignment.ValueRaw;
             using (HorizontalScope()) {
                 100.space();
@@ -264,47 +263,6 @@ namespace ToyBox {
                 }
             }
             Div(100, 20, 755);
-#elif RT
-            var soulMarks = ch.GetSoulMarks();
-            using (HorizontalScope()) {
-                100.space();
-                Label("Soul Marks".localize(), Width(200));
-                using (VerticalScope()) {
-                    var names = Enum.GetNames(typeof(SoulMarkDirection));
-                    var index = 0;
-                    foreach (var name in names) {
-                        if (name == "None") continue;
-                        var soulMarkDirection = (SoulMarkDirection)index;
-                        var soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, soulMarkDirection);
-                        using (HorizontalScope()) {
-                            Label(name.localize().orange(), 200.width());
-                            var oldRank = soulMark?.GetRank() - 1 ?? 0;
-                            ValueAdjuster(
-                                "Rank".localize(), () => oldRank,
-                                v => {
-                                    var change = v - oldRank;
-                                    if (Math.Abs(change) > 0) {
-                                        var soulMarkShift = new SoulMarkShift {
-                                            Direction = soulMarkDirection,
-                                            Value = change
-                                        };
-                                        new BlueprintAnswer {
-                                            SoulMarkShift = soulMarkShift
-                                        }.ApplyShiftDialog();
-
-                                    }
-                                }, 1, 0, 120);
-                        }
-                        index++;
-                    }
-                }
-            }
-            using (HorizontalScope()) {
-                528.space();
-                //                AlignmentGrid(alignment, (a) => ch.Descriptor().Alignment.Set(a));
-            }
-            Div(100, 20, 755);
-#endif
 #if false
                                     var soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, (SoulMarkDirection)index);
                         using (HorizontalScope()) {
@@ -327,7 +285,6 @@ namespace ToyBox {
                         }
 #endif
             if (ch != null && ch.HashKey() != null) {
-#if Wrath
                 using (HorizontalScope()) {
                     Space(100);
                     using (VerticalScope()) {
@@ -369,7 +326,6 @@ namespace ToyBox {
                         }
                     }
                 }
-#endif
                 using (HorizontalScope()) {
                     Space(100);
                     if (ch.View?.gameObject?.transform?.localScale[0] is float scaleMultiplier) {
@@ -386,7 +342,6 @@ namespace ToyBox {
                     }
                 }
             }
-#if Wrath
             if (ch.Descriptor().Progression.GetCurrentMythicClass()?.CharacterClass.Name == "Swarm That Walks") {
                 UnitPartLocustSwarm SwarmPart = null;
                 UnitPartLocustClonePets SwarmClones = null;
@@ -454,7 +409,6 @@ namespace ToyBox {
                 }
             }
             Div(100, 20, 755);
-#endif
             using (HorizontalScope()) {
                 Space(100);
                 Label("Gender".localize(), Width(400));
@@ -477,21 +431,13 @@ namespace ToyBox {
                 try {
                     var statType = (StatType)obj;
                     Mod.Debug($"stat: {statType}");
-#if Wrath
                     var modifiableValue = ch.Stats.GetStat(statType);
-#elif RT
-                    var modifiableValue = ch.Stats.GetStatOptional(statType);
-#endif
                     if (modifiableValue == null) {
                         continue;
                     }
 
                     var key = $"{ch.CharacterName}-{statType}";
-#if Wrath
                     var storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.BaseValue;
-#elif RT
-                    var storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.ModifiedValue;
-#endif
                     var statName = statType.ToString();
                     if (statName == "BaseAttackBonus" || statName == "SkillAthletics" || statName == "HitPoints") {
                         Div(100, 20, 755);
@@ -504,47 +450,27 @@ namespace ToyBox {
                                      () => {
                                          modifiableValue.BaseValue -= 1;
                                          modifiableValue.UpdateValue();
-#if Wrath
                                          storedValue = modifiableValue.BaseValue;
-#elif RT
-                                         storedValue = modifiableValue.ModifiedValue;
-#endif
                                      },
                                      GUI.skin.box,
                                      AutoWidth());
                         Space(20);
-#if Wrath
                         var val = modifiableValue.BaseValue;
-#elif RT
-                        var val = modifiableValue.ModifiedValue;
-#endif
                         Label($"{val}".orange().bold(), Width(50f));
                         ActionButton(" > ",
                                      () => {
                                          modifiableValue.BaseValue += 1;
                                          modifiableValue.UpdateValue();
-#if Wrath
                                          storedValue = modifiableValue.BaseValue;
-#elif RT
-                                         storedValue = modifiableValue.ModifiedValue;
-#endif
                                      },
                                      GUI.skin.box,
                                      AutoWidth());
                         Space(25);
                         ActionIntTextField(ref storedValue, (v) => {
 
-#if Wrath
                             modifiableValue.BaseValue += v - modifiableValue.BaseValue;
                             storedValue = modifiableValue.BaseValue;
-#elif RT
-                            modifiableValue.BaseValue += v - modifiableValue.ModifiedValue;
-                            storedValue = modifiableValue.ModifiedValue;
-#endif
                             modifiableValue.UpdateValue();
-#if Wrath
-#elif RT
-#endif
                         }, Width(75));
                         statEditorStorage[key] = storedValue;
                     }
