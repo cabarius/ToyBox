@@ -475,7 +475,7 @@ namespace ToyBox {
                         statEditorStorage[key] = storedValue;
                     }
                 }
-                catch (Exception ex) {
+                catch (Exception) {
                     // Mod.Error(ex);
                 }
             }

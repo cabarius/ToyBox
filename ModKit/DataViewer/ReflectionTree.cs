@@ -56,10 +56,10 @@ namespace ModKit.DataViewer {
             IsNullable = Type.IsGenericType && !Type.IsGenericTypeDefinition && Type.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
-        [ObsoleteAttribute("TODO - move this into a proper view model", false)]
+        //[ObsoleteAttribute("TODO - move this into a proper view model", false)]
         public ToggleState Expanded { get; set; }
 
-        [ObsoleteAttribute("TODO - move this into a proper view model", false)]
+        //[ObsoleteAttribute("TODO - move this into a proper view model", false)]
         public bool Matches { get; set; }
 
         public string NodeTypePrefix {

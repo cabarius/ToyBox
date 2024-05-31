@@ -546,7 +546,6 @@ namespace ToyBox.classes.MainUI {
             foreach (var enchantment in item.Enchantments)
                 source.Remove(enchantment.Blueprint);
             if (source.Empty<BlueprintItemEnchantment>())
-            if (source.DefaultIfEmpty<BlueprintItemEnchantment>())
                 return;
             var blueprint = source.ToList<BlueprintItemEnchantment>().Random<BlueprintItemEnchantment>();
             var itemEntityShield = item as ItemEntityShield;
@@ -649,7 +648,7 @@ namespace ToyBox.classes.MainUI {
                 return Source.Not;
             }
 
-            if (enc.EndTime != null) {
+            if (enc.EndTime != default) {
                 return Source.Timed;
             }
 

@@ -30,7 +30,7 @@ Global
 		SolutionGuid = {BA000E91-0748-40FC-8104-184CCB5CEA32}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		ModKit\ModKitSrc.projitems*{22dcb4e1-d979-4ea9-913a-4ee1634b4ded}*SharedItemsImports = 4
+		ModKit\ModKitSrc.projitems*{22dcb4e1-d979-4ea9-913a-4ee1634b4ded}*SharedItemsImports = 5
 		ModKit\ModKitSrc.projitems*{7d3f9428-c134-47fe-9d04-305b4d330401}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

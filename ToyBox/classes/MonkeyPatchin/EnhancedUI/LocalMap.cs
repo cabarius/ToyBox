@@ -179,11 +179,13 @@ namespace ToyBox.BagOfPatches {
                                 }
 
                                 // Finally we tweak the thickness of the Frame Block so it doesn't grow really small and thick.
+#pragma warning disable CS0618 // Type or member is obsolete
                                 if (frame.FindChild("Top")?.gameObject?.transform is Transform tt) tt.localScale = new Vector3(1, 1.5f / zoom, 1);
                                 if (frame.FindChild("Bottom")?.gameObject?.transform is Transform tb) tb.localScale = new Vector3(1, 1.5f / zoom, 1);
                                 if (frame.FindChild("Bottom/BottomEye")?.gameObject?.transform is Transform tbe) tbe.localScale = new Vector3(1.5f / zoom, 1f, 1);
                                 if (frame.FindChild("Left")?.gameObject?.transform is Transform tl) tl.localScale = new Vector3(1.5f / zoom, 1, 1);
                                 if (frame.FindChild("Right")?.gameObject?.transform is Transform tr) tr.localScale = new Vector3(1.5f / zoom, 1, 1);
+#pragma warning restore CS0618 // Type or member is obsolete
                             }
                         }
                         else {
@@ -333,7 +335,9 @@ namespace ToyBox.BagOfPatches {
                 //Mod.Debug($"{unit.CharacterName.orange()} -> unit interestingness: {count}");
                 //var attentionMark = markerView.transform.Find("ToyBoxAttentionMark")?.gameObject;
                 //Mod.Debug($"attentionMark: {attentionMark}");
+#pragma warning disable CS0618 // Type or member is obsolete
                 var markImage = markerView.transform.FindChild("Mark").GetComponent<Image>();
+#pragma warning restore CS0618 // Type or member is obsolete
                 if (count >= 1) {
                     //Mod.Debug($"adding Mark to {unit.CharacterName.orange()}");
                     var mark = markerView.transform;

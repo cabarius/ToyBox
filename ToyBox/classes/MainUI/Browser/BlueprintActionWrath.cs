@@ -165,8 +165,6 @@ namespace ToyBox {
                     //Feature fact = progression.Features.GetFact(bp);
                     var fact = ch.Descriptor()?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
                     var selections = ch?.Descriptor?.Progression.Selections;
-                    BlueprintFeatureSelection featureSelection = null;
-                    FeatureSelectionData featureSelectionData = null;
                     foreach (var selection in selections) {
                         if (selection.Key == bp) {
                             foreach (var keyValuePair in selection.Value.SelectionsByLevel.ToList()) {

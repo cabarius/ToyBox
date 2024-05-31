@@ -18,7 +18,6 @@ namespace ToyBox {
 
     public static class EnhancedInventory {
         public static Settings Settings => Main.Settings;
-        private static Harmony m_harmony;
         private static OnAreaLoad m_area_load_handler;
 
         public static readonly Dictionary<ItemSortCategories, (int index, string title)> SorterCategoryMap = new Dictionary<ItemSortCategories, (int index, string title)> {

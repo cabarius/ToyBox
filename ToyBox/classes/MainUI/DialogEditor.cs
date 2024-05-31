@@ -18,7 +18,6 @@ using Kingmaker.UnitLogic.Parts;
 using ModKit;
 using ModKit.DataViewer;
 using ModKit.Utility;
-using ModKit.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;

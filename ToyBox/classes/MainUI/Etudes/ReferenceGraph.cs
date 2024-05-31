@@ -62,11 +62,5 @@ namespace ToyBox {
 
         public readonly List<Entry> Entries = new List<Entry>();
         public readonly List<SceneEntity> SceneEntitys = new List<SceneEntity>();
-        private List<string> m_ReferencingBlueprintPaths;
-        private List<string> m_ReferencingScenesPaths;
-        private Dictionary<string, Entry> m_EntriesByGuid;
-        private Dictionary<string, SceneEntity> m_SceneObjectRefs;
-        private readonly Dictionary<string, string> m_TypeNamesByGuid = new Dictionary<string, string>();
-
     }
 }

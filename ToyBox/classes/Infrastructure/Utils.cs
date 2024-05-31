@@ -221,39 +221,6 @@ namespace ToyBox {
                     result[field.Name] = String.Join(", ", text);
                 }
             }
-
-#else
-            PropertyInfo[] props = typeof(T).GetProperties(BindingFlags.NonPublic);
-            foreach (PropertyInfo prop in props) {
-                var attributes = prop.GetCustomAttributes(true);
-                if (attributes.Count() > 0) {
-                    foreach (var attribute in attributes) {
-                        var strings = attribute.ToStringDictionary();
-                        foreach (var pair in strings) {
-                            try {
-                                result.Add($"{prop.Name}.{pair.Key}", pair.Value);
-                            }
-                            catch { }
-                        }
-
-                    }
-                }
-            }
-            FieldInfo[] fields = typeof(T).GetFields(BindingFlags.NonPublic);
-            foreach (FieldInfo field in fields) {
-                var attributes = field.GetCustomAttributes(true);
-                if (attributes.Count() > 0) {
-                    foreach (var attribute in attributes) {
-                        var strings = attribute.ToStringDictionary();
-                        foreach (var pair in strings) {
-                            try {
-                                result.Add($"{field.Name}.{pair.Key}", pair.Value);
-                            }
-                            catch { }
-                        }
-                    }
-                }
-            }
             return result;
         }
         public static T GetAttributeFrom<T>(this object instance, string propertyName) where T : Attribute {

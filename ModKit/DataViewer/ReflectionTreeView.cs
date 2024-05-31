@@ -57,7 +57,7 @@ namespace ModKit.DataViewer {
         private int _totalNodeCount;
         private int _nodesCount;
         private int _startIndex;
-        private int _skipLevels;
+        private readonly int _skipLevels;
         private string _searchText = "";
 
         internal string[] SearchTerms => _searchText.Length == 0
@@ -361,7 +361,7 @@ namespace ModKit.DataViewer {
                 // children
                 if (expanded.IsOn()) DrawChildren(node, depth + 1, collapse);
             }
-            catch (Exception e) { }
+            catch (Exception) { }
         }
 
         private void DrawChildren(Node node, int depth, bool collapse, Func<Node, bool>? hoist = null) {

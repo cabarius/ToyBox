@@ -308,7 +308,7 @@ namespace ModKit.Utility {
                     return true;
                 else if (x == null)
                     return false;
-                else if ((y.opcode == null || OpCodeEquals(y.opcode, x.opcode)) &&
+                else if ((y.opcode == default || OpCodeEquals(y.opcode, x.opcode)) &&
                         (y.operand == null || (y.operand is ValueType ? y.operand.Equals(x.operand) : y.operand == x.operand)) &&
                         (y.labels.Count == 0 || y.labels.TrueForAll(label => x.labels.Contains(label))))
                     return true;

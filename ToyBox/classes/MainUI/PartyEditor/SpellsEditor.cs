@@ -20,7 +20,6 @@ namespace ToyBox {
     public partial class PartyEditor {
         public static Dictionary<UnitEntityData, Browser<BlueprintSpellbook, Spellbook>> SpellbookBrowserDict = new();
         public static Dictionary<UnitEntityData, Browser<BlueprintAbility, AbilityData>> SpellBrowserDict = new();
-        private static bool _startedLoading = false;
         public static List<Action> OnSpellsGUI(UnitEntityData ch, List<Spellbook> spellbooks) {
             List<Action> todo = new();
             Space(20);
@@ -155,7 +154,6 @@ namespace ToyBox {
                                 20.space();
                                 if (Toggle("Search All Spellbooks".localize(), ref Settings.showFromAllSpellbooks)) {
                                     spellBrowser.ResetSearch();
-                                    _startedLoading = true;
                                 }
                                 if (needsReload) spellBrowser.ResetSearch();
                                 GUI.enabled = !spellBrowser.isSearching;

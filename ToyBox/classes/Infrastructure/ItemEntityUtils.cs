@@ -39,7 +39,6 @@ namespace ToyBox {
             return unit.Stats.AllStats.SelectMany(stat => stat.Modifiers)
                        .Any(m => !m.Stacks 
                                  && m.ItemSource != (Loot.selectedSlot?.Item ?? null)
-                                 && m.SourceItem != (Loot.selectedSlot?.Item ?? null)
                                  && itemModifiers.Contains(m.ModDescriptor));
         }
         public static HashSet<ModifierDescriptor> GetNonStackingModifiers(this UnitEntityData unit) {

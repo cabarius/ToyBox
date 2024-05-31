@@ -83,9 +83,6 @@ namespace ToyBox {
                     Toggle("Ignore Feature Restrictions".localize(), ref Settings.toggleIgnoreFeatRestrictions);
                     Space(25);
                     Label(("Experimental".cyan() + ": lets you select any feat ignoring prerequisites.".green()).localize());
-#elif false
-                    Toggle("Ignore Talent Restrictions".localize(), ref Settings.toggleIgnoreFeatRestrictions);
-
                 },
                 () => Toggle("Allow Companions to Take Mythic Classes".localize(), ref Settings.toggleAllowCompanionsToBecomeMythic),
                 () => Toggle("Allow Pets to Take Mythic Classes".localize(), ref Settings.toggleAllowMythicPets),

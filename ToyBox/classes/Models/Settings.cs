@@ -523,9 +523,7 @@ namespace ToyBox {
         public bool onlyShowLanguagesWithFiles = true;
 
         // Deprecated
-        private bool toggleNoLevelUpRestirctions = false;    // deprecated
         internal bool toggleSpellbookAbilityAlignmentChecks = false;
-        private bool hideCompleted = true;
 
         // Save
         public override void Save(UnityModManager.ModEntry modEntry) => Save(this, modEntry);

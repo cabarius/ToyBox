@@ -52,7 +52,6 @@ namespace ModKit.Utility {
             bool detail = source.Contains("More");
             if (detail) Mod.Debug($"{query} in {source}");
             #endif
-            var cnt = 0;
             segment = segment.MarkedSubstringNoHTML(query);
             #if MARK_DEBUG
             if (detail) Mod.Log($"{(cnt++)} - segment - (0, {htmlStart}) {segment} ");
