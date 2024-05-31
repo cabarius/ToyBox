@@ -10,7 +10,9 @@ It was created in the spirit of Bag of Tricks & Cheat Menu but with a little dif
   - Items
   - etc.
 
-Download: [nexusmods.com](https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/8)### Install & Setup (Wrath)
+Download: [nexusmods.com](https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/8)
+
+### Install & Setup (Wrath)
 
 1. Install Unity Mod Manager﻿﻿.
 2. Install the mod using the Unity Mod Manager﻿ ***or*** Modfinder ***or*** manually extract the archive to your game's mod folder (e.g. '\Steam\steamapps\common\Pathfinder Second Adventure\Mods').
