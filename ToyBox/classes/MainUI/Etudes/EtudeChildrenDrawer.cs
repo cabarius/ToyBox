@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace ToyBox {
 
     public class EtudeChildrenDrawer {
-        private Dictionary<BlueprintGuid, EtudeInfo> loadedEtudes = new Dictionary<BlueprintGuid, EtudeInfo>();
+        private readonly Dictionary<BlueprintGuid, EtudeInfo> loadedEtudes = [];
         private BlueprintGuid parentEtude;
         public float DefaultExpandedNodeWidth = 600;
 
@@ -19,8 +19,8 @@ namespace ToyBox {
         public static bool newParentFromContestComand = false;
         public static BlueprintGuid newParentID;
 
-        private readonly BlueprintGuid SelectedId;
-        private string SelectedName = "";
+        private readonly BlueprintGuid SelectedId = default;
+        private readonly string SelectedName = "";
 
         private EtudeChildrenDrawer() {
         }
@@ -29,9 +29,7 @@ namespace ToyBox {
             loadedEtudes = etudes;
         }
 
-        public void SetParent(BlueprintGuid parent) {
-            parentEtude = parent;
-        }
+        public void SetParent(BlueprintGuid parent) => parentEtude = parent;
 
         public static void TryToSetParent(BlueprintGuid parent) {
             newParentFromContestComand = true;

@@ -22,13 +22,13 @@
         <DebugSymbols>true</DebugSymbols>
         <DebugType>portable</DebugType>
         <Optimize>false</Optimize>
-        <DefineConstants>TRACE;DEBUG;RT</DefineConstants>
+        <DefineConstants>TRACE;DEBUG;Wrath</DefineConstants>
         <ErrorReport>none</ErrorReport>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
         <DebugType>pdbonly</DebugType>
         <Optimize>true</Optimize>
-        <DefineConstants>TRACE;RT</DefineConstants>
+        <DefineConstants>TRACE;Wrath</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
     </PropertyGroup>
     <ItemGroup>
