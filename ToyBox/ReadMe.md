@@ -1,50 +1,14 @@
 # ToyBox
 
-### Now with 500+ Cheats, Tweaks and Quality of Life Improvements
-
-* **Bag of Tricks**: 142 (or 173 depending on how you count)
-* **Level Up & Multiclass**: 57
-* **Party Editor**: 67
-* **Loot Checklist**: 4
-* **Enchantment**: 20 ways to view add, remove enchantments from your favorite items
-* **Search 'n Pick**: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
-* **Crusade**: 38
-* **Armies**: 22
-* **Events/Decrees**: 9
-* **Etudes**: 6225 x 3 (start, unstart, complete)
-* **Quest Resolution**: 4
-
-**Please backup early and backup often.**
-
 ### Install & Setup (Wrath)
 
-1. Install the Unity Mod Manager﻿﻿.
-1. Install the mod using the Unity Mod Manager﻿ or extract the archive to your game's mod folder (e.g. '
-   \Steam\steamapps\common\Pathfinder Second Adventure\Mods').
-1. Start the game and load a save or start a new save (the mod's functions can't accessed from the main menu).
-1. Open the Unity Mod Manager﻿ by pressing CTRL + F10.
-1. Adjust the settings in the mod's menu
-1. Important this mod is designed to be run at 1920x1080 or higher.
-1. Please set your resolution to at least 1920x1080
-1. Go to Settings tab on Unity Mod Manager to set your screen width to at least 1920 wide
+1. Install Unity Mod Manager﻿﻿.
+2. Install the mod using the Unity Mod Manager﻿ ***or*** Modfinder ***or*** manually extract the archive to your game's mod folder (e.g. '\Steam\steamapps\common\Pathfinder Second Adventure\Mods').
+3. Start the game and load a save or start a new save (the mod's functions can't accessed from the main menu).
+4. Open the Unity Mod Manager﻿ by pressing CTRL + F10.
+5. Adjust the settings in the mod's menu
 
-### Install & Setup (Rogue)
-
-1. Download the ToyBox mod file and unzip
-1. If the folder is not already named 0ToyBox0 please rename it to that
-1. Launch the game at least once.
-1. **Please note that the game comes with its own built in Unity Mod Manager so you do not need to install another one**
-1. Navigate to %userprofile%\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
-1. An example path is C:\Users\PC\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
-1. Copy 0ToyBox0 into the UnityModManagerFolder
-1. Launch Rogue Trader and you may need to hit ctrl+F10 to see the mod manager window
-1. Load a save or start a new game to get the most out of of the mod
-
-* Warning: This is an experimental preview of ToyBox for Rogue Trader Prelease. Save early and often.
-* Note: Not all features are functional at this time. The ToyBox team is working hard to get as much working as fast as
-  possible
-
-### Usage
+### Features
 
 * **Bag of Tricks**: this is a collection of quality of life, quick cheats, settings, multipliers, etc from the awesome
   Kingmaker mod of the same name plus a bag or two of new tricks ^_^
@@ -72,10 +36,8 @@
   your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
-  
-**ToyBox Wrath - Ver 1.5.11 - Preview Version 1.5.10a** built for 2.2.4p
 
-### ToyBox Wrath - Ver 1.5.12 (built for 2.2.4p)
+### ToyBox Wrath - Ver 1.5.12 (built for 2.3.0am)
 * (***ADDB***) Backported alternate glyphs from RT ToyBox.
 * (***ADDB***) Removed Log Spam
 * (***ADDB***) Added AssetGUID to Search Key
