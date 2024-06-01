@@ -113,6 +113,9 @@ namespace ToyBox {
                         }
                     }
                     var unorderedSpells = selectedSpellbookLevel <= spellbook.Blueprint.MaxSpellLevel ? spellbook.GetKnownSpells(selectedSpellbookLevel) : spellbook.GetAllKnownSpells();
+                    if (Settings.showSpecialSpells) {
+                        unorderedSpells = selectedSpellbookLevel <= spellbook.Blueprint.MaxSpellLevel ? unorderedSpells.Concat(spellbook.m_CustomSpells?[selectedSpellbookLevel] ?? []) : unorderedSpells.Concat(spellbook.GetAllCustomSpells());
+                    }
                     var spells = unorderedSpells.OrderBy(d => d.Name).ToList();
                     SelectedSpellbook[ch.HashKey()] = spellbook;
                     spellBrowser.OnGUI(
@@ -148,6 +151,10 @@ namespace ToyBox {
                                 needsReload |= Toggle("Search Descriptions".localize(), ref Settings.searchDescriptions);
                                 20.space();
                                 if (Toggle("Search All Spellbooks".localize(), ref Settings.showFromAllSpellbooks)) {
+                                    spellBrowser.ResetSearch();
+                                }
+                                20.space();
+                                if (Toggle("Show Special Spells".localize(), ref Settings.showSpecialSpells)) {
                                     spellBrowser.ResetSearch();
                                 }
                                 if (needsReload) spellBrowser.ResetSearch();

@@ -22,6 +22,7 @@ using UnityEngine;
 using UnityModManagerNet;
 using static ModKit.UI;
 using Kingmaker.Kingdom;
+using static ToyBox.BagOfPatches.Romance;
 namespace ToyBox {
     public static class BagOfTricks {
         public static Settings Settings => Main.Settings;
@@ -54,6 +55,7 @@ namespace ToyBox {
 
         //For buffs exceptions
         private static bool showBuffDurationExceptions = false;
+        private static bool showDLC6RomanceOverrideMenu = false;
 
         public static void OnLoad() {
             // Combat
@@ -247,6 +249,18 @@ namespace ToyBox {
                        Toggle("Jealousy Begone!".localize().bold(), ref Settings.toggleMultipleRomance, 300.width());
                        25.space();
                        Label(("Allow ".green() + "multiple".color(RGBA.purple) + " romances at the same time".green()).localize());
+                   },
+                   () => {
+                       if (Settings.toggleMultipleRomance) {
+                           25.space();
+                           DisclosureToggle("Show End of DLC6 romance picker. You should use this if you have multiple romances just before the end of DLC6.".localize(), ref showDLC6RomanceOverrideMenu);
+                           if (showDLC6RomanceOverrideMenu) {
+                               using (VerticalScope()) {
+                                   Label("");
+                                   EnumerablePicker("Which cutscene should play at the end of DLC6?", ref Settings.pickedDLC6Override, (DLC6RomanceOverride[])Enum.GetValues(typeof(DLC6RomanceOverride)), 3);
+                               }
+                           }
+                       }
                    },
                    () => {
                        Toggle("Friendship is Magic".localize().bold(), ref Settings.toggleFriendshipIsMagic, 300.width());

@@ -37,11 +37,14 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
-### ToyBox Wrath - Ver 1.5.12 (built for 2.3.0am)
+### ToyBox Wrath - Ver 1.5.12b (built for 2.3.0am)
+* (***ADDB***) DLC Version compatability
+* (***ADDB***) ***Important for users of Jealousy Begone!*** In BagOfTricks => Dialog, added an option to pick your romance for the end of DLC6
+* (***ADDB***) It is now possible to use the Spellbook Editor to change the Level of Spells (This allows fusing with Cantrip spells, i.e. raise Cantrip level to 1 and then fuse)
+* (***ADDB***) It is now possible to show special spells (Metamagic, Fused Spells) in Spellbooks
 * (***ADDB***) Backported alternate glyphs from RT ToyBox.
 * (***ADDB***) Removed Log Spam
 * (***ADDB***) Added AssetGUID to Search Key
-* (***ADDB***) DLC Version compatability
 
 ### ToyBox Wrath - Ver 1.5.10a (built for 2.2.4p)
 * (***evandixon***) Fix unusable map screen on console view (e.g. PC Controller User & Steam Deck).

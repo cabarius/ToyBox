@@ -66,8 +66,14 @@ namespace ToyBox {
             remainingWidth -= 50;
             var titleWidth = (remainingWidth / (IsWide ? 3.5f : 4.0f)) - 100;
             remainingWidth -= titleWidth;
-
-            var text = GetTitle(blueprint).MarkedSubstring(browser.SearchText);
+            string text;
+            if (feature is AbilityData maybeSpell2 && maybeSpell2.Blueprint.IsSpell && maybeSpell2.MagicHackData != null) {
+                text = maybeSpell2.MagicHackData.Name;
+                if (text.IsNullOrEmpty()) text = maybeSpell2.MagicHackData.GetDefaultName();
+            } else {
+                text = GetTitle(blueprint);
+            }
+            text = text.MarkedSubstring(browser.SearchText);
             var titleKey = $"{blueprint.AssetGuid}";
             if (feature != null) {
                 text = text.Cyan().Bold();
@@ -103,6 +109,55 @@ namespace ToyBox {
                     Space(10f);
                     Label($"{v}".orange().bold(), Width(30));
                     increase.BlueprintActionButton(ch, blueprint, () => todo.Add(() => increase!.action(blueprint, ch, repeatCount)), 60);
+                    Space(17);
+                    remainingWidth -= 190;
+                } else if (feature is AbilityData maybeSpell && maybeSpell.Blueprint.IsSpell) {
+                    var sb = maybeSpell.Spellbook;
+                    var level = sb.GetSpellLevel(maybeSpell);
+                    if (level > 0) {
+                        UI.ActionButton("<", () => {
+                            todo.Add(() => {
+                                if (maybeSpell.MagicHackData == null && maybeSpell.MetamagicData == null) {
+                                    sb.RemoveSpell(maybeSpell.Blueprint);
+                                    sb.AddKnown(level - 1, maybeSpell.Blueprint);
+                                } else {
+                                    sb.RemoveCustomSpell(maybeSpell);
+                                    if (maybeSpell.MagicHackData != null) {
+                                        maybeSpell.MagicHackData.SpellLevel = level - 1;
+                                    } else {
+                                        maybeSpell.SpellLevelInSpellbook = level - 1;
+                                    }
+                                    sb.AddCustomSpell(maybeSpell);
+                                }
+                                browser.ResetSearch();
+                            });
+                        }, Width(60));
+                    } else {
+                        Space(60);
+                    }
+                    Space(10f);
+                    Label($"{level}".orange().bold(), Width(30));
+                    if (level < 10) {
+                        UI.ActionButton(">", () => {
+                            todo.Add(() => {
+                                if (maybeSpell.MagicHackData == null && maybeSpell.MetamagicData == null) {
+                                    sb.RemoveSpell(maybeSpell.Blueprint);
+                                    sb.AddKnown(level + 1, maybeSpell.Blueprint);
+                                } else {
+                                    sb.RemoveCustomSpell(maybeSpell);
+                                    if (maybeSpell.MagicHackData != null) {
+                                        maybeSpell.MagicHackData.SpellLevel = level + 1;
+                                    } else {
+                                        maybeSpell.SpellLevelInSpellbook = level + 1;
+                                    }
+                                    sb.AddCustomSpell(maybeSpell);
+                                }
+                                browser.ResetSearch();
+                            });
+                        }, Width(60));
+                    } else {
+                        Space(60);
+                    }
                     Space(17);
                     remainingWidth -= 190;
                 } else {

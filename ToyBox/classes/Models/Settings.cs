@@ -187,6 +187,7 @@ namespace ToyBox {
         public bool toggleForceTutorialsToHonorSettings = false;
         public bool toggleAllowAnyGenderRomance = false;
         public bool toggleMultipleRomance = false;
+        public int pickedDLC6Override = 0;
         public bool toggleFriendshipIsMagic = false;
         public bool toggleReplaceModelMenu = false;
         public bool toggleSpiderBegone = false;
@@ -402,6 +403,7 @@ namespace ToyBox {
         public bool showElements = false;
         public bool showDivisions = true;
         public bool showFromAllSpellbooks = false;
+        public bool showSpecialSpells = false;
         public bool showDisplayAndInternalNames = false;
         public bool factEditorShowInspector = true;
         public bool sortCollationByEntries = false;
