@@ -2,6 +2,7 @@
 using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Designers.EventConditionActionSystem.Conditions;
+using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.ElementsSystem;
 using Kingmaker.UI.MVVM._PCView.ActionBar;
 using Kingmaker.UI.MVVM._VM.Tooltip.Templates;
@@ -133,6 +134,18 @@ namespace ToyBox.BagOfPatches {
             // Crusade Events
             { "d9fd5839ef1a44fe81473fc2bac2078b", true },   // CrusadeEvent05
         };
+        internal static readonly HashSet<string> EtudeMythicIsPlaying = new() {
+            // PlayerIsLich                   , // PlayerIsAeon
+            "11fc5662e0ce8074ea145a022282b879", "3a040afde22f4b742a2f607354ab17e7",
+            // PlayerIsAzata                  , // PlayerIsAngel
+            "d3b47e973d65c6c46af1cce815d1f6ce", "3a82aba4de71b89458ac82949ed957c4",
+            // PlayerIsDevil                  , // PlayerIsDemon
+            "3a82aba4de71b89458ac82949ed957c4", "9a3739370f84b0b4196d0e4d326ea3a8",
+            // PlayerIsLegend                 , // PlayerIsDragon
+            "c6165efcd5571c442ae38d7c0601f2df", "9b193d30c89a20b409fd3dda9bd109bf",
+            // PlayerIsLocust                 , // PlayerIsTrickster
+            "439e63fed37f52048887d98f99255e40", "9f486a9c0c9abfc4a952bb22e88a7e96"
+        };
 
         internal static readonly Dictionary<string, DLC6RomanceOverride> EtudesToCheckForDLCOverride = new() {
             { "b152c93f814c4b7a9c372750d9490af9", DLC6RomanceOverride.Galfrey },
@@ -243,6 +256,12 @@ namespace ToyBox.BagOfPatches {
                 }
                 if (settings.toggleDialogRestrictionsMythic) {
                     if (EtudeStatusOverridesAnyMythic.TryGetValue(key, out var valueDialogRestrictionsMythic)) { Mod.Debug($"overiding {(__instance.Owner.name)} to {valueDialogRestrictionsMythic}"); __result = valueDialogRestrictionsMythic; }
+                    if (__instance.Owner is BlueprintAnswer bpAnswer && (bpAnswer.ShowConditions.Conditions?.Contains(__instance) ?? false)) {
+                        if (EtudeMythicIsPlaying.Contains(__instance.Etude.AssetGuid.ToString())) {
+                            Mod.Debug($"For {__instance.Owner.name} overiding {__instance.Etude.name} to {!__instance.Not}");
+                            __result = !__instance.Not;
+                        }
+                    }
                 }
             }
         }
