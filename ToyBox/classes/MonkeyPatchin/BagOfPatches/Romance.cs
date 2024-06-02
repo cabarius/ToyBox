@@ -211,15 +211,15 @@ namespace ToyBox.BagOfPatches {
                 if (EtudesToCheckForDLCOverride.TryGetValue(key.Item1, out var Override)) {
                     if (settings.pickedDLC6Override > 0) {
                         if ((int)Override != settings.pickedDLC6Override) {
-                            __result = __instance.Not;
-                            Mod.Debug($"(DLC6 End Romance overiding {(__instance.Owner.name, __instance.name)} to {__result} (isNot: {__instance.Not})");
+                            __result = false;
+                            Mod.Debug($"(DLC6 End Romance overiding {(__instance.Owner.name, __instance.name)} to {__result}");
                         }
                     }
                 } else if (EtudesToCheckForDLCOverrideStage.TryGetValue(key, out Override)) {
                     if (settings.pickedDLC6Override > 0) {
                         if ((int)Override != settings.pickedDLC6Override) {
-                            __result = __instance.Not;
-                            Mod.Debug($"(DLC6 End Romance overiding {(__instance.Owner.name, __instance.name)} to {__result} (isNot: {__instance.Not})");
+                            __result = false;
+                            Mod.Debug($"(DLC6 End Romance overiding {(__instance.Owner.name, __instance.name)} to {__result}");
                         }
                     }
                 }

@@ -37,7 +37,7 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
-### ToyBox Wrath - Ver 1.5.12b (built for 2.3.0am)
+### ToyBox Wrath - Ver 1.5.12c (built for 2.3.0am)
 * (***ADDB***) DLC Version compatability
 * (***ADDB***) ***Important for users of Jealousy Begone!*** In BagOfTricks => Dialog, added an option to pick your romance for the end of DLC6
 * (***ADDB***) It is now possible to use the Spellbook Editor to change the Level of Spells (This allows fusing with Cantrip spells, i.e. raise Cantrip level to 1 and then fuse)
