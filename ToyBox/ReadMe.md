@@ -43,6 +43,9 @@ Here is a summarized list of features. This list only includes a part of the fea
 - **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
  
+### ToyBox Rogue - Ver 1.5.12a built for Rogue Trader 1.1.67
+* (***ADDB***) Support adding new Blueprints even after ToyBox finished loading.
+
 ### ToyBox Rogue - Ver 1.5.12 built for Rogue Trader 1.1.67
 * (***ADDB***) Readded ArcaneTrixter's loading with Blueprint Errors (Why was it ever removed? Who knows.).
 * (***ADDB***) Fixed mod for new game version.

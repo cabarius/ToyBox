@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="$(SolutionDir)GamePath.props" Condition="Exists('$(SolutionDir)GamePath.props')" />
+    <Import Project="$(SolutionDir)ModKit\ModKitSrc.projitems" Label="Shared" />
 	<PropertyGroup>
         <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
 		<AssemblyName>ToyBox</AssemblyName>
@@ -72,6 +73,7 @@
 			<Files Include="$(MSBuildProjectDirectory)\$(OutputPath)**\*.*" />
 		</ItemGroup>
 		<Copy SourceFiles="@(Files)" DestinationFiles="@(Files->'$(RogueTraderData)\UnityModManager\0$(AssemblyName)0\%(RecursiveDir)%(Filename)%(Extension)')" />
+		<ZipDirectory SourceDirectory="$(MSBuildProjectDirectory)\$(OutputPath)" DestinationFile="$(MSBuildProjectDirectory)\$(OutputPath)\..\$(AssemblyName)-$(Version).zip" Overwrite="true" />
 	</Target>
     <ItemGroup>
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
@@ -82,7 +84,7 @@
 		<PublishToWorkshop PathToManifest="$(MSBuildThisFileDirectory)\ModDetails\OwlcatModificationManifest.json" ImageDir="$(MSBuildThisFileDirectory)\ModDetails\" BuildDir="$(MSBuildProjectDirectory)\$(OutputPath)" PathToDescription="$(MSBuildThisFileDirectory)\ModDetails\Workshop-description.txt" GameAppId="2186680" />
 	</Target>
     <Target Name="ZipOutput" AfterTargets="Build">
-        <ZipDirectory SourceDirectory="$(MSBuildProjectDirectory)\$(OutputPath)" DestinationFile="$(MSBuildProjectDirectory)\$(OutputPath)\..\$(AssemblyName)_$(Configuration).zip" Overwrite="true" />
+        <ZipDirectory SourceDirectory="$(MSBuildProjectDirectory)\$(OutputPath)" DestinationFile="$(MSBuildProjectDirectory)\$(OutputPath)\..\$(AssemblyName)-$(Version).zip" Overwrite="true" />
     </Target>
 	<Target Name="GenerateCustomPropsFile" BeforeTargets="BeforeBuild" Condition="$(RogueTraderInstallDir) == ''">
 		<Exec Command="findstr /C:&quot;Mono path[0]&quot; &quot;$(RogueTraderData)\Player.log&quot;" IgnoreExitCode="true" ConsoleToMSBuild="true">
@@ -97,5 +99,4 @@
 		</PropertyGroup>
 		<WriteLinesToFile File="$(SolutionDir)GamePath.props" Lines="&lt;Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003'&gt; &#xD;&#xA;	&lt;PropertyGroup&gt; &#xD;&#xA;		&lt;RogueTraderInstallDir&gt;$(RogueTraderInstallDir)&lt;/RogueTraderInstallDir&gt;&#xD;&#xA;	&lt;/PropertyGroup&gt;&#xD;&#xA;&lt;/Project&gt;" Overwrite="true" Encoding="utf-8" />
 	</Target>
-    <Import Project="$(SolutionDir)ModKit\ModKitSrc.projitems" Label="Shared" />
 </Project>
