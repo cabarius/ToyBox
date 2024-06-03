@@ -2,11 +2,13 @@
 using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Designers.EventConditionActionSystem.Conditions;
+using Kingmaker.DialogSystem;
 using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.ElementsSystem;
 using Kingmaker.UI.MVVM._PCView.ActionBar;
 using Kingmaker.UI.MVVM._VM.Tooltip.Templates;
 using Kingmaker.UI.UnitSettings;
+using Kingmaker.Utility;
 using ModKit;
 using System;
 using System.Collections.Generic;
@@ -254,15 +256,55 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleFriendshipIsMagic) {
                     if (EtudeStatusOverridesFriendshipIsMagic.TryGetValue(key, out var valueFriendshipIsMagic)) { Mod.Debug($"overiding {(__instance.Owner.name)} to {valueFriendshipIsMagic}"); __result = valueFriendshipIsMagic; }
                 }
-                if (settings.toggleDialogRestrictionsMythic) {
+                if (settings.toggleDialogRestrictionsMythic || settings.toggleDialogRestrictionsEverything) {
                     if (EtudeStatusOverridesAnyMythic.TryGetValue(key, out var valueDialogRestrictionsMythic)) { Mod.Debug($"overiding {(__instance.Owner.name)} to {valueDialogRestrictionsMythic}"); __result = valueDialogRestrictionsMythic; }
-                    if (__instance.Owner is BlueprintAnswer bpAnswer && (bpAnswer.ShowConditions.Conditions?.Contains(__instance) ?? false)) {
+                    bool ownerIsAnswer = __instance.Owner is BlueprintAnswer bpAnswer && (bpAnswer.ShowConditions.Conditions?.Contains(__instance) ?? false);
+                    bool ownerIsCueSelectionWithNoValidCue = CueSelection_Select_Patch.ignoreNextMythicRestrictions;
+                    if (ownerIsAnswer || ownerIsCueSelectionWithNoValidCue) {
                         if (EtudeMythicIsPlaying.Contains(__instance.Etude.AssetGuid.ToString())) {
                             Mod.Debug($"For {__instance.Owner.name} overiding {__instance.Etude.name} to {!__instance.Not}");
                             __result = !__instance.Not;
                         }
                     }
                 }
+            }
+        }
+
+        [HarmonyPatch(typeof(CueSelection), nameof(CueSelection.Select))]
+        public static class CueSelection_Select_Patch {
+            internal static bool ignoreNextMythicRestrictions = false;
+            [HarmonyPrefix]
+            public static void Select_Pre(CueSelection __instance) {
+                try {
+                    if (settings.toggleDialogRestrictionsMythic || settings.toggleDialogRestrictionsEverything) {
+                        var cc = Game.Instance.DialogController.CurrentCue;
+                        if (cc == null) return;
+                        var answers = ResolveBlueprintAnswerBaseReference(cc.Answers);
+                        foreach (var answer in answers) {
+                            if (answer.NextCue == __instance) {
+                                if (__instance.Cues.Dereference().Count(nc => nc.CanShow()) == 0) {
+                                    ignoreNextMythicRestrictions = true;
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    Mod.Error(ex.ToString());
+                }
+            }
+            [HarmonyPostfix]
+            public static void Select_Post() {
+                ignoreNextMythicRestrictions = false;
+            }
+            public static List<BlueprintAnswer> ResolveBlueprintAnswerBaseReference(List<BlueprintAnswerBaseReference> lbabr) {
+                if (lbabr == null) return [];
+                List<BlueprintAnswer> ret = [];
+                lbabr.ForEach(babr => {
+                    var answerBase = babr.Get();
+                    if (answerBase is BlueprintAnswer answer) ret.Add(answer);
+                    else if (answerBase is BlueprintAnswersList answerList) ret.AddRange(ResolveBlueprintAnswerBaseReference(answerList.Answers));
+                });
+                return ret;
             }
         }
 
