@@ -70,7 +70,7 @@
 	</ItemGroup>
 	<Target Name="Deploy" AfterTargets="Build">
 		<ItemGroup>
-			<Files Include="$(MSBuildProjectDirectory)\$(OutputPath)**\*.*" />
+			<Files Include="$(TargetDir)\**\*.*" />
 		</ItemGroup>
 		<Copy SourceFiles="@(Files)" DestinationFiles="@(Files->'$(RogueTraderData)\UnityModManager\0$(AssemblyName)0\%(RecursiveDir)%(Filename)%(Extension)')" />
 		<ZipDirectory SourceDirectory="$(MSBuildProjectDirectory)\$(OutputPath)" DestinationFile="$(MSBuildProjectDirectory)\$(OutputPath)\..\$(AssemblyName)-$(Version).zip" Overwrite="true" />
@@ -83,9 +83,6 @@
 	<Target Name="PublishToSteamWorkshop" AfterTargets="Publish">
 		<PublishToWorkshop PathToManifest="$(MSBuildThisFileDirectory)\ModDetails\OwlcatModificationManifest.json" ImageDir="$(MSBuildThisFileDirectory)\ModDetails\" BuildDir="$(MSBuildProjectDirectory)\$(OutputPath)" PathToDescription="$(MSBuildThisFileDirectory)\ModDetails\Workshop-description.txt" GameAppId="2186680" />
 	</Target>
-    <Target Name="ZipOutput" AfterTargets="Build">
-        <ZipDirectory SourceDirectory="$(MSBuildProjectDirectory)\$(OutputPath)" DestinationFile="$(MSBuildProjectDirectory)\$(OutputPath)\..\$(AssemblyName)-$(Version).zip" Overwrite="true" />
-    </Target>
 	<Target Name="GenerateCustomPropsFile" BeforeTargets="BeforeBuild" Condition="$(RogueTraderInstallDir) == ''">
 		<Exec Command="findstr /C:&quot;Mono path[0]&quot; &quot;$(RogueTraderData)\Player.log&quot;" IgnoreExitCode="true" ConsoleToMSBuild="true">
 			<Output TaskParameter="ExitCode" PropertyName="ExitCode" />
