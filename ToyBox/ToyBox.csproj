@@ -55,7 +55,7 @@
     </ItemGroup>
     <Target Name="Deploy" AfterTargets="Build">
         <ItemGroup>
-            <Files Include="$(TargetDir)\**\*.*" />
+			<Files Include="$(TargetDir)\**\*.*" />
         </ItemGroup>
 
         <Copy SourceFiles="@(Files)" DestinationFiles="@(Files->'$(WrathInstallDir)\Mods\$(AssemblyName)\%(RecursiveDir)%(Filename)%(Extension)')" />

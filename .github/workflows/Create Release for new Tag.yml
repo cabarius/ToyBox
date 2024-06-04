@@ -1,0 +1,84 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+#
+# For more information on GitHub Actions, refer to https://github.com/features/actions
+# For a complete CI/CD sample to get started with GitHub Action workflows for Desktop Applications,
+# refer to https://github.com/microsoft/github-actions-for-desktop-apps
+
+name: Create Release for new Tag
+
+on:
+  push:
+    tags:        
+      - '**'           # Push events to every tag not containing /
+
+env:
+  GAME_NAME: "Wrath"
+  GITHUB_NAME: "xADDBx"
+  READ_PACKAGE_KEY: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+      packages: read
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8
+        
+    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
+      
+    - name: Add NuGet Source
+      run: nuget sources add -name github -source https://nuget.pkg.github.com/${{ env.GITHUB_NAME }}/index.json -username ${{ env.GITHUB_NAME }} -password ${{ env.READ_PACKAGE_KEY }} -StorePasswordInClearText -Verbosity detailed
+    
+    - name: Install NuGet package
+      run: nuget install ${{ env.GAME_NAME }}GameAssemblies -Source github -OutputDirectory GameFiles -DependencyVersion Highest -DirectDownload -PreRelease -Verbosity detailed
+      
+    - name: Restore
+      run: dotnet restore
+
+    - name: Find subdirectory
+      id: find-dir
+      run: |
+        $currentPath = "${{ github.workspace }}"
+        $prefixPath = Join-Path -Path $currentPath -ChildPath 'GameFiles'
+        $subdirectory = Get-ChildItem -Path $prefixPath -Directory | Select-Object -First 1 -ExpandProperty Name
+        $fullPath = Join-Path -Path $prefixPath -ChildPath $subdirectory
+        $currentDirName = Split-Path -Path $currentPath -Leaf
+        echo "currentDirName=$currentDirName" >> $env:GITHUB_ENV
+        echo "fullPath=$fullPath" >> $env:GITHUB_ENV
+      shell: pwsh
+
+    - name: Build Project
+      run: msbuild /p:Configuration=Release /p:${{ env.GAME_NAME }}Data="${{ env.fullPath }}\UserDataDir" /p:${{ env.GAME_NAME }}InstallDir="${{ env.fullPath }}\Assemblies" /p:OutputPath=Out\Bin
+
+    - name: Find zip file
+      id: find-zip
+      run: |
+        $prefixPath = "${{ github.workspace }}\${{ env.currentDirName }}\Out"
+        $zipFile = Get-ChildItem -Path $prefixPath -Recurse -Filter "*.zip" | Select-Object -First 1 -ExpandProperty BaseName
+        echo "zipFile=$zipFile" >> $env:GITHUB_ENV
+      shell: pwsh
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.zipFile }}
+        path: ${{ github.workspace }}\${{ env.currentDirName }}\Out\Bin
+    
+    - name: Create Release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: ${{ github.workspace }}\${{ env.currentDirName }}\Out\*.zip

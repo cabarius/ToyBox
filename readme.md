@@ -18,7 +18,7 @@ Download: [nexusmods.com](https://www.nexusmods.com/pathfinderwrathoftherighteou
 2. Install the mod using the Unity Mod Manager﻿ ***or*** Modfinder ***or*** manually extract the archive to your game's mod folder (e.g. '\Steam\steamapps\common\Pathfinder Second Adventure\Mods').
 3. Start the game and load a save or start a new save (the mod's functions can't accessed from the main menu).
 4. Open the Unity Mod Manager﻿ by pressing CTRL + F10.
-5. Adjust the settings in the mod's menu
+5. Adjust the settings in the mod's menu.
 
 # How to contribute
 - Make sure you have Visual Studio 22 (or current) installed and other tools you might want.  See [WotR Modding Beginners Guide](https://github.com/WittleWolfie/OwlcatModdingWiki/wiki/Beginner-Guide) for more info
