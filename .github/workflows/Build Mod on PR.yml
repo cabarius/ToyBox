@@ -1,22 +1,8 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-#
-# For more information on GitHub Actions, refer to https://github.com/features/actions
-# For a complete CI/CD sample to get started with GitHub Action workflows for Desktop Applications,
-# refer to https://github.com/microsoft/github-actions-for-desktop-apps
-
 name: Build Mod on PR
 
 on:
   pull_request_target:
       types: [labeled]
-
-env:
-  GAME_NAME: "Wrath"
-  GITHUB_NAME: "xADDBx"
-  READ_PACKAGE_KEY: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
 
@@ -25,64 +11,21 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+    - name: Build
+      id: build-action
+      uses: xADDBx/BuildOwlcatMod@v1
       with:
-        ref: "${{ github.event.pull_request.head.sha  }}"
-
-    - name: Set up .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8
-        
-    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v2
-      
-    - name: Add NuGet Source
-      run: nuget sources add -name github -source https://nuget.pkg.github.com/${{ env.GITHUB_NAME }}/index.json -username ${{ env.GITHUB_NAME }} -password ${{ env.READ_PACKAGE_KEY }} -StorePasswordInClearText -Verbosity detailed
-    
-    - name: Install NuGet package
-      run: nuget install ${{ env.GAME_NAME }}GameAssemblies -Source github -OutputDirectory GameFiles -DependencyVersion Highest -DirectDownload -PreRelease -Verbosity detailed
-      
-    - name: Restore
-      run: dotnet restore
-
-    - name: Find subdirectory
-      id: find-dir
-      run: |
-        $currentPath = "${{ github.workspace }}"
-        $prefixPath = Join-Path -Path $currentPath -ChildPath 'GameFiles'
-        $subdirectory = Get-ChildItem -Path $prefixPath -Directory | Select-Object -First 1 -ExpandProperty Name
-        $version = [regex]::Match($subdirectory, '(?<=\d+\.\d+\.\d+-).+$').Value
-        $versionW = [regex]::Match($subdirectory, '\d+\.\d+\.\d+').Value
-        $fullPath = Join-Path -Path $prefixPath -ChildPath $subdirectory
-        $currentDirName = Split-Path -Path $currentPath -Leaf
-        echo "currentDirName=$currentDirName" >> $env:GITHUB_ENV
-        echo "fullPath=$fullPath" >> $env:GITHUB_ENV
-        echo "GameVersion=$version" >> $env:GITHUB_ENV
-        echo "GameVersionW=$versionW" >> $env:GITHUB_ENV
-      shell: pwsh
-
-    - name: Build Project
-      run: msbuild /p:Configuration=Release /p:${{ env.GAME_NAME }}Data="${{ env.fullPath }}\UserDataDir" /p:${{ env.GAME_NAME }}InstallDir="${{ env.fullPath }}\Assemblies" /p:OutputPath=Out\Bin
-
-    - name: Find zip file
-      id: find-zip
-      run: |
-        $prefixPath = "${{ github.workspace }}"
-        $zipFileObject = Get-ChildItem -Recurse -Path $prefixPath -Filter "*.zip" | Where-Object { $_.Directory.Name -eq 'Out' } | Select-Object -First 1
-        $zipFile = $zipFileObject.BaseName
-        $zipFilePath = (Get-Item $zipFileObject.FullName).Directory.FullName
-        echo "zipFile=$zipFile" >> $env:GITHUB_ENV
-        echo "zipFilePath=$zipFilePath" >> $env:GITHUB_ENV
-      shell: pwsh
+        GAME_NAME: Wrath
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_NAME: xADDBx
+        PACKAGE_OWNER: xADDBx
+        BRANCH_REF: ${{ github.event.pull_request.head.sha }}
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: ${{ env.zipFile }}
-        path: ${{ env.zipFilePath }}\Bin
+        path: ${{ env.outDir }}
 
     - name: Remove Test Label
       if: always()
