@@ -89,4 +89,4 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         artifacts: ${{ env.zipFilePath }}\*.zip
-        name: ${{ env.ZipFile }} built for Game Version ${{ env.GameVersionW }}.${{ env.GameVersion }}
+        name: ${{ env.ZipFile }} built for Game Version ${{ env.GameVersionW }}${{ env.GameVersion }}

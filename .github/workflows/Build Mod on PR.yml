@@ -54,10 +54,14 @@ jobs:
         $currentPath = "${{ github.workspace }}"
         $prefixPath = Join-Path -Path $currentPath -ChildPath 'GameFiles'
         $subdirectory = Get-ChildItem -Path $prefixPath -Directory | Select-Object -First 1 -ExpandProperty Name
+        $version = [regex]::Match($subdirectory, '(?<=\d+\.\d+\.\d+-).+$').Value
+        $versionW = [regex]::Match($subdirectory, '\d+\.\d+\.\d+').Value
         $fullPath = Join-Path -Path $prefixPath -ChildPath $subdirectory
         $currentDirName = Split-Path -Path $currentPath -Leaf
         echo "currentDirName=$currentDirName" >> $env:GITHUB_ENV
         echo "fullPath=$fullPath" >> $env:GITHUB_ENV
+        echo "GameVersion=$version" >> $env:GITHUB_ENV
+        echo "GameVersionW=$versionW" >> $env:GITHUB_ENV
       shell: pwsh
 
     - name: Build Project
