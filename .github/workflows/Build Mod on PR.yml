@@ -25,7 +25,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout
       uses: actions/checkout@v4
       with:
         ref: "${{ github.event.pull_request.head.sha  }}"
@@ -51,13 +51,12 @@ jobs:
     - name: Find subdirectory
       id: find-dir
       run: |
-        $currentPath = "${{ github.workspace }}"
-        $prefixPath = Join-Path -Path $currentPath -ChildPath 'GameFiles'
-        $subdirectory = Get-ChildItem -Path $prefixPath -Directory | Select-Object -First 1 -ExpandProperty Name
-        $fullPath = Join-Path -Path $prefixPath -ChildPath $subdirectory
-        $currentDirName = Split-Path -Path $currentPath -Leaf
-        echo "currentDirName=$currentDirName" >> $env:GITHUB_ENV
-        echo "fullPath=$fullPath" >> $env:GITHUB_ENV
+        $prefixPath = "${{ github.workspace }}"
+        $zipFileObject = Get-ChildItem -Recurse -Path $prefixPath -Filter "*.zip" | Select-Object -First 1
+        $zipFile = $zipFileObject.BaseName
+        $zipFilePath = (Get-Item $zipFileObject.FullName).Directory.FullName
+        echo "zipFile=$zipFile" >> $env:GITHUB_ENV
+        echo "zipFilePath=$zipFilePath" >> $env:GITHUB_ENV
       shell: pwsh
 
     - name: Build Project
@@ -66,8 +65,8 @@ jobs:
     - name: Find zip file
       id: find-zip
       run: |
-        $prefixPath = "${{ github.workspace }}\${{ env.currentDirName }}\Out"
-        $zipFile = Get-ChildItem -Path $prefixPath -Recurse -Filter "*.zip" | Select-Object -First 1 -ExpandProperty BaseName
+        $prefixPath = "${{ github.workspace }}"
+        $zipFile = Get-ChildItem -Path $prefixPath -Recurse -Filter "Out\*.zip" | Select-Object -First 1 -ExpandProperty BaseName
         echo "zipFile=$zipFile" >> $env:GITHUB_ENV
       shell: pwsh
 
@@ -75,7 +74,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ env.zipFile }}
-        path: ${{ github.workspace }}\${{ env.currentDirName }}\Out\Bin
+        path: ${{ env.zipFilePath }}\Bin
 
     - name: Remove Test Label
       if: always()
