@@ -63,13 +63,16 @@ jobs:
     - name: Find zip file
       id: find-zip
       run: |
-        $prefixPath = "${{ github.workspace }}\${{ env.currentDirName }}\Out"
-        $zipFile = Get-ChildItem -Path $prefixPath -Recurse -Filter "*.zip" | Select-Object -First 1 -ExpandProperty BaseName
+        $prefixPath = "${{ github.workspace }}"
+        $zipFileObject = Get-ChildItem -Recurse -Path $prefixPath -Filter "*.zip" | Select-Object -First 1
+        $zipFile = $zipFileObject.BaseName
+        $zipFilePath = (Get-Item $zipFileObject.FullName).Directory.FullName
         echo "zipFile=$zipFile" >> $env:GITHUB_ENV
+        echo "zipFilePath=$zipFilePath" >> $env:GITHUB_ENV
       shell: pwsh
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: ${{ env.zipFile }}
-        path: ${{ github.workspace }}\${{ env.currentDirName }}\Out\Bin
+        path: ${{ env.zipFilePath }}\Bin
