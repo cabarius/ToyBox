@@ -51,12 +51,17 @@ jobs:
     - name: Find subdirectory
       id: find-dir
       run: |
-        $prefixPath = "${{ github.workspace }}"
-        $zipFileObject = Get-ChildItem -Recurse -Path $prefixPath -Filter "*.zip" | Select-Object -First 1
-        $zipFile = $zipFileObject.BaseName
-        $zipFilePath = (Get-Item $zipFileObject.FullName).Directory.FullName
-        echo "zipFile=$zipFile" >> $env:GITHUB_ENV
-        echo "zipFilePath=$zipFilePath" >> $env:GITHUB_ENV
+        $currentPath = "${{ github.workspace }}"
+        $prefixPath = Join-Path -Path $currentPath -ChildPath 'GameFiles'
+        $subdirectory = Get-ChildItem -Path $prefixPath -Directory | Select-Object -First 1 -ExpandProperty Name
+        $version = [regex]::Match($subdirectory, '(?<=\d+\.\d+\.\d+-).+$').Value
+        $versionW = [regex]::Match($subdirectory, '\d+\.\d+\.\d+').Value
+        $fullPath = Join-Path -Path $prefixPath -ChildPath $subdirectory
+        $currentDirName = Split-Path -Path $currentPath -Leaf
+        echo "currentDirName=$currentDirName" >> $env:GITHUB_ENV
+        echo "fullPath=$fullPath" >> $env:GITHUB_ENV
+        echo "GameVersion=$version" >> $env:GITHUB_ENV
+        echo "GameVersionW=$versionW" >> $env:GITHUB_ENV
       shell: pwsh
 
     - name: Build Project
@@ -67,7 +72,10 @@ jobs:
       run: |
         $prefixPath = "${{ github.workspace }}"
         $zipFileObject = Get-ChildItem -Recurse -Path $prefixPath -Filter "*.zip" | Where-Object { $_.Directory.Name -eq 'Out' } | Select-Object -First 1
+        $zipFile = $zipFileObject.BaseName
+        $zipFilePath = (Get-Item $zipFileObject.FullName).Directory.FullName
         echo "zipFile=$zipFile" >> $env:GITHUB_ENV
+        echo "zipFilePath=$zipFilePath" >> $env:GITHUB_ENV
       shell: pwsh
 
     - name: Upload build artifacts
