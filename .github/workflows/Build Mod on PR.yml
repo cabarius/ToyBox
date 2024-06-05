@@ -67,7 +67,7 @@ jobs:
       id: find-zip
       run: |
         $prefixPath = "${{ github.workspace }}"
-        $zipFileObject = Get-ChildItem -Recurse -Path $prefixPath -Filter "*.zip" | Select-Object -First 1
+        $zipFileObject = Get-ChildItem -Recurse -Path $prefixPath -Filter "*.zip" | Where-Object { $_.Directory.Name -eq 'Out' } | Select-Object -First 1
         $zipFile = $zipFileObject.BaseName
         $zipFilePath = (Get-Item $zipFileObject.FullName).Directory.FullName
         echo "zipFile=$zipFile" >> $env:GITHUB_ENV
