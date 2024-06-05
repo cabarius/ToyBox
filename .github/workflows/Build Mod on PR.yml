@@ -25,8 +25,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout
+    - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        ref: "${{ github.event.pull_request.head.sha  }}"
 
     - name: Set up .NET
       uses: actions/setup-dotnet@v4
@@ -74,3 +76,14 @@ jobs:
       with:
         name: ${{ env.zipFile }}
         path: ${{ github.workspace }}\${{ env.currentDirName }}\Out\Bin
+
+    - name: Remove Test Label
+      if: always()
+      shell: pwsh
+      run: |
+        $headers = @{
+          Accept = 'application/vnd.github.v3+json'
+          Authorization = "token ${{ secrets.GITHUB_TOKEN }}"
+        }
+        $url = "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels/safe%20to%20test"
+        Invoke-RestMethod -Uri $url -Method Delete -Headers $headers
