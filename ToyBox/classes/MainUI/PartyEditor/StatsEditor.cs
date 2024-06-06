@@ -206,6 +206,15 @@ namespace ToyBox {
                     }
                 }
             }
+            using (HorizontalScope()) {
+                100.space();
+                var cName = ch.Blueprint?.CharacterName?.ToLower() ?? ch.Blueprint.AssetGuid.ToString();
+                bool DisableVO = Settings.namesToDisableVoiceOver.Contains(cName);
+                if (Toggle("Disable Voice Over and Barks for this character".localize(), ref DisableVO, Width(425))) {
+                    if (DisableVO) Settings.namesToDisableVoiceOver.Add(cName);
+                    else Settings.namesToDisableVoiceOver.Remove(cName);
+                }
+            }
             Div(100, 20, 755);
             var alignment = ch.Descriptor().Alignment.ValueRaw;
             using (HorizontalScope()) {

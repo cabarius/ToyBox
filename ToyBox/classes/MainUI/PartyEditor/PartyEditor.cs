@@ -30,7 +30,7 @@ namespace ToyBox {
         private const int NarrowIndent = 413;
 
         private static ToggleChoice selectedToggle = ToggleChoice.None;
-        private static int editingCharacterIndex = 0;
+        private static UnitEntityData selectedCharacter = null;
         private static UnitEntityData charToAdd = null;
         private static UnitEntityData charToRecruit = null;
         private static UnitEntityData charToRemove = null;
@@ -50,12 +50,12 @@ namespace ToyBox {
         private static UnitEntityData GetEditCharacter() {
             var characterList = CharacterPicker.GetCharacterList();
             if (characterList == null || characterList.Count == 0) return null;
-            if (editingCharacterIndex >= characterList.Count) editingCharacterIndex = 0;
-            return characterList[editingCharacterIndex];
+            if (!characterList.Contains(selectedCharacter)) return null;
+            else return selectedCharacter;
         }
 
         public static void ResetGUI() {
-            editingCharacterIndex = 0;
+            selectedCharacter = null;
             selectedSpellbook = 0;
             selectedSpellbookLevel = 0;
             CharacterPicker.PartyFilterChoices = null;
@@ -127,7 +127,7 @@ namespace ToyBox {
             var chIndex = 0;
             recruitableCount = 0;
             respecableCount = 0;
-            var selectedCharacter = GetEditCharacter();
+            selectedCharacter = GetEditCharacter();
             var isWide = IsWide;
             if (Main.IsInGame) {
                 using (HorizontalScope()) {
@@ -156,8 +156,7 @@ namespace ToyBox {
                 var isOnTeam = player.AllCharacters.Contains(ch);
                 using (HorizontalScope()) {
                     var name = ch.CharacterName;
-                    if (Game.Instance.Player.AllCharacters.Contains(ch)
-                        ) {
+                    if (Game.Instance.Player.AllCharacters.Contains(ch)) {
                         var oldEditState = nameEditState;
                         if (isWide) {
                             if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), MinWidth(100), MaxWidth(400))) {
@@ -266,29 +265,21 @@ namespace ToyBox {
                     editMultiClass = false;
                     multiclassEditCharacter = null;
                 }
-                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Classes) {
-                    OnClassesGUI(ch, classData, selectedCharacter);
-                }
-                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Stats) {
-                    todo = OnStatsGUI(ch);
-                }
-                //if (ch == selectedCharacter && selectedToggle == ToggleChoice.Facts) {
-                //    todo = FactsEditor.OnGUI(ch, ch.Facts.m_Facts);
-                //}
-                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Features) {
-                    todo = FactsEditor.OnGUI(ch, ch.Progression.Features.Enumerable.ToList());
-                }
-                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs) {
-                    todo = FactsEditor.OnGUI(ch, ch.Descriptor().Buffs.Enumerable.ToList());
-                }
-                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities) {
-                    todo = FactsEditor.OnGUI(ch, ch.Descriptor().Abilities.Enumerable, ch.Descriptor.ActivatableAbilities.Enumerable);
-                }
-                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Spells) {
-                    todo = OnSpellsGUI(ch, spellbooks);
-                }
-                if (selectedCharacter != GetEditCharacter()) {
-                    editingCharacterIndex = characterList.IndexOf(selectedCharacter);
+                if (ch == selectedCharacter) {
+
+                    if (selectedToggle == ToggleChoice.Classes) {
+                        OnClassesGUI(ch, classData, selectedCharacter);
+                    } else if (selectedToggle == ToggleChoice.Stats) {
+                        todo = OnStatsGUI(ch);
+                    } else if (selectedToggle == ToggleChoice.Features) {
+                        todo = FactsEditor.OnGUI(ch, ch.Progression.Features.Enumerable.ToList());
+                    } else if (selectedToggle == ToggleChoice.Buffs) {
+                        todo = FactsEditor.OnGUI(ch, ch.Descriptor().Buffs.Enumerable.ToList());
+                    } else if (selectedToggle == ToggleChoice.Abilities) {
+                        todo = FactsEditor.OnGUI(ch, ch.Descriptor().Abilities.Enumerable, ch.Descriptor.ActivatableAbilities.Enumerable);
+                    } else if (selectedToggle == ToggleChoice.Spells) {
+                        todo = OnSpellsGUI(ch, spellbooks);
+                    }
                 }
                 chIndex += 1;
             }

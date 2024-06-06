@@ -111,6 +111,7 @@ namespace ToyBox {
         public int increment = 10000;
         public int alignmentIncrement = 5;
         public bool toggleBugFixes = true;
+        public HashSet<string> namesToDisableVoiceOver = new();
 
         // Quality of Life
         public bool toggleContinueAudioOnLostFocus = false;
