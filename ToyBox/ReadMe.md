@@ -51,6 +51,7 @@
 * (***ADDB***) Added AssetGUID to Search Key.
 * (***ADDB***) Support adding new Blueprints even after ToyBox finished loading.
 * (***ADDB***) Saves Tab can now handle null Player Name without crashing (Admittedly that's a non issue for most people).
+* (***ADDB***) Updated localization keys in case someone actually wants to localize the mod.
 
 ### ToyBox Wrath - Ver 1.5.10a (built for 2.2.4p)
 * (***evandixon***) Fix unusable map screen on console view (e.g. PC Controller User & Steam Deck).
