@@ -38,18 +38,19 @@
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
 ### ToyBox Wrath - Ver 1.5.12g (built for 2.3.0am)
-* (***ADDB***) DLC Version compatability
-* (***ADDB***) ***Important for users of Jealousy Begone!*** In BagOfTricks => Dialog, added an option to pick your romance for the end of DLC6
-* (***ADDB***) It is now possible to use the Spellbook Editor to change the Level of Spells (This allows fusing with Cantrip spells, i.e. raise Cantrip level to 1 and then fuse)
-* (***ADDB***) It is now possible to show special spells (Metamagic, Fused Spells) in Spellbooks
-* (***ADDB***) Ignore Dialog Mythic Restrictions should now show more available Mythic Answers?
-* (***ADDB***) Ignore Dialog Mythic Restrictions should now show ***even more*** available Mythic Answers. How has this feature even worked before?
-* (***ADDB***) Added an option to disable Voice Over via Party => Stats
+* (***ADDB***) DLC Version compatability.
+* (***ADDB***) ***Important for users of Jealousy Begone!*** In BagOfTricks => Dialog, added an option to pick your romance for the end of DLC6.
+* (***ADDB***) It is now possible to use the Spellbook Editor to change the Level of Spells (This allows fusing with Cantrip spells, i.e. raise Cantrip level to 1 and then fuse).
+* (***ADDB***) It is now possible to show special spells (Metamagic, Fused Spells) in Spellbooks.
+* (***ADDB***) Ignore Dialog Mythic Restrictions should now show more available Mythic Answers?.
+* (***ADDB***) Ignore Dialog Mythic Restrictions should now show ***even more*** available Mythic Answers. How has this feature even worked before?.
+* (***ADDB***) Added an option to disable Voice Over via Party => Stats.
 * (***ADDB***) Improve Party GUI tabs sometimes not clickeable (especially in Nearby configuration).
 * (***ADDB***) Backported alternate glyphs from RT ToyBox.
-* (***ADDB***) Removed Log Spam
-* (***ADDB***) Added AssetGUID to Search Key
+* (***ADDB***) Removed Log Spam.
+* (***ADDB***) Added AssetGUID to Search Key.
 * (***ADDB***) Support adding new Blueprints even after ToyBox finished loading.
+* (***ADDB***) Saves Tab can now handle null Player Name without crashing (Admittedly that's a non issue for most people).
 
 ### ToyBox Wrath - Ver 1.5.10a (built for 2.2.4p)
 * (***evandixon***) Fix unusable map screen on console view (e.g. PC Controller User & Steam Deck).

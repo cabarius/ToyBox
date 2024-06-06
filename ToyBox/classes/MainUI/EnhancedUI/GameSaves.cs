@@ -1,5 +1,6 @@
 ﻿using Kingmaker;
 using Kingmaker.EntitySystem.Persistence;
+using Kingmaker.Utility;
 using ModKit;
 using System;
 using System.Collections.Generic;
@@ -12,14 +13,14 @@ namespace ToyBox {
         public static Settings Settings => Main.Settings;
         private static Browser<SaveInfo, SaveInfo> savesBrowser = new(true, true);
         private static (string, string) nameEditState = (null, null);
-        private static IEnumerable<SaveInfo> _allSaves = null;
-        private static IEnumerable<SaveInfo> _currentSaves = null;
+        private static List<SaveInfo> _allSaves = null;
+        private static List<SaveInfo> _currentSaves = null;
         public static string? SearchKey(this SaveInfo info) =>
-            $"{info.Name}{info.Area.AreaName.ToString()}{info.Campaign.Title}{info.DlcCampaign.Campaign.Title}{info.Description}{info.FileName}";
-        public static IComparable?[] SortKey(this SaveInfo info) => new IComparable[] {
-            info.PlayerCharacterName,
+            $"{info.Name}{info.Area.AreaName}{info.Campaign.Title}{info.DlcCampaign.Campaign.Title}{info.Description}{info.FileName}";
+        public static IComparable?[] SortKey(this SaveInfo info) => [
+            info.PlayerCharacterName ?? info.Name ?? info.FileName,
             info.GameSaveTime
-        };
+        ];
 
         public static void OnGUI() {
             var saveManager = Game.Instance?.SaveManager;
@@ -53,8 +54,8 @@ namespace ToyBox {
                 // TODO: add refresh
                 if (_currentSaves == null || _allSaves == null) {
                     saveManager?.UpdateSaveListIfNeeded(true);
-                    _currentSaves = saveManager?.Where(info => info?.GameId == currentGameID);
-                    _allSaves = saveManager?.Where(info => info != null);
+                    _currentSaves = saveManager?.Where(info => info?.GameId == currentGameID).ToList();
+                    _allSaves = saveManager?.m_SavedGames.NotNull().ToList();
                 }
                 if (_currentSaves == null || _allSaves == null) {
                     return;
@@ -80,16 +81,7 @@ namespace ToyBox {
                                            }
                                            25.space();
                                            HelpLabel(info.Name.ToString());
-                                       },
-                                       null,
-                                       50,
-                                       true,
-                                       true,
-                                       100,
-                                       400,
-                                       "",
-                                       false
-                        );
+                                       }, null, 50, true, true, 100, 400);
                 }
             }
 
