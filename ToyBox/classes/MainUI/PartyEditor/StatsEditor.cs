@@ -78,13 +78,11 @@ namespace ToyBox {
                         loaded = true;
                         return _portraitsByID[customID];
                     }
-                }
-                else {
+                } else {
                     loaded = true;
                     return portraitData;
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Mod.Log(e.ToString());
             }
             return null;
@@ -97,8 +95,7 @@ namespace ToyBox {
                 if (targetWidth == 0) {
                     w = (int)(sprite.rect.width * scaling);
                     h = (int)(sprite.rect.height * scaling);
-                }
-                else {
+                } else {
                     w = targetWidth;
                     h = (int)(targetWidth * (sprite.rect.height / sprite.rect.width));
                 }
@@ -107,8 +104,7 @@ namespace ToyBox {
                         if (GUILayout.Button(sprite.texture, rarityStyle, w.width(), h.height())) {
                             newPortraitName = customID;
                         }
-                    }
-                    else {
+                    } else {
                         GUILayout.Label(sprite.texture, rarityStyle, w.width(), h.height());
                     }
                     Label(customID);
@@ -123,8 +119,7 @@ namespace ToyBox {
                 if (targetWidth == 0) {
                     w = (int)(sprite.rect.width * scaling);
                     h = (int)(sprite.rect.height * scaling);
-                }
-                else {
+                } else {
                     w = targetWidth;
                     h = (int)(targetWidth * (sprite.rect.height / sprite.rect.width));
                 }
@@ -133,8 +128,7 @@ namespace ToyBox {
                         if (GUILayout.Button(sprite.texture, rarityStyle, w.width(), h.height())) {
                             newBlueprintPortrait = portrait;
                         }
-                    }
-                    else {
+                    } else {
                         GUILayout.Label(sprite.texture, rarityStyle, w.width(), h.height());
                     }
                     ActionButton("Save as png".localize(), () => {
@@ -150,8 +144,7 @@ namespace ToyBox {
                             outFile = new FileInfo(Path.Combine(portraitDir.FullName, BlueprintRoot.Instance.CharGenRoot.PortraitBigName + BlueprintRoot.Instance.CharGenRoot.PortraitsFormat));
                             portrait.FullLengthPortrait.texture.SaveTextureToFile(outFile.FullName, -1, -1, UnityExtensions.SaveTextureFileFormat.PNG, 100, false);
                             Process.Start(portraitDir.FullName);
-                        }
-                        catch (Exception ex) {
+                        } catch (Exception ex) {
                             Mod.Error(ex.ToString());
                         }
                     });
@@ -167,8 +160,7 @@ namespace ToyBox {
                     if (ch.UISettings.Portrait.IsCustom) {
                         Label("Current Custom Portrait".localize());
                         OnPortraitGUI(ch.UISettings.Portrait.CustomId, 0.25f, false);
-                    }
-                    else {
+                    } else {
                         Label("Current Blueprint Portrait".localize());
                         OnPortraitGUI(ch.UISettings.PortraitBlueprint, 0.25f, false, (int)(0.25f * 692));
                     }
@@ -183,8 +175,7 @@ namespace ToyBox {
                                     ch.UISettings.SetPortrait(new PortraitData(newPortraitName));
                                     Mod.Debug($"Changed portrait of {ch.CharacterName} to {newPortraitName}");
                                     unknownID = false;
-                                }
-                                else {
+                                } else {
                                     Mod.Warn($"No portrait with name {newPortraitName}");
                                     unknownID = true;
                                 }
@@ -266,8 +257,7 @@ namespace ToyBox {
                             if (ch.Asks.List != null) {
                                 if (!(ch.IsCustomCompanion() || ch.IsMainCharacter)) {
                                     Label("You're about to change the voice of a non-custom character. That's untested.".localize().red().bold());
-                                }
-                                else if (!BlueprintExtensions.GetTitle(ch.Asks.List).StartsWith("RT")) {
+                                } else if (!BlueprintExtensions.GetTitle(ch.Asks.List).StartsWith("RT")) {
                                     Label("You have given a custom character a non-default voice. That's untested.".localize().red().bold());
                                 }
                             }
@@ -290,16 +280,14 @@ namespace ToyBox {
                                         ActionButton("Play Example".localize(), () => {
                                             new BarkWrapper(definition.GetComponent<UnitAsksComponent>().PartyMemberUnconscious, ch.View.Asks).Schedule();
                                         }, 150.width());
-                                    }
-                                    else {
+                                    } else {
                                         Label(BlueprintExtensions.GetTitle(definition), 500.width());
                                         Space(150);
                                     }
                                     Space(200);
                                     if (isCurrentVoice) {
                                         Label("This is the current voice!".localize());
-                                    }
-                                    else {
+                                    } else {
                                         ActionButton("Change Voice".localize(), () => {
                                             if (definition != null) {
                                                 todo.Add(() => {
@@ -313,6 +301,12 @@ namespace ToyBox {
                                 });
                             }
                         }
+                    }
+                    var cName = ch.Blueprint?.CharacterName?.ToLower() ?? ch.Blueprint.AssetGuid.ToString();
+                    bool DisableVO = Settings.namesToDisableVoiceOver.Contains(cName);
+                    if (Toggle("Disable Voice Over and Barks for this character".localize(), ref DisableVO, Width(425))) {
+                        if (DisableVO) Settings.namesToDisableVoiceOver.Add(cName);
+                        else Settings.namesToDisableVoiceOver.Remove(cName);
                     }
                 }
             }
@@ -335,8 +329,7 @@ namespace ToyBox {
                                 ch.AddFact(f);
                                 soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, dir);
                                 }*/
-                            }
-                            catch (Exception ex) {
+                            } catch (Exception ex) {
                                 Mod.Error(ex);
                                 continue;
                             }
@@ -398,8 +391,7 @@ namespace ToyBox {
                                        ch.Descriptor().State.Size = newSize;
                                        Main.Settings.perSave.characterSizeModifier[ch.HashKey()] = newSize;
                                        Settings.SavePerSaveSettings();
-                                   }
-                                   else {
+                                   } else {
                                        Main.Settings.perSave.characterSizeModifier.Remove(ch.HashKey());
                                        Settings.SavePerSaveSettings();
                                        ch.Descriptor().State.Size = ch.Descriptor().OriginalSize;
@@ -434,8 +426,7 @@ namespace ToyBox {
                         if (temp) {
                             Main.Settings.perSave.doOverrideEnableAiForCompanions[ch.HashKey()] = new(temp, valuePair.Item2);
                             Settings.SavePerSaveSettings();
-                        }
-                        else {
+                        } else {
                             Main.Settings.perSave.doOverrideEnableAiForCompanions.Remove(ch.HashKey());
                             Settings.SavePerSaveSettings();
                         }
@@ -512,8 +503,7 @@ namespace ToyBox {
                         }, Width(75));
                         statEditorStorage[key] = storedValue;
                     }
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     Mod.Trace(ex.ToString());
                 }
             }
@@ -525,8 +515,7 @@ namespace ToyBox {
             if (change > 0) {
                 var soulMarkShift = new SoulMarkShift() { CheckByRank = false, Direction = dir, Value = change };
                 new BlueprintAnswer() { SoulMarkShift = soulMarkShift }.ApplyShiftDialog();
-            }
-            else if (change < 0) {
+            } else if (change < 0) {
                 var soulMarkShift = new SoulMarkShift() { CheckByRank = false, Direction = dir, Value = change };
                 var provider = new BlueprintAnswer() { SoulMarkShift = soulMarkShift };
                 var source = provider as BlueprintScriptableObject;

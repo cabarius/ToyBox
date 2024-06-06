@@ -31,11 +31,11 @@ namespace ToyBox {
         private const int NarrowIndent = 413;
 
         private static ToggleChoice selectedToggle = ToggleChoice.None;
-        private static int editingCharacterIndex = 0;
         private static BaseUnitEntity charToAdd = null;
         private static BaseUnitEntity charToRecruit = null;
         private static BaseUnitEntity charToRemove = null;
         private static BaseUnitEntity charToUnrecruit = null;
+        private static BaseUnitEntity selectedCharacter = null;
         private static bool editMultiClass = false;
         private static BaseUnitEntity multiclassEditCharacter = null;
         private static int respecableCount = 0;
@@ -48,12 +48,12 @@ namespace ToyBox {
         private static BaseUnitEntity GetEditCharacter() {
             var characterList = CharacterPicker.GetCharacterList();
             if (characterList == null || characterList.Count == 0) return null;
-            if (editingCharacterIndex >= characterList.Count) editingCharacterIndex = 0;
-            return characterList[editingCharacterIndex];
+            if (!characterList.Contains(selectedCharacter)) return null;
+            else return selectedCharacter;
         }
 
         public static void ResetGUI() {
-            editingCharacterIndex = 0;
+            selectedCharacter = null;
             selectedSpellbookLevel = 0;
             CharacterPicker.PartyFilterChoices = null;
             Main.Settings.selectedPartyFilter = 0;
@@ -70,13 +70,11 @@ namespace ToyBox {
                 ActionButton("Add".localize(), () => { charToAdd = ch; }, Width(150));
                 Space(25);
                 buttonCount++;
-            }
-            else if (player.ActiveCompanions.Contains(ch)) {
+            } else if (player.ActiveCompanions.Contains(ch)) {
                 ActionButton("Remove".localize(), () => { charToRemove = ch; }, Width(150));
                 Space(25);
                 buttonCount++;
-            }
-            else if (!player.AllCharactersAndStarships.Contains(ch)) {
+            } else if (!player.AllCharactersAndStarships.Contains(ch)) {
                 recruitableCount++;
                 ActionButton("Recruit".localize().cyan(), () => { charToRecruit = ch; }, Width(150));
                 Space(25);
@@ -95,8 +93,7 @@ namespace ToyBox {
             if (ch.CanRespec()) {
                 respecableCount++;
                 ActionButton("Respec".localize().cyan(), () => { Actions.ToggleModWindow(); ch.DoRespec(); }, Width(150));
-            }
-            else {
+            } else {
                 Space(153);
             }
             if (buttonCount >= 0)
@@ -127,7 +124,7 @@ namespace ToyBox {
             var chIndex = 0;
             recruitableCount = 0;
             respecableCount = 0;
-            var selectedCharacter = GetEditCharacter();
+            selectedCharacter = GetEditCharacter();
             var isWide = IsWide;
             if (Main.IsInGame) {
                 using (HorizontalScope()) {
@@ -156,16 +153,14 @@ namespace ToyBox {
                 using (HorizontalScope()) {
                     var name = ch.CharacterName;
                     if (Game.Instance.Player.AllCharacters.Contains(ch)
-                        || Game.Instance.Player.m_AllCharactersAndStarships.Contains(ch)
-                        ) {
+                        || Game.Instance.Player.m_AllCharactersAndStarships.Contains(ch)) {
                         var oldEditState = nameEditState;
                         if (isWide) {
                             if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), MinWidth(100), MaxWidth(400))) {
                                 ch.Description.CustomName = name;
                                 Main.SetNeedsResetGameUI();
                             }
-                        }
-                        else
+                        } else
                             if (EditableLabel(ref name, ref nameEditState, 200, n => n.orange().bold(), Width(230))) {
                             ch.Description.CustomName = name;
                             Main.SetNeedsResetGameUI();
@@ -173,8 +168,7 @@ namespace ToyBox {
                         if (nameEditState != oldEditState) {
                             Mod.Log($"EditState changed: {oldEditState} -> {nameEditState}");
                         }
-                    }
-                    else {
+                    } else {
                         if (isWide)
                             Label(ch.CharacterName.orange().bold(), MinWidth(100), MaxWidth(400));
                         else
@@ -196,10 +190,8 @@ namespace ToyBox {
                             ActionButton("+1", () => {
                                 progression.AdvanceExperienceTo(xpTable.GetBonus(nextLevel + 1), true);
                             }, Width(63));
-                        }
-                        else { Label("max".localize(), Width(63)); }
-                    }
-                    else { Space(66); }
+                        } else { Label("max".localize(), Width(63)); }
+                    } else { Space(66); }
                     Space(30);
                     Wrap(IsNarrow, NarrowIndent, 0);
                     var prevSelectedChar = selectedCharacter;
@@ -207,8 +199,7 @@ namespace ToyBox {
                     if (DisclosureToggle($"{classData.Count} " + "Classes".localize(), ref showClasses, 140)) {
                         if (showClasses) {
                             selectedCharacter = ch; selectedToggle = ToggleChoice.Classes; Mod.Trace($"selected {ch.CharacterName}");
-                        }
-                        else { selectedToggle = ToggleChoice.None; }
+                        } else { selectedToggle = ToggleChoice.None; }
                     }
                     var showStats = ch == selectedCharacter && selectedToggle == ToggleChoice.Stats;
                     if (DisclosureToggle("Stats".localize(), ref showStats, 95)) {
@@ -240,33 +231,22 @@ namespace ToyBox {
                 if (!isWide) Div(00, 10);
                 5.space();
                 ReflectionTreeView.OnDetailGUI(ch);
-                //if (!UI.IsWide && (selectedToggle != ToggleChoice.Stats || ch != selectedCharacter)) {
-                //    UI.Div(20, 20);
-                //}
                 if (selectedCharacter != multiclassEditCharacter) {
                     editMultiClass = false;
                     multiclassEditCharacter = null;
                 }
-                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Classes) {
-                    OnClassesGUI(ch, classData, selectedCharacter);
-                }
-                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Stats) {
-                    todo = OnStatsGUI(ch);
-                }
-                //if (ch == selectedCharacter && selectedToggle == ToggleChoice.Facts) {
-                //    todo = FactsEditor.OnGUI(ch, ch.Facts.m_Facts);
-                //}
-                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Features) {
-                    todo = FactsEditor.OnGUI(ch, ch.Progression.Features.Enumerable.ToList());
-                }
-                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Buffs) {
-                    todo = FactsEditor.OnGUI(ch, ch.Descriptor().Buffs.Enumerable.ToList());
-                }
-                if (ch == selectedCharacter && selectedToggle == ToggleChoice.Abilities) {
-                    todo = FactsEditor.OnGUI(ch, ch.Descriptor().Abilities.Enumerable, ch.Descriptor().ActivatableAbilities.Enumerable);
-                }
-                if (selectedCharacter != GetEditCharacter()) {
-                    editingCharacterIndex = characterList.IndexOf(selectedCharacter);
+                if (ch == selectedCharacter) {
+                    if (selectedToggle == ToggleChoice.Classes) {
+                        OnClassesGUI(ch, classData, selectedCharacter);
+                    } else if (selectedToggle == ToggleChoice.Stats) {
+                        todo = OnStatsGUI(ch);
+                    } else if (selectedToggle == ToggleChoice.Features) {
+                        todo = FactsEditor.OnGUI(ch, ch.Progression.Features.Enumerable.ToList());
+                    } else if (selectedToggle == ToggleChoice.Buffs) {
+                        todo = FactsEditor.OnGUI(ch, ch.Descriptor().Buffs.Enumerable.ToList());
+                    } else if (selectedToggle == ToggleChoice.Abilities) {
+                        todo = FactsEditor.OnGUI(ch, ch.Descriptor().Abilities.Enumerable, ch.Descriptor().ActivatableAbilities.Enumerable);
+                    }
                 }
                 chIndex += 1;
             }

@@ -54,8 +54,7 @@ namespace ToyBox {
                 try {
                     cachedPerSave = JsonConvert.DeserializeObject<PerSaveSettings>(json);
                     Mod.Debug($"read successfully from Player.SettingsList[{PerSaveKey}]");
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Mod.Error($"failed to read from Player.SettingsList[{PerSaveKey}]");
                     Mod.Error(e);
                 }
@@ -89,8 +88,7 @@ namespace ToyBox {
                 }
                 if (cachedPerSave)
                     PerSaveSettings.observers?.Invoke(cachedPerSave);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Mod.Error(e);
             }
         }
@@ -222,6 +220,7 @@ namespace ToyBox {
 
         // Party Editor
         public int selectedPartyFilter = 0;
+        public HashSet<string> namesToDisableVoiceOver = new();
 
         // Blueprint Browser
         public int searchLimit = 100;
