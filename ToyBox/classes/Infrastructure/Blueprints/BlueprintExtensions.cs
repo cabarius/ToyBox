@@ -71,8 +71,7 @@ namespace ToyBox {
         public static string GetTitle(SimpleBlueprint blueprint, Func<string, string> formatter = null) {
             if (titleCache.TryGetValue(blueprint.AssetGuid, out var ret) && (wasIncludeInternalNameForTitle == Settings.showDisplayAndInternalNames)) {
                 return ret;
-            }
-            else {
+            } else {
                 wasIncludeInternalNameForTitle = Settings.showDisplayAndInternalNames;
             }
             if (formatter == null) formatter = s => s;
@@ -81,14 +80,12 @@ namespace ToyBox {
                 bool isEmpty = true;
                 try {
                     isEmpty = string.IsNullOrEmpty(uiDataProvider.Name);
-                }
-                catch (NullReferenceException) {
+                } catch (NullReferenceException) {
                     Mod.Debug($"Error while getting name for {uiDataProvider}");
                 }
                 if (isEmpty) {
                     name = blueprint.name;
-                }
-                else {
+                } else {
                     if (blueprint is BlueprintSpellbook spellbook) {
                         titleCache[blueprint.AssetGuid] = $"{spellbook.Name} - {spellbook.name}";
                         return $"{spellbook.Name} - {spellbook.name}";
@@ -96,26 +93,22 @@ namespace ToyBox {
                     name = formatter(uiDataProvider.Name);
                     if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                         name = formatter(blueprint.name);
-                    }
-                    else if (Settings.showDisplayAndInternalNames) {
+                    } else if (Settings.showDisplayAndInternalNames) {
                         name += $" : {blueprint.name.color(RGBA.darkgrey)}";
                     }
                 }
                 titleCache[blueprint.AssetGuid] = name;
                 return name;
-            }
-            else if (blueprint is BlueprintItemEnchantment enchantment) {
+            } else if (blueprint is BlueprintItemEnchantment enchantment) {
                 string name;
                 var isEmpty = string.IsNullOrEmpty(enchantment.Name);
                 if (isEmpty) {
                     name = formatter(blueprint.name);
-                }
-                else {
+                } else {
                     name = formatter(enchantment.Name);
                     if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                         name = formatter(blueprint.name);
-                    }
-                    else if (Settings.showDisplayAndInternalNames) {
+                    } else if (Settings.showDisplayAndInternalNames) {
                         name += $" : {blueprint.name.color(RGBA.darkgrey)}";
                     }
                 }
@@ -128,8 +121,7 @@ namespace ToyBox {
         public static string GetSearchKey(SimpleBlueprint blueprint, bool forceDisplayInternalName = false) {
             if (searchKeyCache.TryGetValue(blueprint.AssetGuid, out var ret) && (wasIncludeInternalNameForSearchKey == (Settings.showDisplayAndInternalNames || forceDisplayInternalName))) {
                 return ret;
-            }
-            else {
+            } else {
                 wasIncludeInternalNameForSearchKey = Settings.showDisplayAndInternalNames || forceDisplayInternalName;
             }
             try {
@@ -138,14 +130,12 @@ namespace ToyBox {
                     bool isEmpty = true;
                     try {
                         isEmpty = string.IsNullOrEmpty(uiDataProvider.Name);
-                    }
-                    catch (NullReferenceException) {
+                    } catch (NullReferenceException) {
                         Mod.Debug($"Error while getting name for {uiDataProvider}");
                     }
                     if (isEmpty) {
                         name = blueprint.name;
-                    }
-                    else {
+                    } else {
                         if (uiDataProvider is BlueprintSpellbook spellbook) {
                             searchKeyCache[blueprint.AssetGuid] = $"{spellbook.Name} {spellbook.name} {spellbook.AssetGuid}";
                             return searchKeyCache[blueprint.AssetGuid];
@@ -153,26 +143,22 @@ namespace ToyBox {
                         name = uiDataProvider.Name;
                         if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                             name = blueprint.name;
-                        }
-                        else if (Settings.showDisplayAndInternalNames || forceDisplayInternalName) {
+                        } else if (Settings.showDisplayAndInternalNames || forceDisplayInternalName) {
                             name += $" : {blueprint.name}";
                         }
                     }
                     searchKeyCache[blueprint.AssetGuid] = name.StripHTML() + $" {blueprint.AssetGuid}";
                     return searchKeyCache[blueprint.AssetGuid];
-                }
-                else if (blueprint is BlueprintItemEnchantment enchantment) {
+                } else if (blueprint is BlueprintItemEnchantment enchantment) {
                     string name;
                     var isEmpty = string.IsNullOrEmpty(enchantment.Name);
                     if (isEmpty) {
                         name = blueprint.name;
-                    }
-                    else {
+                    } else {
                         name = enchantment.Name;
                         if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                             name = blueprint.name;
-                        }
-                        else if (Settings.showDisplayAndInternalNames) {
+                        } else if (Settings.showDisplayAndInternalNames) {
                             name += $" : {blueprint.name}";
                         }
                     }
@@ -181,8 +167,7 @@ namespace ToyBox {
                 }
                 searchKeyCache[blueprint.AssetGuid] = blueprint.name.StripHTML() + $" {blueprint.AssetGuid}";
                 return searchKeyCache[blueprint.AssetGuid];
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Mod.Debug(ex.ToString());
                 Mod.Debug($"-------{blueprint}-----{blueprint.AssetGuid}");
                 return "";
@@ -191,8 +176,7 @@ namespace ToyBox {
         public static string GetSortKey(SimpleBlueprint blueprint) {
             if (sortKeyCache.TryGetValue(blueprint.AssetGuid, out var ret) && (wasIncludeInternalNameForSortKey == Settings.showDisplayAndInternalNames)) {
                 return ret;
-            }
-            else {
+            } else {
                 wasIncludeInternalNameForSortKey = Settings.showDisplayAndInternalNames;
             }
             try {
@@ -201,14 +185,12 @@ namespace ToyBox {
                     bool isEmpty = true;
                     try {
                         isEmpty = string.IsNullOrEmpty(uiDataProvider.Name);
-                    }
-                    catch (NullReferenceException) {
+                    } catch (NullReferenceException) {
                         Mod.Debug($"Error while getting name for {uiDataProvider}");
                     }
                     if (isEmpty) {
                         name = blueprint.name;
-                    }
-                    else {
+                    } else {
                         if (blueprint is BlueprintSpellbook spellbook) {
                             sortKeyCache[blueprint.AssetGuid] = $"{spellbook.Name} - {spellbook.name}";
                             return $"{spellbook.Name} - {spellbook.name}";
@@ -216,26 +198,22 @@ namespace ToyBox {
                         name = uiDataProvider.Name;
                         if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                             name = blueprint.name;
-                        }
-                        else if (Settings.showDisplayAndInternalNames) {
+                        } else if (Settings.showDisplayAndInternalNames) {
                             name += blueprint.name;
                         }
                     }
                     sortKeyCache[blueprint.AssetGuid] = name;
                     return name;
-                }
-                else if (blueprint is BlueprintItemEnchantment enchantment) {
+                } else if (blueprint is BlueprintItemEnchantment enchantment) {
                     string name;
                     var isEmpty = string.IsNullOrEmpty(enchantment.Name);
                     if (isEmpty) {
                         name = blueprint.name;
-                    }
-                    else {
+                    } else {
                         name = enchantment.Name;
                         if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                             name = blueprint.name;
-                        }
-                        else if (Settings.showDisplayAndInternalNames) {
+                        } else if (Settings.showDisplayAndInternalNames) {
                             name += blueprint.name;
                         }
                     }
@@ -244,8 +222,7 @@ namespace ToyBox {
                 }
                 sortKeyCache[blueprint.AssetGuid] = blueprint.name;
                 return blueprint.name;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Mod.Debug(ex.ToString());
                 Mod.Debug($"-------{blueprint}-----{blueprint.AssetGuid}");
                 return "";
@@ -261,8 +238,7 @@ namespace ToyBox {
                     if (value.HasValue && value.GetValueOrDefault()) {
                         modifiers.Add(property); //.Substring(2));
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Mod.Warn($"${bp.name}.{property} thew an exception: {e.Message}");
                     BadList.Add(bp.AssetGuid);
                     break;
@@ -379,8 +355,7 @@ namespace ToyBox {
                 descriptionCache[guid] = desc;
                 return desc;
 
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Mod.Debug(e.ToString());
 #if DEBUG
                 return "ERROR".red().bold() + $": caught exception {e}";

@@ -60,8 +60,7 @@ namespace ToyBox.classes.MonkeyPatchin {
                         InteractionHighlightController.Instance.HighlightOff();
                         wasTurnedOff = false;
                     }
-                }
-                else {
+                } else {
                     if (wasTurnedOffBefore && (!InteractionHighlightController.Instance?.IsHighlighting ?? false)) {
                         InteractionHighlightController.Instance.HighlightOn();
                         wasTurnedOffBefore = false;
@@ -131,8 +130,7 @@ namespace ToyBox.classes.MonkeyPatchin {
                 }));
                 if (!flag || !HighlightOnHover || ((__instance.Data.IsRevealed || !__instance.Data.IsAwarenessCheckPassed) && !Main.Settings.highlightHiddenObjects)) {
                     __result = __instance.Data.Parts.GetAll<InteractionPart>().Any((InteractionPart i) => i.HasVisibleTrap());
-                }
-                else {
+                } else {
                     __result = true;
                 }
                 Mod.Debug($"Checking highlighting for {__instance.name}: Result:{__result}; flag:{flag}; Highlighted:{__instance.Highlighted} - ForcedHighlightOnReveal:{__instance.m_ForcedHighlightOnReveal} - GlobalHighlighting:{__instance.GlobalHighlighting} - IsInFogOfWar:{__instance.Data.IsInFogOfWar} - HighlightOnHover:{__instance.HighlightOnHover} - IsRevealed:{__instance.Data.IsRevealed} - AwarenessCheckPassed:{__instance.Data.IsAwarenessCheckPassed}");

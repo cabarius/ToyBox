@@ -53,8 +53,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                 SimpleBlueprint retrievedBlueprint;
                 try {
                     retrievedBlueprint = ResourcesLibrary.TryGetBlueprint(text);
-                }
-                catch {
+                } catch {
                     retrievedBlueprint = null;
                 }
                 if (retrievedBlueprint == null) Mod.Warn($"Failed to load blueprint by guid '{text}' but continued with null blueprint.");

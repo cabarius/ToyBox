@@ -53,8 +53,7 @@ namespace ToyBox {
         public void UpdateEtude(BlueprintEtude blueprintEtude) {
             if (loadedEtudes.ContainsKey(blueprintEtude.AssetGuid)) {
                 UpdateEtudeData(blueprintEtude);
-            }
-            else {
+            } else {
                 AddEtudeToLoaded(blueprintEtude);
             }
         }

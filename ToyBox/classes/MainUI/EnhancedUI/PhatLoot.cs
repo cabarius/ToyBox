@@ -114,8 +114,7 @@ namespace ToyBox {
                     if (Main.IsInGame) {
                         try {
                             areaName = Game.Instance.CurrentlyLoadedArea.AreaDisplayName;
-                        }
-                        catch { }
+                        } catch { }
                         var areaPrivateName = Game.Instance.CurrentlyLoadedArea.name;
                         if (areaPrivateName != areaName) areaName += $"\n({areaPrivateName})".yellow();
                     }

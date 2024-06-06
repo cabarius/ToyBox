@@ -100,8 +100,7 @@ namespace ToyBox {
                 //if (enchantValue > 0) Main.Log($"blueprint enchantValue: {enchantValue}");
                 rating = Math.Max(itemRating, bpRating);
                 rating = Math.Max(rating, costRating);
-            }
-            catch {
+            } catch {
                 // ignored
             }
             //var rating = item.EnchantmentValue * rarityScaling;

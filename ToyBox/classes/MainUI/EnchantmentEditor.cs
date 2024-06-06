@@ -125,8 +125,7 @@ namespace ToyBox.classes.MainUI {
                                 if (_currentPage >= 1) {
                                     if (_currentPage == 1) {
                                         _currentPage = _pageCount;
-                                    }
-                                    else {
+                                    } else {
                                         _currentPage -= 1;
                                     }
                                 }
@@ -138,8 +137,7 @@ namespace ToyBox.classes.MainUI {
                                 if (_currentPage > _pageCount) _currentPage = 1;
                                 if (_currentPage == _pageCount) {
                                     _currentPage = 1;
-                                }
-                                else {
+                                } else {
                                     _currentPage += 1;
                                 }
                                 var offset = Math.Min(inventory.Count, (_currentPage - 1) * searchLimit);
@@ -171,8 +169,7 @@ namespace ToyBox.classes.MainUI {
                             },
                             rarityButtonStyle,
                             Width(375));
-                    }
-                    else {
+                    } else {
                         Label("No Items".localize().grey(), Width(375));
                     }
                 }
@@ -225,15 +222,13 @@ namespace ToyBox.classes.MainUI {
                                             TargetItemGUI(shield.WeaponComponent);
                                         }
                                         ActionButton("Remove ", () => shield.WeaponComponent = null, AutoWidth());
-                                    }
-                                    else {
+                                    } else {
                                         var compTitle = shield.Blueprint.WeaponComponent?.name;
                                         compTitle = compTitle != null ? " from " + compTitle.yellow() : "";
                                         ActionButton("Add " + "Spikes".orange() + compTitle, () => shield.WeaponComponent = new ItemEntityWeapon(shield.Blueprint.WeaponComponent ?? basicSpikeShield, shield), AutoWidth());
                                     }
                                 }
-                            }
-                            else if (item is ItemEntityWeapon weapon && weapon.Second != null) {
+                            } else if (item is ItemEntityWeapon weapon && weapon.Second != null) {
                                 using (VerticalScope()) {
                                     using (HorizontalScope()) {
                                         Label("Main".orange(), Width(100));
@@ -245,8 +240,7 @@ namespace ToyBox.classes.MainUI {
                                         TargetItemGUI(weapon.Second);
                                     }
                                 }
-                            }
-                            else {
+                            } else {
                                 TargetItemGUI(item);
                             }
                         }
@@ -290,8 +284,7 @@ namespace ToyBox.classes.MainUI {
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 Label("No Enchantments".orange());
             }
         }
@@ -354,8 +347,7 @@ namespace ToyBox.classes.MainUI {
                                             }
                                         }
                                     }
-                                }
-                                else if (selectedItem is ItemEntityWeapon weapon && weapon?.Second != null) {
+                                } else if (selectedItem is ItemEntityWeapon weapon && weapon?.Second != null) {
                                     using (VerticalScope()) {
                                         using (HorizontalScope()) {
                                             ActionButton("+ " + "Main".localize().orange(), () => AddClicked(enchant), Width(130));
@@ -372,8 +364,7 @@ namespace ToyBox.classes.MainUI {
                                                 Space(130);
                                         }
                                     }
-                                }
-                                else {
+                                } else {
                                     ActionButton("Add".localize(), () => AddClicked(enchant), Width(130));
                                     if (selectedItem?.Enchantments.Any(e => e.Blueprint == enchant) ?? false)
                                         ActionButton("Remove".localize(), () => RemoveClicked(enchant), Width(130));
@@ -435,12 +426,10 @@ namespace ToyBox.classes.MainUI {
                 else
                     AddEnchantment(shield.WeaponComponent, ench);
                 editedItem = shield;
-            }
-            else if (second && selected is ItemEntityWeapon weapon) {
+            } else if (second && selected is ItemEntityWeapon weapon) {
                 AddEnchantment(weapon.Second, ench);
                 editedItem = weapon;
-            }
-            else {
+            } else {
                 AddEnchantment(selected, ench);
                 editedItem = selected;
             }
@@ -459,8 +448,7 @@ namespace ToyBox.classes.MainUI {
             if (second && selected is ItemEntityWeapon weapon) {
                 RemoveEnchantment(weapon.Second, ench);
                 editedItem = weapon;
-            }
-            else {
+            } else {
                 RemoveEnchantment(selected, ench);
                 editedItem = selected;
             }

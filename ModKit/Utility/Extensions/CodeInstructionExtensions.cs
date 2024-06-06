@@ -169,8 +169,7 @@ namespace ModKit.Utility {
                             codes.RemoveRange(i, findingCodesCount, moveLabelsFromIndex);
                         replaced++;
                         i -= findingCodesCount;
-                    }
-                    else {
+                    } else {
                         i--;
                     }
                 }
@@ -218,8 +217,7 @@ namespace ModKit.Utility {
             while (i < source.Count) {
                 if (skip.Contains(source[i])) {
                     i++;
-                }
-                else {
+                } else {
                     target.Add(source[i]);
                     source.RemoveAt(i);
                 }

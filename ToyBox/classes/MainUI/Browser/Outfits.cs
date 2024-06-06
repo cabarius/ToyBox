@@ -75,8 +75,7 @@ namespace ToyBox {
                             if (equippedOutfits == null) equippedOutfits = new();
                             Main.Settings.perSave.doOverrideOutfit[ch.HashKey()] = new(tmpOverride, equippedOutfits.Select(e => e.AssetGuid).ToList());
                             Settings.SavePerSaveSettings();
-                        }
-                        else {
+                        } else {
                             ch.View.CharacterAvatar.RemoveAllEquipmentEntities();
                             BlueprintAction action = null;
                             BlueprintAction action2 = null;
@@ -88,8 +87,7 @@ namespace ToyBox {
                                     if (action.canPerform(kee, ch)) {
                                         action.action(kee, ch);
                                     }
-                                }
-                                else {
+                                } else {
                                     if (action2 == null) {
                                         action2 = kee.GetActions().Where(a => a.name == "Undress".localize()).First();
                                     }
@@ -144,8 +142,7 @@ namespace ToyBox {
                                 Space(10);
                                 remainingWidth -= 174.0f;
 
-                            }
-                            else {
+                            } else {
                                 Space(174);
                             }
                         }

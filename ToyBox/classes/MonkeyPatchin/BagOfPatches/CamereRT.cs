@@ -52,8 +52,7 @@ namespace ToyBox.BagOfPatches {
                     //Mod.Log($"Euler angles: {instance.transform.eulerAngles}");
                     instance.MinSpaceCameraAngle = -63; // -15
                     instance.MaxSpaceCameraAngle = +100; // +20 
-                }
-                else {
+                } else {
                     instance.MinSpaceCameraAngle = -20;
                     instance.MaxSpaceCameraAngle = +15;
 
@@ -201,8 +200,7 @@ namespace ToyBox.BagOfPatches {
                         CameraElevation = 60f;
                         __instance.m_TargetPosition = __instance.PlaceOnGround2(__instance.m_TargetPosition);
                         Main.resetExtraCameraAngles = false;
-                    }
-                    else if (Input.GetKey(KeyCode.LeftControl) && Settings.toggleCameraElevation) {
+                    } else if (Input.GetKey(KeyCode.LeftControl) && Settings.toggleCameraElevation) {
                         var yRotationSign = Settings.toggleInvertYAxis ? 1f : -1f;
                         mouseMovement = __instance.CameraDragToRotate();
                         ___m_TargetPosition.y += yRotationSign * mouseMovement.y / 10f;

@@ -42,8 +42,7 @@ namespace ModKit.DataViewer {
                 }
                 reflectionTreeView.OnGUI(false);
                 return true;
-            }
-            else
+            } else
                 return false;
         }
 
@@ -128,8 +127,7 @@ namespace ModKit.DataViewer {
                             _startIndex++;
                     }
                     if (_startIndex > startIndexUBound) _startIndex = startIndexUBound;
-                }
-                else
+                } else
                     _startIndex = 0;
             }
             using (new GUILayout.VerticalScope()) {
@@ -246,8 +244,7 @@ namespace ModKit.DataViewer {
                                                 if (node.Node.NodeType == NodeType.Root) {
                                                     if (node.matches.Count == 0) return false;
                                                     Label("Search Results".Cyan().Bold());
-                                                }
-                                                else
+                                                } else
                                                     DrawNodePrivate(node.Node, depth, ref toggleState);
                                                 if (node.ToggleState != toggleState) Mod.Log(node.ToString());
                                                 node.ToggleState = toggleState;
@@ -338,8 +335,7 @@ namespace ModKit.DataViewer {
                         text = node.InstType.Name.color(RGBA.yellow);
                         style = _buttonStyle;
                         Label(text, _buttonStyle, GUILayout.ExpandWidth(false));
-                    }
-                    else
+                    } else
                         Label("", ExpandWidth(false));
                 }
         }
@@ -359,8 +355,7 @@ namespace ModKit.DataViewer {
 
                 // children
                 if (expanded.IsOn()) DrawChildren(node, depth + 1, collapse);
-            }
-            catch (Exception) { }
+            } catch (Exception) { }
         }
 
         private void DrawChildren(Node node, int depth, bool collapse, Func<Node, bool>? hoist = null) {

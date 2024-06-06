@@ -28,8 +28,7 @@ namespace ToyBox {
             Div(100, 20);
 
             if (editMultiClass) {
-            }
-            else {
+            } else {
                 var prog = ch.Descriptor().Progression;
                 using (HorizontalScope()) {
                     using (HorizontalScope(Width(600))) {

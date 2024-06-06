@@ -51,8 +51,7 @@ namespace ToyBox {
                 () => {
                     if (BlueprintLoader.Shared.IsLoading) {
                         Label(("Blueprints".orange().bold() + " loading: ").localize() + BlueprintLoader.Shared.progress.ToString("P2").cyan().bold());
-                    }
-                    else Space(25);
+                    } else Space(25);
                 },
                 () => {
                     if (BlueprintLoader.Shared.IsLoading || _searchResults == null) return;

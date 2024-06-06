@@ -29,8 +29,7 @@ namespace ToyBox.BagOfPatches {
                             duration = new(newRounds, duration.EndCondition);
                         }
                     }
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     Mod.Error(ex);
                 }
             }
@@ -45,8 +44,7 @@ namespace ToyBox.BagOfPatches {
                     if (settings.useSpaceExpSlider) {
                         mult = settings.experienceMultiplierSpace;
                     }
-                }
-                else {
+                } else {
                     switch (type) {
                         case EncounterType.QuestNormal:
                         case EncounterType.QuestMain: {

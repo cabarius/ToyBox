@@ -19,8 +19,7 @@ namespace ToyBox {
                 justInit = true;
                 availableAchievements.Clear();
                 unlocked.Clear();
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Mod.Debug(ex.ToString());
             }
         }
@@ -78,8 +77,7 @@ namespace ToyBox {
                             }
                         }, Width(116));
                         Space(70);
-                    }
-                    else {
+                    } else {
                         Space(190);
                     }
                     remainingWidth -= 190;

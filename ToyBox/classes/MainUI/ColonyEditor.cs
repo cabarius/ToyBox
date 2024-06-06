@@ -145,8 +145,7 @@ namespace ToyBox.classes.MainUI {
                                 remainingWidth -= 190;
                                 if (isAdded) {
                                     ActionButton("Remove".localize(), () => colony.RemoveTrait(trait), Width(150));
-                                }
-                                else {
+                                } else {
                                     ActionButton("Add".localize(), () => colony.AddTrait(trait), Width(150));
                                 }
                                 remainingWidth -= 178;
@@ -157,8 +156,7 @@ namespace ToyBox.classes.MainUI {
                                         if (Settings.showAssetIDs)
                                             ClipboardLabel(trait.AssetGuid.ToString(), AutoWidth());
                                         Label(trait.Description.StripHTML().MarkedSubstring(traitBrowser.SearchText).green(), Width(remainingWidth - 100));
-                                    }
-                                    catch (Exception e) {
+                                    } catch (Exception e) {
                                         Mod.Warn($"Error in blueprint: {trait.AssetGuid}");
                                         Mod.Warn($"         name: {trait.name}");
                                         Mod.Error(e);
@@ -220,8 +218,7 @@ namespace ToyBox.classes.MainUI {
                                     if (Settings.showAssetIDs)
                                         ClipboardLabel(cr.AssetGuid.ToString(), AutoWidth());
                                     Label(cr.Description.StripHTML().MarkedSubstring(resourceBrowser.SearchText).green(), Width(remainingWidth - 100));
-                                }
-                                catch (Exception e) {
+                                } catch (Exception e) {
                                     Mod.Warn($"Error in blueprint: {cr.AssetGuid}");
                                     Mod.Warn($"         name: {cr.name}");
                                     Mod.Error(e);

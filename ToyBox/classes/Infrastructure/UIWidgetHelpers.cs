@@ -75,8 +75,7 @@ namespace ToyBox {
         public static void OnLoad() {
             if (UnityModManager.gameVersion.Major == 2) {
                 UIHelpers.WidgetPaths = new WidgetPaths_2_0();
-            }
-            else if (UnityModManager.gameVersion.Major == 1) {
+            } else if (UnityModManager.gameVersion.Major == 1) {
 
                 if (UnityModManager.gameVersion.Minor == 4)
                     UIHelpers.WidgetPaths = new WidgetPaths_1_4();

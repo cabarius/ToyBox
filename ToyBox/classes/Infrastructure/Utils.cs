@@ -51,8 +51,7 @@ namespace ToyBox {
 
                 using StreamReader reader = new(path); var text = reader.ReadToEnd();
                 obj = JsonConvert.DeserializeObject<T>(text);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Mod.Error($"{filename} could not be read: {e}");
             }
             return obj;
@@ -96,12 +95,10 @@ namespace ToyBox {
                     //Mod.Debug($"'{key}' => '{value}'");
                 }
                 return result;
-            }
-            catch (DirectoryNotFoundException) {
+            } catch (DirectoryNotFoundException) {
                 Mod.Warn("Unable to load localization directory.");
                 return new();
-            }
-            catch (FileNotFoundException) {
+            } catch (FileNotFoundException) {
                 Mod.Warn("Unable to load Etude localization file.");
                 return new();
             }
@@ -109,8 +106,7 @@ namespace ToyBox {
         public static string ToKM(this float v, string? units = "") {
             if (v < 1000) {
                 return $"{v:0}{units}";
-            }
-            else if (v < 1000000) {
+            } else if (v < 1000000) {
                 v = Mathf.Floor(v / 1000);
                 return $"{v:0.#}k{units}";
             }

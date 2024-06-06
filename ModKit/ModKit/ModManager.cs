@@ -80,8 +80,7 @@ namespace ModKit {
                             try {
                                 var patchProcessor = harmonyInstance.CreateClassProcessor(type);
                                 patchProcessor.Patch();
-                            }
-                            catch (Exception e) {
+                            } catch (Exception e) {
                                 Error(e);
                             }
                         }
@@ -99,8 +98,7 @@ namespace ModKit {
 
                 process.Log("Raising events: OnEnable()");
                 for (var i = 0; i < _eventHandlers.Count; i++) _eventHandlers[i].HandleModEnable();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Error(e);
                 Disable(modEntry, true);
                 throw;
@@ -123,8 +121,7 @@ namespace ModKit {
                 for (var i = _eventHandlers.Count - 1; i >= 0; i--)
                     try {
                         _eventHandlers[i].HandleModDisable();
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         Error(e);
                     }
                 _eventHandlers = null;
@@ -142,8 +139,7 @@ namespace ModKit {
                         foreach (var patch in patches)
                             try {
                                 harmonyInstance.Unpatch(method, patch.PatchMethod);
-                            }
-                            catch (Exception e) {
+                            } catch (Exception e) {
                                 Error(e);
                             }
                     }

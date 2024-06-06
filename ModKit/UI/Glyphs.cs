@@ -30,8 +30,7 @@ namespace ModKit {
                     GUI.skin.font.HasCharacter(DefaultDisclosureEmpty[0]) &&
                     GUI.skin.font.HasCharacter(DefaultEdit[0])) {
                     Mod.ModKitSettings.UseDefaultGlyphs = true;
-                }
-                else {
+                } else {
                     Mod.ModKitSettings.UseDefaultGlyphs = false;
                 }
                 Mod.Log($"Glyph Support Check returned: {Mod.ModKitSettings.UseDefaultGlyphs}");

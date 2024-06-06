@@ -163,8 +163,7 @@ namespace ToyBox.BagOfPatches {
                                 __result = true;
                             break;
                     }
-                }
-                else if (Settings.toggleIgnoreAbilityAnyRestriction)
+                } else if (Settings.toggleIgnoreAbilityAnyRestriction)
                     __result = true;
             }
         }
@@ -287,15 +286,12 @@ namespace ToyBox.BagOfPatches {
                         }
                         PFLog.Default.Log("Cannot transfer items from this cargo cause CanRemoveItems false");
                         return false;
-                    }
-                    else if (cargoEntity2 != null && !cargoEntity2.CanAdd(from.ItemEntity, out num)) {
+                    } else if (cargoEntity2 != null && !cargoEntity2.CanAdd(from.ItemEntity, out num)) {
                         if (cargoEntity2.Blueprint.Integral) {
                             PFLog.Default.Log("Cannot add to cargo cause Integral true");
-                        }
-                        else if (!cargoEntity2.CorrectOrigin(from.ItemEntity.Blueprint.Origin)) {
+                        } else if (!cargoEntity2.CorrectOrigin(from.ItemEntity.Blueprint.Origin)) {
                             PFLog.Default.Log("Cannot add to cargo cause item origin not correct");
-                        }
-                        else {
+                        } else {
                             PFLog.Default.Log("Cannot add to cargo cause is is full");
                         }
                         UISounds.Instance.Sounds.Combat.CombatGridCantPerformActionClick.Play(null);
@@ -324,8 +320,7 @@ namespace ToyBox.BagOfPatches {
                     object obj;
                     if (item == null) {
                         obj = null;
-                    }
-                    else {
+                    } else {
                         ItemEntity value = item.Value;
                         obj = ((value != null) ? value.Blueprint : null);
                     }

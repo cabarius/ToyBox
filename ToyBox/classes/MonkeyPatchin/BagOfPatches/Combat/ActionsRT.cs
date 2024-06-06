@@ -30,8 +30,7 @@ namespace ToyBox.BagOfPatches {
                 if (!Settings.toggleUnlimitedActionsPerTurn) return true;
                 if (__instance.Owner.IsPartyOrPet()) {
                     return false;
-                }
-                else {
+                } else {
                     return true;
                 }
             }
@@ -41,8 +40,7 @@ namespace ToyBox.BagOfPatches {
                 if (!Settings.toggleReallyUnlimitedActionsPerTurn) return true;
                 if (__instance.Owner.IsPartyOrPet()) {
                     return false;
-                }
-                else {
+                } else {
                     return true;
                 }
             }

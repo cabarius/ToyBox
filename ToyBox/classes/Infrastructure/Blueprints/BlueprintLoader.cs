@@ -70,8 +70,7 @@ namespace ToyBox {
                 SimpleBlueprint bp;
                 try {
                     bp = bpCache.Load(entry.Key);
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     Mod.Warn($"cannot load GUID: {entry.Key}, Encountered the following error during BlueprintsCache.Load:\n{ex}");
                     continue;
                 }
@@ -112,8 +111,7 @@ namespace ToyBox {
 
         public List<SimpleBlueprint> GetBlueprints() {
             if (blueprints == null) {
-                if (Shared.IsLoading) { return null; }
-                else {
+                if (Shared.IsLoading) { return null; } else {
                     Mod.Debug($"calling BlueprintLoader.Load");
                     Shared.Load((bps) => {
                         _blueprintsInProcess = bps.Concat(bpsToAdd).ToList();

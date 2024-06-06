@@ -63,11 +63,9 @@ namespace ToyBox.BagOfPatches {
                     if (chanceRoll.RollTypeValue == RollType.Skill) {
                         if (BaseUnitDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake1)) {
                             __instance.m_Result = 1;
-                        }
-                        else if (BaseUnitDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake25)) {
+                        } else if (BaseUnitDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake25)) {
                             __instance.m_Result = 25;
-                        }
-                        else if (BaseUnitDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake50)) {
+                        } else if (BaseUnitDataUtils.CheckUnitEntityData(chanceRoll.InitiatorUnit, settings.skillsTake50)) {
                             __instance.m_Result = 50;
                         }
                     }
@@ -87,20 +85,16 @@ namespace ToyBox.BagOfPatches {
                 if (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll1)
                    || (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll1OutOfCombat) && !initiator.IsInCombat)) {
                     result = 1;
-                }
-                else if (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll50)) {
+                } else if (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll50)) {
                     result = 50;
-                }
-                else if (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll100)) {
+                } else if (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.alwaysRoll100)) {
                     result = 100;
-                }
-                else {
+                } else {
                     var min = 1;
                     var max = 101;
                     if (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.rollWithAdvantage)) {
                         result = Math.Min(result, PFStatefulRandom.RuleSystem.Range(min, max));
-                    }
-                    else if (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.rollWithDisadvantage)) {
+                    } else if (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.rollWithDisadvantage)) {
                         result = Math.Max(result, PFStatefulRandom.RuleSystem.Range(min, max));
                     }
                     if (BaseUnitDataUtils.CheckUnitEntityData(initiator, settings.neverRoll1) && result == 1) {
@@ -121,11 +115,9 @@ namespace ToyBox.BagOfPatches {
             if (Rulebook.CurrentContext.Current is RuleRollInitiative initiativeEvent) {
                 if (BaseUnitDataUtils.CheckUnitEntityData(initiativeEvent.InitiatorUnit, settings.roll1Initiative)) {
                     __result.m_Result = 1;
-                }
-                else if (BaseUnitDataUtils.CheckUnitEntityData(initiativeEvent.InitiatorUnit, settings.roll5Initiative)) {
+                } else if (BaseUnitDataUtils.CheckUnitEntityData(initiativeEvent.InitiatorUnit, settings.roll5Initiative)) {
                     __result.m_Result = 5;
-                }
-                else if (BaseUnitDataUtils.CheckUnitEntityData(initiativeEvent.InitiatorUnit, settings.roll10Initiative)) {
+                } else if (BaseUnitDataUtils.CheckUnitEntityData(initiativeEvent.InitiatorUnit, settings.roll10Initiative)) {
                     __result.m_Result = 10;
                 }
             }

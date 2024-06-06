@@ -78,8 +78,7 @@ namespace ToyBox {
             if (unit != null) {
                 // TODO: can we still do this?
                 // unit.SetFaction() = Game.Instance.BlueprintRoot.PlayerFaction;
-            }
-            else
+            } else
                 Mod.Warn("Unit is null!");
         }
         public static void AddToParty(BaseUnitEntity unit) {

@@ -178,8 +178,7 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintPlanet>("Colonize".localize(), (bp, ch, n, index) => {
                 try {
                     CheatsColonization.ColonizePlanet(bp);
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     throw new Exception("Error trying to colonize Planet. Are you in the correct Star System?\n".localize().orange().bold() + ex.Message + ex.StackTrace.ToString());
                 }
             }, (bp, ch, index) => {
@@ -191,8 +190,7 @@ namespace ToyBox {
 
                 try {
                     CheatsColonization.ColonizePlanet(ColonyToPlanet[bp]);
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     throw new Exception("Error trying to colonize Planet. Are you in the correct Star System?\n".localize().orange().bold() + ex.Message + ex.StackTrace.ToString());
                 }
             }, (bp, ch, index) => {

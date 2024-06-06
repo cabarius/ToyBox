@@ -69,8 +69,7 @@ namespace ToyBox {
                     var subActionList = FormatActions(subActions);
                     caption = $"Run Action Holder({string.Join(", ", subActionList)})";
                 }
-            }
-            else {
+            } else {
                 caption = action?.GetCaption();
             }
             caption = caption == "" || caption == null ? action?.GetType().Name ?? "" : caption;
@@ -86,8 +85,7 @@ namespace ToyBox {
         public static string FormatConditions(Condition[] conditions) => conditions.Join(c => {
             if (c is CheckConditionsHolder holder) {
                 return "Conditions Holder".localize() + $"({FormatConditions(holder.ConditionsHolder.Get().Conditions)})";
-            }
-            else
+            } else
                 return c.GetCaption();
         });
         public static string FormatConditions(ConditionsChecker conditions) => FormatConditions(conditions.Conditions);

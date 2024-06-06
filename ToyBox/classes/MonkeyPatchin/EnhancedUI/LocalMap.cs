@@ -107,8 +107,7 @@ namespace ToyBox.BagOfPatches {
                     //Mod.Debug($"adding Mark to {unit.CharacterName.orange()}");
                     var mark = markerView.transform;
                     markImage.color = new Color(1, 1f, 0);
-                }
-                else {
+                } else {
                     //                    attentionMark?.SetActive(false);
                     markImage.color = new Color(1, 1, 1);
                 }

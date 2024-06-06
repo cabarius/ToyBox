@@ -68,8 +68,7 @@ namespace ModKit {
                     if (title != null) {
                         if (ii == 0) {
                             Label(title.bold(), Width(150f));
-                        }
-                        else {
+                        } else {
                             Space(153);
                         }
                     }
@@ -158,8 +157,7 @@ namespace ModKit {
             IEnumerable<string> titles;
             if (titleFormatter != null) {
                 titles = actions.Select((a, i) => i == sel ? titleFormatter(a.name).orange().bold() : titleFormatter(a.name));
-            }
-            else {
+            } else {
                 titles = actions.Select((a, i) => i == sel ? a.name.orange().bold() : a.name);
             }
             if (SelectionGrid(ref selected, titles.ToArray(), 8, Width(ummWidth - 60))) onChangeTab(sel, selected);

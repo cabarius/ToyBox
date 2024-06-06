@@ -334,7 +334,7 @@ namespace ToyBox {
                            Div(0, 25, 1280);
                        }
                    },
-                   () => Toggle("Disable end turn HotKey".localize(), ref Settings.disableEndTurnHotkey, 500.width()), 
+                   () => Toggle("Disable end turn HotKey".localize(), ref Settings.disableEndTurnHotkey, 500.width()),
                    () => {
                        Toggle("Enable Loading with Blueprint Errors".localize().color(RGBA.maroon), ref Settings.enableLoadWithMissingBlueprints);
                        25.space();
@@ -462,8 +462,7 @@ namespace ToyBox {
                                 if (Settings.fowMultiplier == 1) {
                                     revealer.DefaultRadius = true;
                                     revealer.Radius = 1.0f;
-                                }
-                                else {
+                                } else {
                                     revealer.DefaultRadius = false;
                                     // TODO: is this right?
                                     revealer.Radius = Settings.fowMultiplier;

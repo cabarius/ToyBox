@@ -78,8 +78,7 @@ namespace ToyBox.BagOfPatches {
                 UnitPartCompanion unitPartCompanion = null;
                 try {
                     unitPartCompanion = Game.Instance.Player.AllCharacters.FirstOrDefault(unit => unit.Blueprint == __instance.companion).GetCompanionOptional();
-                }
-                catch (NullReferenceException ex) {
+                } catch (NullReferenceException ex) {
                     Mod.Trace(ex.ToString());
                 }
                 if (unitPartCompanion != null) {
@@ -326,15 +325,12 @@ namespace ToyBox.BagOfPatches {
                                                 continue;
                                         }
                                     }
-                                }
-                                else
+                                } else
                                     expandedAnswers.Add(answer);
                             }
-                        }
-                        else
+                        } else
                             expandedAnswers.Add(answer);
-                    }
-                    else
+                    } else
                         expandedAnswers.Add(answerBase);
                 }
                 answers = expandedAnswers;
@@ -348,8 +344,7 @@ namespace ToyBox.BagOfPatches {
                 if (!settings.toggleShowAnswersForEachConditionalResponse) return true;
                 if (!__instance.CurrentDialog) {
                     __result = Game.Instance.Player.Dialog.SelectedAnswers.Where(a => a.AssetGuid == __instance.Answer.AssetGuid).Any();
-                }
-                else {
+                } else {
                     __result = Game.Instance.DialogController.LocalSelectedAnswers.Where(a => a.AssetGuid == __instance.Answer.AssetGuid).Any();
 
                 }

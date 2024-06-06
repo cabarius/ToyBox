@@ -36,8 +36,8 @@ namespace ToyBox {
                 () => Toggle("Display risky options".localize(), ref Main.Settings.toggleRiskyToggles),
                 () => Toggle("Check for Glyph Support".localize(), ref Mod.ModKitSettings.CheckForGlyphSupport),
                 () => {
-                        if(!Mod.ModKitSettings.CheckForGlyphSupport) Toggle("Use default Glyphs".localize(), ref Mod.ModKitSettings.UseDefaultGlyphs);
-                    },
+                    if (!Mod.ModKitSettings.CheckForGlyphSupport) Toggle("Use default Glyphs".localize(), ref Mod.ModKitSettings.UseDefaultGlyphs);
+                },
               () => { }
             );
 #if true

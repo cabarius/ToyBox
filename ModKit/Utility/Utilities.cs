@@ -59,8 +59,7 @@ namespace ModKit {
                 if (part == final) {
                     info.SetValue(obj, value);
                     return value;
-                }
-                else {
+                } else {
                     obj = info.GetValue(obj, null);
                 }
             }
@@ -160,8 +159,7 @@ namespace ModKit {
                         resultLength.Value > 0) {
                         prefix = values[0].Substring(0, resultLength.Value);
                     }
-                }
-                else if (values.Length > 0) {
+                } else if (values.Length > 0) {
                     prefix = values[0];
                 }
             }
@@ -196,8 +194,7 @@ namespace ModKit {
                 var e = fullList[i];
                 if (temporary.Count < batchSize) {
                     temporary.Add(e);
-                }
-                else {
+                } else {
                     //Mod.Log("new row");
                     chunkedList.Add(temporary);
                     temporary = new List<T>() { e };
@@ -253,8 +250,7 @@ namespace ModKit {
 
                             array[i] = e.Current;
                         }
-                    }
-                    else {
+                    } else {
                         // For all but the first chunk, the array will already be correctly sized.
                         // We can just store into it until either it's full or MoveNext returns false.
                         TSource[] local = array; // avoid bounds checks by using cached local (`array` is lifted to iterator object as a field)

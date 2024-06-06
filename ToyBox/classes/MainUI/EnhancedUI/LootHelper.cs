@@ -30,8 +30,7 @@ namespace ToyBox {
             var ret = (showRating ? $"{u.Rating()} ".orange().bold() : "");
             try {
                 ret += (u.Owner != null ? $"({u.Owner.Name}) ".orange() : "");
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Mod.Error(e.ToString());
             }
             ret += (darkmode ? u.Name.StripHTML().DarkModeRarity(u.Rarity()) : u.Name);

@@ -83,8 +83,7 @@ namespace ToyBox {
                     if (cue.Continue.Cues.Count > 0) {
                         toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(cue.Continue.Cues[0], currentDepth + 1));
                     }
-                }
-                else
+                } else
                     if (cueBase is BlueprintBookPage page) {
                     cueResults.Add(new Tuple<BlueprintCueBase, int, GameAction[], SoulMarkShift, SoulMarkShift>(
                                            page,
@@ -107,13 +106,11 @@ namespace ToyBox {
                             if (c.Get().CanShow())
                                 toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(c, currentDepth + 1));
                     }
-                }
-                else
+                } else
                         if (cueBase is BlueprintCheck check) {
                     toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(check.Success, currentDepth + 1));
                     toCheck.Enqueue(new Tuple<BlueprintCueBase, int>(check.Fail, currentDepth + 1));
-                }
-                else
+                } else
                             if (cueBase is BlueprintCueSequence sequence) {
                     foreach (var c in sequence.Cues)
                         if (c.Get().CanShow())
@@ -132,8 +129,7 @@ namespace ToyBox {
                             }
                         }
                     }
-                }
-                else {
+                } else {
                     break;
                 }
             }
@@ -259,11 +255,9 @@ namespace ToyBox {
                             __result += $"<size=75%>{text}</size>";
                         else if (conditions.Any())
                             __result += $"<size=75%>\v{conditionsText}</size>";
-                    }
-                    else if (!text.IsNullOrEmpty())
+                    } else if (!text.IsNullOrEmpty())
                         __result += $"<size=75%>{text}</size>";
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     Mod.Error(ex);
                 }
             }
@@ -279,8 +273,7 @@ namespace ToyBox {
                     var cue = Game.Instance.DialogController.CurrentCue;
                     var text = cue.ResultsText();
                     __result += text;
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     Mod.Error(ex);
                 }
             }
@@ -341,7 +334,7 @@ namespace ToyBox {
                                     continue;
                             }
 
-label_8:;
+                        label_8:;
                     }
                 }
 

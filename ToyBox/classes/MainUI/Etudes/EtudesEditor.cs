@@ -304,12 +304,10 @@ namespace ToyBox {
                                             if (element is GameAction gameAction) {
                                                 try {
                                                     ActionButton(gameAction.GetCaption().yellow(), gameAction.RunAction);
-                                                }
-                                                catch (Exception e) {
+                                                } catch (Exception e) {
                                                     Mod.Warn($"{gameAction.GetCaption()} failed to run {e.ToString().yellow()}");
                                                 }
-                                            }
-                                            else
+                                            } else
                                                 Label(element.GetCaption().yellow() ?? "?");
                                             Space(25);
                                             ReflectionTreeView.DetailToggle("Inspect".localize(), element, element, 100);
@@ -526,8 +524,7 @@ namespace ToyBox {
 
             if (etude.IsPlaying) {
                 etudeIdReferences.State = EtudeInfo.EtudeState.Active;
-            }
-            else {
+            } else {
                 etudeIdReferences.State = EtudeInfo.EtudeState.Started;
             }
         }

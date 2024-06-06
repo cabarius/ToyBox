@@ -124,8 +124,7 @@ namespace ModKit {
                         page.OnGUI(modEntry);
                         hasPriorPage = true;
                     }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Console.Write($"{e}");
                 caughtException = e;
             }

@@ -39,8 +39,7 @@ namespace ToyBox {
                                if (EditableLabel(ref currentGameID, ref nameEditState, 100)) {
                                    Game.Instance.Player.GameId = currentGameID;
                                }
-                           }
-                           else {
+                           } else {
                                currentGameID = "N/A".localize();
                                Label(currentGameID);
                            }

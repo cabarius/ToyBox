@@ -370,8 +370,7 @@ namespace ToyBox.Inventory {
                 IEnumerable<BaseUnitEntity> all_units = Shodan.AllBaseUnits.All;
                 if (Settings.toggleLootAliveUnits) {
                     all_units = all_units.Where(unit => unit.IsInGame && (unit.IsDeadAndHasLoot || unit.Inventory.HasLoot));
-                }
-                else {
+                } else {
                     all_units = all_units.Where(unit => unit.IsInGame && unit.IsDeadAndHasLoot);
                 }
 

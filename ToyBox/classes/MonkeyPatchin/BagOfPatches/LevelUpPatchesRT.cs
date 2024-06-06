@@ -35,8 +35,7 @@ namespace ToyBox.BagOfPatches {
             public static int getMaybeZero(UnitProgressionData _instance) {
                 if (Settings.toggleSetDefaultRespecLevelZero) {
                     return int.MinValue;
-                }
-                else {
+                } else {
                     var tmp = _instance.Owner.Blueprint.GetDefaultLevel();
                     return tmp;
                 }
@@ -45,8 +44,7 @@ namespace ToyBox.BagOfPatches {
                 ValueTuple<BlueprintCareerPath, int> ret;
                 try {
                     ret = _instance.AllCareerPaths.Last<ValueTuple<BlueprintCareerPath, int>>();
-                }
-                catch (Exception) {
+                } catch (Exception) {
                     ret = new(null, 1);
                 }
                 Mod.Debug($"Respec Career returned: {ret}");
@@ -67,8 +65,7 @@ namespace ToyBox.BagOfPatches {
                         yield return new CodeInstruction(OpCodes.Ldarg_0);
                         instruction.opcode = OpCodes.Call;
                         instruction.operand = AccessTools.Method(typeof(UnitProgressionData_Patch), nameof(UnitProgressionData_Patch.getMaybeZero));
-                    }
-                    else if (instruction.Calls(AccessTools.PropertyGetter(typeof(UnitProgressionData), nameof(UnitProgressionData.AllCareerPaths)))) {
+                    } else if (instruction.Calls(AccessTools.PropertyGetter(typeof(UnitProgressionData), nameof(UnitProgressionData.AllCareerPaths)))) {
                         instruction.operand = AccessTools.Method(typeof(UnitProgressionData_Patch), nameof(UnitProgressionData_Patch.maybeGetNextCareer));
                         shouldSkipNextInstruction = true;
                     }
@@ -128,8 +125,7 @@ namespace ToyBox.BagOfPatches {
                             if (modifiableValue.BaseValue != modifiableValue2.BaseValue) {
                                 modifiableValue2.BaseValue = modifiableValue.BaseValue;
                             }
-                        }
-                        catch (NullReferenceException) {
+                        } catch (NullReferenceException) {
 
                         }
                     }

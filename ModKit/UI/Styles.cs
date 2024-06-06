@@ -91,8 +91,7 @@ namespace ModKit {
             divStyle.normal.background = fillTexture;
             if (divStyle.margin == null) {
                 divStyle.margin = new RectOffset((int)indent, 0, 4, 4);
-            }
-            else {
+            } else {
                 divStyle.margin.left = (int)indent + 3;
             }
             if (width > 0)

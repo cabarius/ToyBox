@@ -83,8 +83,7 @@ namespace ModKit {
                 result = result.Substring(4, result.IndexOf("\"", 4, StringComparison.Ordinal) - 4);
                 cachedTranslations[text] = result;
                 return result;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Mod.Log(url);
                 Mod.Error(e);
                 return text;

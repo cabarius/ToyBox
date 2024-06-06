@@ -82,8 +82,7 @@ namespace ModKit.Utility {
 #if MARK_DEBUG
                 if (detail) Mod.Log($"{(cnt++)} - badtag - ({htmlEnd + 1}, {htmlStart}) {malformedTag} ");
 #endif
-            }
-            else if (htmlEnd < len) {
+            } else if (htmlEnd < len) {
                 segment = source.Substring(htmlEnd + 1, len - htmlEnd - 1);
 #if MARK_DEBUG
                 if (detail) Mod.Log($"{(cnt++)} - segment - ({htmlEnd + 1}, {len}) {segment} ");

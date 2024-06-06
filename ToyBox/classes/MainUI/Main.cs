@@ -110,8 +110,7 @@ namespace ToyBox {
                     var messageLog = LogThreadService.Instance.m_Logs[LogChannelType.Dialog].FirstOrDefault(x => x is DialogLogThread);
                     messageLog?.AddMessage(message);
                 };
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Mod.Error(e.ToString());
                 throw e;
             }
@@ -137,8 +136,7 @@ namespace ToyBox {
                 if (!File.Exists(thisSettingsPath)) {
                     Mod.Log("No ToyBox settings found... creating default settings".yellow());
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Mod.Error(e);
             }
             Settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
@@ -207,8 +205,7 @@ namespace ToyBox {
                     () => {
                         if (BlueprintLoader.Shared.IsLoading) {
                             Label("Blueprints".orange().bold() + " loading: " + BlueprintLoader.Shared.progress.ToString("P2").cyan().bold());
-                        }
-                        else Space(25);
+                        } else Space(25);
                     },
                     (oldTab, newTab) => {
                         if (partyTabID == -1) {
@@ -228,8 +225,7 @@ namespace ToyBox {
                     s => s.localize(),
                     tabs
                     );
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Console.Write($"{e}");
                 _caughtException = e;
                 ReflectionSearch.Shared.Stop();

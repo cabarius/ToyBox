@@ -84,8 +84,7 @@ namespace ToyBox {
                 var etude = etudesTree.Get(etudeBP);
                 if (etude != null)
                     return etudesTree.EtudeCanPlay(etude);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Mod.Error(ex);
             }
             return true;
@@ -120,8 +119,7 @@ namespace ToyBox {
                 int num = ((component != null) ? component.LevelLimit : 0);
                 if (Main.Settings.toggleSetDefaultRespecLevelZero) {
                     return ch.Progression.CharacterLevel > 0;
-                }
-                else {
+                } else {
                     return ch.Progression.CharacterLevel > num;
                 }
             }

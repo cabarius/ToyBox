@@ -123,8 +123,7 @@ namespace ToyBox.BagOfPatches {
                 try {
                     Mod.Debug($"refill {item.Blueprint.Name.cyan()}");
                     __instance.InsertItem(item);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Mod.Error($"{e}");
                 }
                 yield return null;
@@ -163,8 +162,7 @@ namespace ToyBox.BagOfPatches {
                         var target = RTExtensions.GetCurrentCharacter();
                         Mod.Debug($"user: {user.CharacterName} - target:{target.CharacterName}");
                         item.TryUseFromInventory(user, target);
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         Mod.Error($"InventorySlotPCView_OnClick_Patch - {e}");
                     }
                     return false;

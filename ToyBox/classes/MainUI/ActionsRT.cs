@@ -73,8 +73,7 @@ namespace ToyBox {
                 var partyCharacters = Game.Instance.Player.Party.Select(u => new UnitReference(u)).ToList(); ;
                 if ((partyCharacters != null ? (partyCharacters.Select(r => r.Entity).SequenceEqual(Game.Instance.Player.Party) ? 1 : 0) : 1) != 0)
                     return;
-            }
-            else {
+            } else {
                 foreach (var temp in Game.Instance.Player.RemoteCompanions.ToTempList())
                     temp.IsInGame = false;
                 Game.Instance.Player.FixPartyAfterChange();

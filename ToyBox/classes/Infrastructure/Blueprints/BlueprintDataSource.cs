@@ -33,8 +33,7 @@ namespace ToyBox {
                 SimpleBlueprint bp;
                 try {
                     bp = bpCache.Load(entry.Key);
-                }
-                catch {
+                } catch {
                     Mod.Warn($"cannot load GUID: {entry.Key}");
                     continue;
                 }

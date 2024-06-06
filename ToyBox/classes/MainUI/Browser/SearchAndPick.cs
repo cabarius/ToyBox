@@ -185,8 +185,7 @@ namespace ToyBox {
                     collationKeys.Sort(Comparer<string>.Create((x, y) => {
                         return SearchAndPickBrowser.collatedDefinitions[y].Count.CompareTo(SearchAndPickBrowser.collatedDefinitions[x].Count);
                     }));
-                }
-                else {
+                } else {
                     collationKeys.Sort(Comparer<string>.Create((x, y) => {
                         if (char.IsNumber(x[x.Length - 1]) && char.IsNumber(y[y.Length - 1])) {
                             int numberOfDigitsAtEndx = 0;
@@ -339,8 +338,7 @@ namespace ToyBox {
                                 // var lockIndex = titles.IndexOf("Lock".localize());
                                 if (removeIndex > -1 || lockIndex > -1) {
                                     title = GetTitle(bp, name => name.cyan().bold());
-                                }
-                                else {
+                                } else {
                                     title = GetTitle(bp, name => name.orange().bold());
                                 }
                                 titleWidth = (remainingWidth / (IsWide ? 3 : 4));
@@ -349,8 +347,7 @@ namespace ToyBox {
     ) {
                                     if (Browser.DetailToggle(text, bp, bp, (int)titleWidth))
                                         SearchAndPickBrowser.ReloadData();
-                                }
-                                else
+                                } else
                                     Label(text, Width((int)titleWidth));
                                 remWidth -= titleWidth;
 
@@ -369,8 +366,7 @@ namespace ToyBox {
 #if DEBUG
                                         Label(flagBP.GetDescription().green());
 #endif
-                                    }
-                                    else {
+                                    } else {
                                         // FIXME - perf bottleneck 
                                         var unlockIndex = titles.IndexOf("Unlock".localize());
                                         if (unlockIndex >= 0) {
@@ -381,8 +377,7 @@ namespace ToyBox {
                                         }
                                     }
                                     remWidth -= 300;
-                                }
-                                else {
+                                } else {
                                     for (var ii = 0; ii < maxActions; ii++) {
                                         if (ii < actionCount) {
                                             var action = actions.ElementAt(ii);
@@ -400,8 +395,7 @@ namespace ToyBox {
                                             Space(10);
                                             remWidth -= 174.0f + extraSpace;
 
-                                        }
-                                        else {
+                                        } else {
                                             Space(174);
                                         }
                                     }
@@ -454,8 +448,7 @@ namespace ToyBox {
                                         if (Settings.showAssetIDs) {
                                             Label(typeString, rarityButtonStyle);
                                             ClipboardLabel(bp.AssetGuid.ToString(), ExpandWidth(false));
-                                        }
-                                        else Label(typeString, rarityButtonStyle);
+                                        } else Label(typeString, rarityButtonStyle);
                                         Space(17);
                                     }
                                     if (description.Length > 0) Label(description.green(), Width(remWidth));

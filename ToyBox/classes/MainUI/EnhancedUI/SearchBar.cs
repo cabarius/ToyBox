@@ -32,8 +32,7 @@ namespace ToyBox {
                 Dropdown = GameObject.transform.Find("FieldPlace/SearchField/SearchBackImage/Dropdown").GetComponent<TMP_Dropdown>();
                 DropdownButton = GameObject.transform.Find("FieldPlace/SearchField/SearchBackImage/Dropdown/GenerateButtonPlace").GetComponent<OwlcatButton>();
                 DropdownIconObject = GameObject.transform.Find("FieldPlace/SearchField/SearchBackImage/Dropdown/GenerateButtonPlace/GenerateButton/Icon").gameObject;
-            }
-            else
+            } else
                 Object.Destroy(GameObject.transform.Find("FieldPlace/SearchField/SearchBackImage/Dropdown").gameObject);
             PlaceholderText = GameObject.transform.Find("FieldPlace/SearchField/SearchBackImage/Placeholder/Label").GetComponent<TextMeshProUGUI>();
             InputField = GameObject.transform.Find("FieldPlace/SearchField/SearchBackImage/InputField").GetComponent<TMP_InputField>();
