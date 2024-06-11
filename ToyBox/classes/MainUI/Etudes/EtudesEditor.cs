@@ -171,9 +171,6 @@ namespace ToyBox {
                 //etudeChildrenDrawer.OnGUI();
                 //}
             }
-#if DEBUG
-            ActionButton("Generate Comment Translation Table".localize(), () => { });
-#endif
             foreach (var item in toValues) {
                 var mutator = actionLookup[item.Key];
                 if (mutator != null)
