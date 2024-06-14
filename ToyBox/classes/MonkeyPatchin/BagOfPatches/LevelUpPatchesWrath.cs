@@ -33,6 +33,7 @@ using DG.Tweening.Core;
 using System.Diagnostics;
 using Kingmaker.EntitySystem.Entities;
 using Owlcat.Runtime.Core.Logging;
+using Kingmaker.UI.MVVM._VM.CharGen.Phases.Alignment;
 
 namespace ToyBox.BagOfPatches {
     internal static class LevelUp {
@@ -512,6 +513,25 @@ namespace ToyBox.BagOfPatches {
                     __result = true;
                 }
             }
+        }
+
+        [HarmonyPatch(typeof(CharGenAlignmentPhaseVM), nameof(CharGenAlignmentPhaseVM.SelectionStateIsCompleted))]
+        public static class CharGenAlignmentPhaseVM_SelectionStateIsCompleted_Patch {
+            [HarmonyPostfix]
+            public static void SelectionStateIsCompleted(ref bool __result) {
+                if (settings.toggleIgnoreAlignmentWhenChoosingClass) {
+                    __result = true;
+                }
+            }
+        }
+        [HarmonyPatch(typeof(CharGenAlignmentSectorVM), nameof(CharGenAlignmentSectorVM.UpdateRestriction))]
+        public static class CharGenAlignmentSectorVM_UpdateRestriction_Patch {
+            [HarmonyPrefix]
+            public static void UpdateRestriction(ref bool restricted) {
+                if (settings.toggleIgnoreAlignmentWhenChoosingClass) {
+                    restricted = false;
+                }
+            } 
         }
 
         [HarmonyPatch(typeof(PrerequisiteAlignment), nameof(PrerequisiteAlignment.CheckInternal))]

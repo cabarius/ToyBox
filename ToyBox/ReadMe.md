@@ -37,6 +37,12 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
+### ToyBox Wrath - Ver 1.5.14 (built for 2.3.0bb)
+* (***ADDB***) Fixed Ignore Alignment When Choosing A Class not working for some classes (e.g. Bloodseeker).
+* (***ADDB***) Fixed Outdated Repository Link.
+* (***ADDB***) Fixed Ignore Alignment When Choosing A Class somehow breaking alignment window (Owlcat Logger is null? Why?).
+* (***ADDB***) Port to .NET Framework v4.8.1 (should make no difference to users; should improve compatability with other mods if necessary) ***This will increase minimum UMM version to a pretty recent version (at the same time it will prevent possible bugs because of UMM version being too recent)***.
+
 ### ToyBox Wrath - Ver 1.5.13 (built for 2.3.0bb)
 * (***ADDB***) ***Important for users of Jealousy Begone!*** In BagOfTricks => Dialog, added an option to pick your romance for the end of DLC6.
 * (***ADDB***) It is now possible to use the Spellbook Editor to change the Level of Spells (This allows fusing with Cantrip spells, i.e. raise Cantrip level to 1 and then fuse).

@@ -2,12 +2,12 @@
     <Import Project="$(SolutionDir)GamePath.props" Condition="Exists('$(SolutionDir)GamePath.props')" />
     <Import Project="$(SolutionDir)ModKit\ModKitSrc.projitems" Label="Shared" />
     <PropertyGroup>
-        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+        <TargetFramework>net481</TargetFramework>
         <AssemblyName>ToyBox</AssemblyName>
         <Description>ToyBox</Description>
         <AppDesignerFolder>Properties</AppDesignerFolder>
         <OutputType>Library</OutputType>
-        <Version>1.5.13</Version>
+        <Version>1.5.14</Version>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <FileAlignment>512</FileAlignment>
         <LangVersion>latest</LangVersion>
