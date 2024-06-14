@@ -7,6 +7,6 @@
   "Requirements": [],
   "AssemblyName": "ToyBox.dll",
   "EntryMethod": "ToyBox.Main.Load",
-  "HomePage": "https://github.com/xADDBx/ToyBox/tree/RT",
-  "Repository": "https://raw.githubusercontent.com/xADDBx/ToyBox/RT/ToyBox/ModDetails/Repository.json"
+  "HomePage": "https://github.com/xADDBx/ToyBox-RogueTrader",
+  "Repository": "https://raw.githubusercontent.com/xADDBx/ToyBox-RogueTrader/main/ToyBox/ModDetails/Repository.json"
 }
