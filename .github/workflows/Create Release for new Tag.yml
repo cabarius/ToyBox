@@ -16,7 +16,7 @@ jobs:
     steps:
     - name: Build
       id: build-action
-      uses: xADDBx/BuildOwlcatMod@v1
+      uses: xADDBx/BuildOwlcatMod@v2
       with:
         GAME_NAME: Wrath
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
