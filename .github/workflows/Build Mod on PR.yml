@@ -17,7 +17,7 @@ jobs:
       with:
         GAME_NAME: RogueTrader
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GITHUB_NAME: xADDBx
+        GITHUB_NAME: ${{ github.repository_owner }}
         PACKAGE_OWNER: xADDBx
         BRANCH_REF: ${{ github.event.pull_request.head.sha }}
 
