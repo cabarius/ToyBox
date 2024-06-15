@@ -37,6 +37,9 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
+### ToyBox Wrath - Ver 1.5.15 (built for 2.3.1e)
+* (***ADDB***) Simply recompile for new version.
+
 ### ToyBox Wrath - Ver 1.5.14 (built for 2.3.0bb)
 * (***ADDB***) Fixed Ignore Alignment When Choosing A Class not working for some classes (e.g. Bloodseeker).
 * (***ADDB***) Fixed Outdated Repository Link.
