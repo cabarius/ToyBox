@@ -17,12 +17,10 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(BlueprintEtude), nameof(BlueprintEtude.IsReadOnly), MethodType.Getter)]
         public static class BlueprintEtude_IsReadOnly_Patch {
-            private static bool Prefix(ref bool __result) {
+            private static void Postfix(ref bool __result) {
                 if (Settings.allEtudesReadable) {
                     __result = false;
-                    return false;
                 }
-                return true;
             }
         }
     }
