@@ -462,7 +462,13 @@ namespace ToyBox.BagOfPatches {
                 return true;
             }
         }
-
+        [HarmonyPatch(typeof(TutorialSystem), nameof(TutorialSystem.Trigger))]
+        private static class TutorialSystem_Trigger_Patch {
+            [HarmonyPrefix]
+            private static bool Trigger() {
+                return !Settings.toggleForceDisableTutorials;
+            }
+        }
         [HarmonyPatch(typeof(ItemsCollection), nameof(ItemsCollection.DeltaWeight))]
         public static class NoWeight_Patch1 {
             public static void Refresh(bool SetEquipmentWeightZero) {

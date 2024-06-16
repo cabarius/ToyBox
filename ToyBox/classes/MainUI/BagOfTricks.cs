@@ -374,6 +374,12 @@ namespace ToyBox {
                        Label("Some players find spiders and other swarms icky. This replaces them with something more pleasant".localize().green());
                    },
                    () => Toggle("Make tutorials not appear if disabled in settings".localize(), ref Settings.toggleForceTutorialsToHonorSettings),
+                   () => {
+                       if (Settings.toggleForceTutorialsToHonorSettings) {
+                           Space(25);
+                           Toggle("Disable tutorials forcefully".localize(), ref Settings.toggleForceDisableTutorials);
+                       }
+                   },
                    () => Toggle("Refill consumables in belt slots if in inventory".localize(), ref Settings.togglAutoEquipConsumables),
                    () => {
                        var modifier = KeyBindings.GetBinding("InventoryUseModifier");

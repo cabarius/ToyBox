@@ -39,6 +39,7 @@
 
 ### ToyBox Wrath - Ver 1.5.17 (built for 2.3.1e)
 * (***ADDB***) Fix the Magus: Allow Spell Combat. This time for real.
+* (***ADDB***) Maybe added setting to forcefully disable all tutorials.
 * (***Delth***) Add toggle to remove read-onlyness from etudes. 
 
 ### ToyBox Wrath - Ver 1.5.16 (built for 2.3.1e)

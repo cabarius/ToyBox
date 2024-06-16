@@ -186,6 +186,7 @@ namespace ToyBox {
         public bool toggleBlockUnrecruit = false;
         public bool toggleAllowAchievementsDuringModdedGame = false;
         public bool toggleForceTutorialsToHonorSettings = false;
+        public bool toggleForceDisableTutorials = false;
         public bool toggleAllowAnyGenderRomance = false;
         public bool toggleMultipleRomance = false;
         public int pickedDLC6Override = 0;
