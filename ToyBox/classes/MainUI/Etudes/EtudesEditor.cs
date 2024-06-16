@@ -80,6 +80,8 @@ namespace ToyBox {
                 25.space();
                 Toggle("Show GUIDs".localize(), ref Main.Settings.showAssetIDs);
                 25.space();
+                Toggle("Allow to start read-only etudes".localize(), ref Main.Settings.allEtudesReadable);
+                25.space();
                 Toggle("Show Comments (some in Russian)".localize(), ref Main.Settings.showEtudeComments);
                 //UI.Label($"Etude Hierarchy : {(loadedEtudes.Count == 0 ? "" : loadedEtudes[parent].Name)}", UI.AutoWidth());
                 //UI.Label($"H : {(loadedEtudes.Count == 0 ? "" : loadedEtudes[selected].Name)}");
