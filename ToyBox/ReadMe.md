@@ -37,6 +37,9 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
+### ToyBox Wrath - Ver 1.5.16 (built for 2.3.1e)
+* (***ADDB***) Maybe make Magus: Always Allow Spell Combat work with dual wielding.
+
 ### ToyBox Wrath - Ver 1.5.15 (built for 2.3.1e)
 * (***ADDB***) Simply recompile for new version.
 

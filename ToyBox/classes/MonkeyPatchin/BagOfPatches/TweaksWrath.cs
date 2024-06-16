@@ -39,6 +39,7 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Components.CasterCheckers;
 using Kingmaker.UnitLogic.Abilities.Components.TargetCheckers;
 using Kingmaker.UnitLogic.ActivatableAbilities;
+using Kingmaker.UnitLogic.ActivatableAbilities.Restrictions;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Class.Kineticist;
 using Kingmaker.UnitLogic.Class.Kineticist.ActivatableAbility;
@@ -578,6 +579,16 @@ namespace ToyBox.BagOfPatches {
         public static class UnitPartMagus_IsSpellCombatThisRoundAllowed_Patch {
             public static void Postfix(ref bool __result, UnitPartMagus __instance) {
                 if (Settings.toggleAlwaysAllowSpellCombat && __instance.Owner != null && __instance.Owner.IsPartyOrPet()) {
+                    __result = true;
+                }
+            }
+        }
+        [HarmonyPatch(typeof(ActivatableAbilityRestrictionByEquipmentSet), nameof(ActivatableAbilityRestrictionByEquipmentSet.IsAvailable))]
+        public static class ActivatableAbilityRestrictionByEquipmentSet_IsAvailable_Patch {
+            [HarmonyPostfix]
+            public static void IsAvailable(ActivatableAbilityRestrictionByEquipmentSet __instance, ref bool __result) {
+                const string SpellCombatAbilityGUID = "8898a573e8a8a184b8186dbc3a26da74";
+                if (Settings.toggleAlwaysAllowSpellCombat && __instance.Fact.Blueprint.AssetGuid.ToString().ToLower() == SpellCombatAbilityGUID) {
                     __result = true;
                 }
             }
