@@ -589,34 +589,17 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPostfix]
             public static void IsAvailable(ActivatableAbilityRestrictionByEquipmentSet __instance, ref bool __result) {
                 const string SpellCombatAbilityGUID = "8898a573e8a8a184b8186dbc3a26da74";
-                if (Settings.toggleAlwaysAllowSpellCombat && __instance.Fact.Blueprint.AssetGuid.ToString().ToLower() == SpellCombatAbilityGUID) {
+                if (Settings.toggleAlwaysAllowSpellCombat && __instance.Fact.Blueprint.AssetGuid.ToString().ToLower() == SpellCombatAbilityGUID && __instance.Owner.IsPartyOrPet()) {
                     __result = true;
                 }
             }
         }
-        [HarmonyPatch(typeof(SetMagusFeatureActive), nameof(SetMagusFeatureActive.OnTurnOn))]
-        public static class SetMagusFeatureActive_OnActivate_Patch {
+        [HarmonyPatch(typeof(DeactivateOnGripChanged), nameof(DeactivateOnGripChanged.HandleUnitChangedGrip))]
+        public static class DeactivateOnGripChanged_HandleUnitChangedGrip {
             [HarmonyPrefix]
-            public static bool OnTurnOn(SetMagusFeatureActive __instance) {
-                if (Settings.toggleAlwaysAllowSpellCombat) {
-                    UnitPartMagus unitPartMagus = __instance.Owner.Get<UnitPartMagus>();
-                    if (!unitPartMagus) {
-                        PFLog.Default.Error(__instance, "Owner has no UnitPartMagus", Array.Empty<object>());
-                        return false;
-                    }
-                    SetMagusFeatureActive.FeatureType feature = __instance.m_Feature;
-                    if (feature != SetMagusFeatureActive.FeatureType.SpellCombat) {
-                        if (feature != SetMagusFeatureActive.FeatureType.Spellstrike) {
-                            throw new ArgumentOutOfRangeException();
-                        }
-                        unitPartMagus.Spellstrike.Active = true;
-                    } else {
-                        unitPartMagus.SpellCombat.Active = true;
-                    }
-                    EventBus.RaiseEvent<IUnityChangedGripAutoModeHandler>(delegate (IUnityChangedGripAutoModeHandler x)
-                    {
-                        x.HandleUnitChangedGripAutoMode(__instance.Owner);
-                    }, true);
+            public static bool HandleUnitChangedGrip(DeactivateOnGripChanged __instance) {
+                const string SpellCombatAbilityGUID = "8898a573e8a8a184b8186dbc3a26da74";
+                if (Settings.toggleAlwaysAllowSpellCombat && __instance.Fact.Blueprint.AssetGuid.ToString().ToLower() == SpellCombatAbilityGUID && __instance.Owner.IsPartyOrPet()) {
                     return false;
                 }
                 return true;
