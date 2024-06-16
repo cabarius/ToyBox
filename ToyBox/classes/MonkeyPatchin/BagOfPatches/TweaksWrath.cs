@@ -600,10 +600,10 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(DeactivateOnGripChanged), nameof(DeactivateOnGripChanged.HandleUnitChangedGrip))]
-        public static class DeactivateOnGripChanged_HandleUnitChangedGrip {
+        [HarmonyPatch(typeof(DeactivateOnGripChanged), nameof(DeactivateOnGripChanged.TryDeactivate))]
+        public static class DeactivateOnGripChanged_TryDeactivate {
             [HarmonyPrefix]
-            public static bool HandleUnitChangedGrip(DeactivateOnGripChanged __instance) {
+            public static bool TryDeactivate(DeactivateOnGripChanged __instance) {
                 const string SpellCombatAbilityGUID = "8898a573e8a8a184b8186dbc3a26da74";
                 if (Settings.toggleAlwaysAllowSpellCombat && __instance.Fact.Blueprint.AssetGuid.ToString().ToLower() == SpellCombatAbilityGUID && __instance.Owner.IsPartyOrPet()) {
                     return false;
