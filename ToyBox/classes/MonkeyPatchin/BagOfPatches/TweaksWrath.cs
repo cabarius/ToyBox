@@ -597,7 +597,7 @@ namespace ToyBox.BagOfPatches {
         [HarmonyPatch(typeof(SetMagusFeatureActive), nameof(SetMagusFeatureActive.OnTurnOn))]
         public static class SetMagusFeatureActive_OnActivate_Patch {
             [HarmonyPrefix]
-            public static bool OnActivate(SetMagusFeatureActive __instance) {
+            public static bool OnTurnOn(SetMagusFeatureActive __instance) {
                 if (Settings.toggleAlwaysAllowSpellCombat) {
                     UnitPartMagus unitPartMagus = __instance.Owner.Get<UnitPartMagus>();
                     if (!unitPartMagus) {
