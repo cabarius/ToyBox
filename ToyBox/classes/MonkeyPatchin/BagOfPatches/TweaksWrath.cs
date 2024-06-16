@@ -43,6 +43,7 @@ using Kingmaker.UnitLogic.ActivatableAbilities.Restrictions;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Class.Kineticist;
 using Kingmaker.UnitLogic.Class.Kineticist.ActivatableAbility;
+using Kingmaker.UnitLogic.FactLogic;
 using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Mechanics.Actions;
 using Kingmaker.UnitLogic.Parts;
@@ -591,6 +592,34 @@ namespace ToyBox.BagOfPatches {
                 if (Settings.toggleAlwaysAllowSpellCombat && __instance.Fact.Blueprint.AssetGuid.ToString().ToLower() == SpellCombatAbilityGUID) {
                     __result = true;
                 }
+            }
+        }
+        [HarmonyPatch(typeof(SetMagusFeatureActive), nameof(SetMagusFeatureActive.OnTurnOn))]
+        public static class SetMagusFeatureActive_OnActivate_Patch {
+            [HarmonyPrefix]
+            public static bool OnActivate(SetMagusFeatureActive __instance) {
+                if (Settings.toggleAlwaysAllowSpellCombat) {
+                    UnitPartMagus unitPartMagus = __instance.Owner.Get<UnitPartMagus>();
+                    if (!unitPartMagus) {
+                        PFLog.Default.Error(__instance, "Owner has no UnitPartMagus", Array.Empty<object>());
+                        return false;
+                    }
+                    SetMagusFeatureActive.FeatureType feature = __instance.m_Feature;
+                    if (feature != SetMagusFeatureActive.FeatureType.SpellCombat) {
+                        if (feature != SetMagusFeatureActive.FeatureType.Spellstrike) {
+                            throw new ArgumentOutOfRangeException();
+                        }
+                        unitPartMagus.Spellstrike.Active = true;
+                    } else {
+                        unitPartMagus.SpellCombat.Active = true;
+                    }
+                    EventBus.RaiseEvent<IUnityChangedGripAutoModeHandler>(delegate (IUnityChangedGripAutoModeHandler x)
+                    {
+                        x.HandleUnitChangedGripAutoMode(__instance.Owner);
+                    }, true);
+                    return false;
+                }
+                return true;
             }
         }
 
