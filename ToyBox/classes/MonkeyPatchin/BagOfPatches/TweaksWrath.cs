@@ -594,7 +594,7 @@ namespace ToyBox.BagOfPatches {
                 }
             }
         }
-        [HarmonyPatch(typeof(SetMagusFeatureActive), nameof(SetMagusFeatureActive.OnActivate))]
+        [HarmonyPatch(typeof(SetMagusFeatureActive), nameof(SetMagusFeatureActive.OnTurnOn))]
         public static class SetMagusFeatureActive_OnActivate_Patch {
             [HarmonyPrefix]
             public static bool OnActivate(SetMagusFeatureActive __instance) {
