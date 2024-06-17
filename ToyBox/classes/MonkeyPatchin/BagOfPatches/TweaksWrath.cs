@@ -8,6 +8,7 @@ using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
+using Kingmaker.Blueprints.Root;
 using Kingmaker.Cheats;
 using Kingmaker.Controllers;
 using Kingmaker.Controllers.Combat;
@@ -43,6 +44,8 @@ using Kingmaker.UnitLogic.ActivatableAbilities.Restrictions;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Class.Kineticist;
 using Kingmaker.UnitLogic.Class.Kineticist.ActivatableAbility;
+using Kingmaker.UnitLogic.Commands;
+using Kingmaker.UnitLogic.Commands.Base;
 using Kingmaker.UnitLogic.FactLogic;
 using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Mechanics.Actions;
@@ -55,10 +58,14 @@ using Owlcat.Runtime.Core.Utils;
 using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using ToyBox;
+using TurnBased.Controllers;
+using TurnBased.Utility;
 using UnityEngine;
 using static Kingmaker.Utility.MassLootHelper;
 using Object = UnityEngine.Object;
@@ -581,13 +588,26 @@ namespace ToyBox.BagOfPatches {
         public static class KineticistAbilityBurnCost_GetTotal_Patch {
             public static void Postfix(ref int __result) => __result = Math.Max(0, __result - Settings.kineticistBurnReduction);
         }
-
-        [HarmonyPatch(typeof(UnitPartMagus), nameof(UnitPartMagus.IsSpellCombatThisRoundAllowed))]
-        public static class UnitPartMagus_IsSpellCombatThisRoundAllowed_Patch {
-            public static void Postfix(ref bool __result, UnitPartMagus __instance) {
+        [HarmonyPatch(typeof(UnitPartMagus))]
+        public static class UnitPartMagus_Patches {
+            [HarmonyPatch(nameof(UnitPartMagus.IsSpellCombatThisRoundAllowed)), HarmonyPostfix]
+            public static void IsSpellCombatThisRoundAllowed(ref bool __result, UnitPartMagus __instance) {
                 if (Settings.toggleAlwaysAllowSpellCombat && __instance.Owner != null && __instance.Owner.IsPartyOrPet()) {
                     __result = true;
                 }
+            }
+            [HarmonyPatch(nameof(UnitPartMagus.CanUseSpellCombat), MethodType.Getter), HarmonyPostfix]
+            public static void CanUseSpellCombat(ref bool __result, UnitPartMagus __instance) {
+                if (Settings.toggleAlwaysAllowSpellCombat && __instance.Owner != null && __instance.Owner.IsPartyOrPet()) {
+                    __result = true;
+                }
+            }
+            [HarmonyPatch(nameof(UnitPartMagus.IsSpellFromMagusSpellList)), HarmonyFinalizer]
+            public static Exception IsSpellFromMagusSpellList(ref bool __result, UnitPartMagus __instance) {
+                if (Settings.toggleAlwaysAllowSpellCombat && __instance.Owner != null && __instance.Owner.IsPartyOrPet()) {
+                    __result = true;
+                }
+                return null;
             }
         }
         [HarmonyPatch(typeof(ActivatableAbilityRestrictionByEquipmentSet), nameof(ActivatableAbilityRestrictionByEquipmentSet.IsAvailable))]
