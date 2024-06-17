@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using Kingmaker;
 using Kingmaker.Achievements;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Items.Weapons;
@@ -47,6 +48,7 @@ using UnityEngine;
 using Utilities = Kingmaker.Cheats.Utilities;
 
 namespace ToyBox.BagOfPatches {
+    [HarmonyPatch]
     internal static partial class Misc {
         public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
@@ -66,6 +68,16 @@ namespace ToyBox.BagOfPatches {
                 Mod.Log("SaveManager_SaveRoutine_Patch");
                 Settings.SavePerSaveSettings();
             }
+        }
+
+        [HarmonyPatch(typeof(BlueprintParametrizedFeature), nameof(BlueprintParametrizedFeature.GetFullSelectionItems))]
+        [HarmonyFinalizer]
+        public static Exception GetFullSelectionItems(Exception __exception, BlueprintParametrizedFeature __instance) {
+            if (__exception != null) {
+                Mod.Warn(__exception.ToString());
+                Mod.Warn($"{__instance.Name ?? "null1"} + {__instance.name ?? "null2"} + {__instance.ToString() ?? "null3"}");
+            }
+            return null;
         }
 
         public static BlueprintAbility ExtractSpell([NotNull] ItemEntity item) {
