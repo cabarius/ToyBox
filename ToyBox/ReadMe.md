@@ -37,13 +37,11 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
-### ToyBox Wrath - Ver 1.5.17 (built for 2.3.1e)
-* (***ADDB***) Fix the Magus: Allow Spell Combat. This time for real.
+### ToyBox Wrath - Ver 1.5.18 (built for 2.3.1e)
+* (***ADDB***) Fix the Magus: Allow Spell Combat for dual wielding.
 * (***ADDB***) Maybe added setting to forcefully disable all tutorials.
+* (***ADDB***) Fix MysticalMayhem breaking Search 'n Pick. Is this mod even working correctly currently?
 * (***Delth***) Add toggle to remove read-onlyness from etudes. 
-
-### ToyBox Wrath - Ver 1.5.16 (built for 2.3.1e)
-* (***ADDB***) Maybe make Magus: Always Allow Spell Combat work with dual wielding.
 
 ### ToyBox Wrath - Ver 1.5.15 (built for 2.3.1e)
 * (***ADDB***) Simply recompile for new version.
