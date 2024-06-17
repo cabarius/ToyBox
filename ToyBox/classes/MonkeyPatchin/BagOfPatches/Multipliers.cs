@@ -189,6 +189,7 @@ namespace ToyBox.BagOfPatches {
                 try {
                     if (!caster.IsPlayersEnemy && isGoodBuff(blueprint)) {
                         if (duration != null) {
+                            Mod.Debug($"Adjust duration for: {blueprint}");
                             duration = GetNewBuffDuration((TimeSpan)duration);
                         }
                     }
@@ -211,6 +212,7 @@ namespace ToyBox.BagOfPatches {
                     if (!parentContext.MaybeCaster.IsPlayersEnemy && isGoodBuff(blueprint)) {
                         if (duration != null) {
                             var oldDuration = duration;
+                            Mod.Debug($"Adjust duration for: {blueprint}");
                             duration = GetNewBuffDuration((TimeSpan)duration);
                             //Mod.Warn($"BuffCollection_AddBuff2_patch - buff: {blueprint.name} duration: {oldDuration} => {duration} - ticks: {duration.Value.Ticks} * {settings.buffDurationMultiplierValue}");
                         }
@@ -233,7 +235,7 @@ namespace ToyBox.BagOfPatches {
             // Ok we have a duration we can actually modify without overflow
             var ticks = originalDuration.Ticks;
             var adjusted = (long)(ticks * settings.buffDurationMultiplierValue);
-            Mod.Log($"originalDur: {originalDuration} ticks: {ticks} adjusted:{adjusted}");
+            Mod.Debug($"originalDur: {originalDuration} ticks: {ticks} adjusted:{adjusted}");
             adjusted = Math.Max(0, adjusted);
             return TimeSpan.FromTicks(Convert.ToInt64(adjusted));
         }
