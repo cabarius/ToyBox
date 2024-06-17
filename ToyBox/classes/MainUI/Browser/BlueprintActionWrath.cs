@@ -39,8 +39,9 @@ namespace ToyBox {
         private static Dictionary<BlueprintParametrizedFeature, IFeatureSelectionItem[]> parametrizedSelectionItems = new();
         public static IFeatureSelectionItem ParametrizedSelectionItems(this BlueprintParametrizedFeature feature, int index) {
             if (parametrizedSelectionItems.TryGetValue(feature, out var value)) return index < value.Length ? value[index] : null;
-            value = feature.Items.OrderBy(x => x.Name).ToArray();
-            if (value == null) return null;
+            var tmp = feature?.Items;
+            if (tmp == null) return null;
+            value = tmp.OrderBy(x => x.Name).ToArray();
             parametrizedSelectionItems[feature] = value;
             return index < value.Length ? value[index] : null;
         }
@@ -105,7 +106,7 @@ namespace ToyBox {
                     ch?.Progression?.Features?.RemoveFact(fact);
                 },
                 (bp, ch, index) => {
-                    if (bp.Items.Count() == 0) return false;
+                    if ((bp.Items?.Count() ?? 0) == 0) return false;
                     int itemIndex;
                     if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
                         itemIndex = SearchAndPick.ParamSelected[index];
