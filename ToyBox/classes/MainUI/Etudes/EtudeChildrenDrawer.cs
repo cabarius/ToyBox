@@ -10,41 +10,17 @@ using System.Threading.Tasks;
 namespace ToyBox {
 
     public class EtudeChildrenDrawer {
-        private Dictionary<BlueprintGuid, EtudeInfo> loadedEtudes = new Dictionary<BlueprintGuid, EtudeInfo>();
-        private Dictionary<BlueprintGuid, EtudeDrawerData> etudeDrawerData = new Dictionary<BlueprintGuid, EtudeDrawerData>();
+        private readonly Dictionary<BlueprintGuid, EtudeInfo> loadedEtudes = [];
         private BlueprintGuid parentEtude;
-        //private float chainedShift = 40;
-        //private float linkedShift = 20;
-        //private float verticalShift = 20;
-        //private float lastRectMaxY;
-        //private Rect workspaceRect;
-        private int maxDepthToDefaultShow = 0;
-        private bool FirstLayoutProcess;
         public float DefaultExpandedNodeWidth = 600;
 
         public ReferenceGraph ReferenceGraph;
-        private ReferenceGraph.Entry selectedEntry;
-        private List<ReferenceGraph.Ref> startReferences = new List<ReferenceGraph.Ref>();
-        private List<ReferenceGraph.Ref> completeReferences = new List<ReferenceGraph.Ref>();
-        private List<ReferenceGraph.Ref> checkReferences = new List<ReferenceGraph.Ref>();
-        private List<ReferenceGraph.Ref> synchronizedReferences = new List<ReferenceGraph.Ref>();
-        private List<ReferenceGraph.Ref> otherReferences = new List<ReferenceGraph.Ref>();
-        private List<BlueprintGuid> conflictingGroupReferences = new List<BlueprintGuid>();
-        private bool startFoldout = false;
-        private bool completeFoldout = false;
-        private bool checkFoldout = false;
-        private bool synchronizedFoldout = false;
-        private bool otherFoldout = false;
-        private bool conflictingGroupFoldout = false;
-
-        private string oldFind = "";
-        private Dictionary<BlueprintGuid, EtudeInfo> foundedEtudes = new Dictionary<BlueprintGuid, EtudeInfo>();
 
         public static bool newParentFromContestComand = false;
         public static BlueprintGuid newParentID;
 
-        private BlueprintGuid SelectedId;
-        private string SelectedName = "";
+        private readonly BlueprintGuid SelectedId = default;
+        private readonly string SelectedName = "";
 
         private EtudeChildrenDrawer() {
         }
@@ -53,11 +29,7 @@ namespace ToyBox {
             loadedEtudes = etudes;
         }
 
-        public void SetParent(BlueprintGuid parent) {
-            parentEtude = parent;
-            etudeDrawerData = new Dictionary<BlueprintGuid, EtudeDrawerData>();
-            FirstLayoutProcess = true;
-        }
+        public void SetParent(BlueprintGuid parent) => parentEtude = parent;
 
         public static void TryToSetParent(BlueprintGuid parent) {
             newParentFromContestComand = true;

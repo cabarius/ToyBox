@@ -251,7 +251,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPrefix]
             public static bool AddAnswers(DialogController __instance, [NotNull] ref IEnumerable<BlueprintAnswerBase> answers, [CanBeNull] BlueprintCueBase continueCue) {
                 if (!settings.toggleShowAnswersForEachConditionalResponse) return true;
-                var  expandedAnswers = new List<BlueprintAnswerBase>();
+                var expandedAnswers = new List<BlueprintAnswerBase>();
                 foreach (var answerBase in answers) {
                     if (answerBase is BlueprintAnswer answer) {
                         if (answer.NextCue is CueSelection cueSelection) {
@@ -281,15 +281,12 @@ namespace ToyBox.BagOfPatches {
                                             expandedAnswers.Add(multiAnswer);
                                         }
                                     }
-                                }
-                                else
+                                } else
                                     expandedAnswers.Add(answer);
                             }
-                        }
-                        else
+                        } else
                             expandedAnswers.Add(answer);
-                    }
-                    else
+                    } else
                         expandedAnswers.Add(answerBase);
                 }
                 answers = expandedAnswers;
@@ -303,8 +300,7 @@ namespace ToyBox.BagOfPatches {
                 if (!settings.toggleShowAnswersForEachConditionalResponse) return true;
                 if (!__instance.CurrentDialog) {
                     __result = Game.Instance.Player.Dialog.SelectedAnswers.Where(a => a.AssetGuid == __instance.Answer.AssetGuid).Any();
-                }
-                else {
+                } else {
                     __result = Game.Instance.DialogController.LocalSelectedAnswers.Where(a => a.AssetGuid == __instance.Answer.AssetGuid).Any();
 
                 }
@@ -371,5 +367,5 @@ namespace ToyBox.BagOfPatches {
             }
         }
 #endif
-        }
+    }
 }

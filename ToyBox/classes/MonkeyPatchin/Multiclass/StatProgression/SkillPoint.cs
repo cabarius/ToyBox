@@ -53,8 +53,7 @@ namespace ToyBox.Multiclass {
                 if (totalSkillPoints.HasValue) {
                     __result = totalSkillPoints.Value;
                     return false;
-                }
-                else return true;
+                } else return true;
             }
         }
     }

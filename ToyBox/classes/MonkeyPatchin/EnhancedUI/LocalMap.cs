@@ -1,42 +1,27 @@
 ﻿using HarmonyLib;
 using Kingmaker;
 using Kingmaker.Blueprints.Area;
-using Kingmaker.Controllers;
 using Kingmaker.Controllers.Clicks.Handlers;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.FactLogic;
-using Kingmaker.UnitLogic.Interaction;
-using Kingmaker.UnitLogic.Parts;
 using Kingmaker.Utility;
-using Kingmaker.View.MapObjects;
 using Kingmaker.Visual.LocalMap;
 using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kingmaker.View;
 using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static Kingmaker.UnitLogic.Interaction.SpawnerInteractionPart;
-#if Wrath
 using Kingmaker.UI._ConsoleUI.Overtips;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap.Markers;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Markers;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
-#elif RT
-using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap;
-using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap.Common.Markers;
-using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap.PC;
-using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap;
-using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap.Utils;
-using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap.Markers;
-#endif
 
 namespace ToyBox.BagOfPatches {
     internal static class LocalMapPatches {
@@ -49,7 +34,6 @@ namespace ToyBox.BagOfPatches {
         public static Vector3 FrameRotation = Vector3.zero;
         [HarmonyPatch(typeof(LocalMapVM))]
         internal static class LocalMapVMPatch {
-#if Wrath
             public static Vector3 prevLocalPos = new Vector2();
 
             [HarmonyPatch(nameof(OnClick), new Type[] { typeof(Vector2), typeof(bool) })]
@@ -58,7 +42,7 @@ namespace ToyBox.BagOfPatches {
                 if (false && !Settings.toggleZoomableLocalMaps) return true;
                 var vector3 = LocalMapRenderer.Instance.ViewportToWorldPoint(
                         new Vector2(
-                                localPos.x / (__instance.DrawResult.Value.ColorRT.width), 
+                                localPos.x / (__instance.DrawResult.Value.ColorRT.width),
                                 localPos.y / (__instance.DrawResult.Value.ColorRT.height)
                             )
                     );
@@ -68,13 +52,11 @@ namespace ToyBox.BagOfPatches {
                 if (state) {
                     Game.Instance.CameraController.Follower.Release();
                     Game.Instance.UI.GetCameraRig().ScrollTo(vector3);
-                }
-                else {
+                } else {
                     ClickGroundHandler.MoveSelectedUnitsToPoint(vector3);
                 }
                 return false;
             }
-#endif
             [HarmonyPatch(nameof(LocalMapVM.SetMarkers))]
             [HarmonyPrefix]
             private static bool SetMarkers(LocalMapVM __instance) {
@@ -87,13 +69,10 @@ namespace ToyBox.BagOfPatches {
                 if (Game.Instance.Player.CapitalPartyMode)
                     first = first.Concat(Game.Instance.Player.RemoteCompanions.Where(u => !u.IsCustomCompanion()));
                 foreach (var unit in first)
-                    if (unit.View != null 
-                        && unit.View.enabled 
+                    if (unit.View != null
+                        && unit.View.enabled
                         && !unit
-#if RT
-                            .LifeState
-#endif
-                            .IsHiddenBecauseDead 
+                            .IsHiddenBecauseDead
                         && LocalMapModel.IsInCurrentArea(unit.Position)
                         ) {
                         __instance.MarkersVm.Add(new LocalMapCharacterMarkerVM(unit));
@@ -101,20 +80,13 @@ namespace ToyBox.BagOfPatches {
                     }
 
                 foreach (var units in Shodan.MainCharacter
-#if RT
-                                            .CombatGroup
-#endif
                                             .Memory.UnitsList) {
                     Mod.Debug($"Checking {units.Unit.CharacterName}");
                     if (!units.Unit.IsPlayerFaction
                         && (units.Unit.IsVisibleForPlayer || units.Unit.InterestingnessCoefficent() > 0)
                         && !units.Unit.Descriptor()
-#if Wrath
                                  .State.IsDead
                         && !units.Unit.State.Features.IsUntargetable.Value
-#elif RT
-                                 .LifeState.IsDead
-#endif
                         && LocalMapModel.IsInCurrentArea(units.Unit.Position)
                        ) {
                         __instance.MarkersVm.Add(new LocalMapUnitMarkerVM(units));
@@ -124,7 +96,6 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
-#if Wrath
         // Modifies Local Map View to zoom the map for easier reading
         // InGamePCView(Clone)/InGameStaticPartPCView/StaticCanvas/ServiceWindowsPCView/Background/Windows/LocalMapPCView/ContentGroup/MapBlock
         [HarmonyPatch(typeof(LocalMapBaseView))]
@@ -152,74 +123,79 @@ namespace ToyBox.BagOfPatches {
                 __instance.SetupBPRVisible();
 
                 // Now ToyBox wants to rock your world. We grab various transforms 
-                var contentGroup = UIHelpers.LocalMapScreen.Find("ContentGroup"); // Overall map view including the compass
-                var mapBlock = UIHelpers.LocalMapScreen.Find("ContentGroup/MapBlock"); // Container for map, border, markers and the frame
-                var map = mapBlock.Find("Map"); // Just the map
-                var frameBlock = mapBlock.Find("Map/FrameBlock"); // Camera viewport projected onto the map
-                var frame = frameBlock.Find("Frame"); // intermediate container for the FrameBlock
-                if (contentGroup is RectTransform contentGroupRect
-                    && mapBlock is RectTransform mapBlockRect
-                    && map is RectTransform mapRect
-                    && frameBlock is RectTransform frameBlockRect
-                    && frame is RectTransform frameRect
-                   ) {
-                    if (Settings.toggleZoomableLocalMaps) {
-                        // Calculate a zoom factor based on info used previously to scale the Frame Block. In our new world we will center the Frame Block in middle of the ContentGroup and then pan the map behind it.  TODO - make it rotate so that it matches exactly the view of the camera (Frame Block will always point up)
-                        var worldWidth = (dr.WorldRect.z - dr.WorldRect.x);
-                        var fovMultiplier = Settings.AdjustedFovMultiplier;
-                        var worldZoom = worldWidth / (fovMultiplier * 47f);
-                        Zoom = width / (worldZoom * sizeDelta.x);
-                        //Mod.Log($"zoom: {Zoom} worldZoom: {worldZoom} sizeDelta: {sizeDelta} - screenRect:{dr.ScreenRect.z - dr.ScreenRect.x} worldRec:{dr.WorldRect.z - dr.WorldRect.x} proj:\n{dr.InverseViewProj}");
-                        // save off the frame rotation so we can fix the camera movement when the map is open
-                        FrameRotation = frame.localEulerAngles;
-                        var zoom = Zoom;
-                        // LocalMapVM_Patch.offset = frameBlockRect.localPosition * LocalMapVM_Patch.zoom;
+                try {
+                    var contentGroup = UIHelpers.LocalMapScreen.Find("ContentGroup"); // Overall map view including the compass
+                    var mapBlock = UIHelpers.LocalMapScreen.Find("ContentGroup/MapBlock"); // Container for map, border, markers and the frame
+                    var map = mapBlock.Find("Map"); // Just the map
+                    var frameBlock = mapBlock.Find("Map/FrameBlock"); // Camera viewport projected onto the map
+                    var frame = frameBlock.Find("Frame"); // intermediate container for the FrameBlock
+                    if (contentGroup is RectTransform contentGroupRect
+                        && mapBlock is RectTransform mapBlockRect
+                        && map is RectTransform mapRect
+                        && frameBlock is RectTransform frameBlockRect
+                        && frame is RectTransform frameRect
+                       ) {
+                        if (Settings.toggleZoomableLocalMaps) {
+                            // Calculate a zoom factor based on info used previously to scale the Frame Block. In our new world we will center the Frame Block in middle of the ContentGroup and then pan the map behind it.  TODO - make it rotate so that it matches exactly the view of the camera (Frame Block will always point up)
+                            var worldWidth = (dr.WorldRect.z - dr.WorldRect.x);
+                            var fovMultiplier = Settings.AdjustedFovMultiplier;
+                            var worldZoom = worldWidth / (fovMultiplier * 47f);
+                            Zoom = width / (worldZoom * sizeDelta.x);
+                            //Mod.Log($"zoom: {Zoom} worldZoom: {worldZoom} sizeDelta: {sizeDelta} - screenRect:{dr.ScreenRect.z - dr.ScreenRect.x} worldRec:{dr.WorldRect.z - dr.WorldRect.x} proj:\n{dr.InverseViewProj}");
+                            // save off the frame rotation so we can fix the camera movement when the map is open
+                            FrameRotation = frame.localEulerAngles;
+                            var zoom = Zoom;
+                            // LocalMapVM_Patch.offset = frameBlockRect.localPosition * LocalMapVM_Patch.zoom;
 
-                        // Now adjust the position of the mapBlock to  keep the FrameBlock in a fixed position
-                        Position = mapBlock.localPosition;
-                        Position.x = -3 - frameBlockRect.localPosition.x * zoom - width / (2 * worldZoom); // ??? this is a weird correction (make better?)
-                        Position.y = -22 - frameBlockRect.localPosition.y * zoom - width / (4 * worldZoom); // ??? this is a weird correction (make better?)
-                        mapBlock.localPosition = Position;
-                        // Now apply the zoom to MapBlock
-                        var zoomVector = new Vector3(zoom, zoom, 1.0f);
-                        mapBlock.localScale = zoomVector;
-                        //frameBlockRect.localScale = new Vector3(1f,1f, 1.0f);
+                            // Now adjust the position of the mapBlock to  keep the FrameBlock in a fixed position
+                            Position = mapBlock.localPosition;
+                            Position.x = -3 - frameBlockRect.localPosition.x * zoom - width / (2 * worldZoom); // ??? this is a weird correction (make better?)
+                            Position.y = -22 - frameBlockRect.localPosition.y * zoom - width / (4 * worldZoom); // ??? this is a weird correction (make better?)
+                            mapBlock.localPosition = Position;
+                            // Now apply the zoom to MapBlock
+                            var zoomVector = new Vector3(zoom, zoom, 1.0f);
+                            mapBlock.localScale = zoomVector;
+                            //frameBlockRect.localScale = new Vector3(1f,1f, 1.0f);
 
-                        // Fix the pivot to ensure we stay centered when we zoom
-                        mapBlockRect.pivot = new Vector2(0.0f, 0.0f);
-                        //Mod.Log($"zoom: {zoomVector}");
-                        //frameBlockRect.pivot = new Vector2(0.5f, 0.5f);
-                        //mapRect.pivot = new Vector2(0.5f, 0.5f);
-                        if (Math.Abs(zoom - prevZoom) > .001) {
-                            // Now we don't need all the POI and other map markers to get really big when you zoom so we will shrink them to a reasonable size 
-                            var shrinkVector = new Vector3(1.5f / zoom, 1.5f / zoom, 1);
+                            // Fix the pivot to ensure we stay centered when we zoom
+                            mapBlockRect.pivot = new Vector2(0.0f, 0.0f);
+                            //Mod.Log($"zoom: {zoomVector}");
+                            //frameBlockRect.pivot = new Vector2(0.5f, 0.5f);
+                            //mapRect.pivot = new Vector2(0.5f, 0.5f);
+                            if (Math.Abs(zoom - prevZoom) > .001) {
+                                // Now we don't need all the POI and other map markers to get really big when you zoom so we will shrink them to a reasonable size 
+                                var shrinkVector = new Vector3(1.5f / zoom, 1.5f / zoom, 1);
 
-                            foreach (var markPath in MarksPaths) {
-                                var marks = map.Find(markPath).gameObject.getChildren();
-                                foreach (var mark in marks) {
-                                    if (!mark.transform.localScale.Equals(new Vector3(0, 0, 0))) {
-                                        mark.transform.localScale = shrinkVector;
+                                foreach (var markPath in MarksPaths) {
+                                    var marks = map.Find(markPath).gameObject.getChildren();
+                                    foreach (var mark in marks) {
+                                        if (!mark.transform.localScale.Equals(new Vector3(0, 0, 0))) {
+                                            mark.transform.localScale = shrinkVector;
+                                        }
+                                        var lootMarkerView = mark.GetComponent<LocalMapLootMarkerPCView>();
+                                        lootMarkerView?.Hide();
                                     }
-                                    var lootMarkerView = mark.GetComponent<LocalMapLootMarkerPCView>();
-                                    lootMarkerView?.Hide();
                                 }
-                            }
 
-                            // Finally we tweak the thickness of the Frame Block so it doesn't grow really small and thick.
-                            if (frame.FindChild("Top")?.gameObject?.transform is Transform tt) tt.localScale = new Vector3(1, 1.5f / zoom, 1);
-                            if (frame.FindChild("Bottom")?.gameObject?.transform is Transform tb) tb.localScale = new Vector3(1, 1.5f / zoom, 1);
-                            if (frame.FindChild("Bottom/BottomEye")?.gameObject?.transform is Transform tbe) tbe.localScale = new Vector3(1.5f / zoom, 1f, 1);
-                            if (frame.FindChild("Left")?.gameObject?.transform is Transform tl) tl.localScale = new Vector3(1.5f / zoom, 1, 1);
-                            if (frame.FindChild("Right")?.gameObject?.transform is Transform tr) tr.localScale = new Vector3(1.5f / zoom, 1, 1);
+                                // Finally we tweak the thickness of the Frame Block so it doesn't grow really small and thick.
+#pragma warning disable CS0618 // Type or member is obsolete
+                                if (frame.FindChild("Top")?.gameObject?.transform is Transform tt) tt.localScale = new Vector3(1, 1.5f / zoom, 1);
+                                if (frame.FindChild("Bottom")?.gameObject?.transform is Transform tb) tb.localScale = new Vector3(1, 1.5f / zoom, 1);
+                                if (frame.FindChild("Bottom/BottomEye")?.gameObject?.transform is Transform tbe) tbe.localScale = new Vector3(1.5f / zoom, 1f, 1);
+                                if (frame.FindChild("Left")?.gameObject?.transform is Transform tl) tl.localScale = new Vector3(1.5f / zoom, 1, 1);
+                                if (frame.FindChild("Right")?.gameObject?.transform is Transform tr) tr.localScale = new Vector3(1.5f / zoom, 1, 1);
+#pragma warning restore CS0618 // Type or member is obsolete
+                            }
+                        } else {
+                            // TODO: Factor the above into a helper function and take zoom as a paremeter so we can call it to reset everything back to normal when we turn off Enhanced Map
+                            var zoomVector = new Vector3(1, 1, 1.0f);
+                            Zoom = 1.0f;
+                            //LocalMapVM_Patch.offset = new Vector2(0.0f, 0.0f);
+                            mapBlock.localScale = new Vector3(1, 1, 1);
                         }
                     }
-                    else {
-                        // TODO: Factor the above into a helper function and take zoom as a paremeter so we can call it to reset everything back to normal when we turn off Enhanced Map
-                        var zoomVector = new Vector3(1, 1, 1.0f);
-                        Zoom = 1.0f;
-                        //LocalMapVM_Patch.offset = new Vector2(0.0f, 0.0f);
-                        mapBlock.localScale = new Vector3(1, 1, 1);
-                    }
+                } catch (Exception ex) {
+                    Mod.Debug("Exception in LocalMapBaseViewPatch.SetDrawResult: " + ex.ToString());
                 }
                 return false;
             }
@@ -241,87 +217,85 @@ namespace ToyBox.BagOfPatches {
             }
         }
 #if true
-            enum MouseEventState {
-                Off,
-                Short,
-                Long,
-            }
+        enum MouseEventState {
+            Off,
+            Short,
+            Long,
+        }
 
-            private static MouseEventState eventState = MouseEventState.Off;
-            private static long eventStartTime = 0;
-            private static Vector3 eventStartPosition = Vector3.zero;
+        private static MouseEventState eventState = MouseEventState.Off;
+        private static long eventStartTime = 0;
+        private static Vector3 eventStartPosition = Vector3.zero;
 
-            [HarmonyPatch(typeof(LocalMapPCView))]
-            public static class LocalMapPCViewPatch {
-                [HarmonyPatch(nameof(OnPointerClick))]
-                [HarmonyPrefix]
-                public static bool OnPointerClick(LocalMapPCView __instance, PointerEventData eventData) {
-                    if (!Settings.toggleZoomableLocalMaps) return true;
-                    if (eventData.button == PointerEventData.InputButton.Middle)
-                        return false;
-                    Vector2 adjustedPoint = eventStartPosition;
-                    if (eventState != MouseEventState.Short) {
-                        Vector2 localPoint;
-                        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                                __instance.m_Image.rectTransform,
-                                eventData.position,
-                                Game.Instance.UI.UICamera,
-                                out localPoint
-                            );
-                        adjustedPoint = localPoint
-                                        + Vector2.Scale(
-                                                __instance.m_Image.rectTransform.sizeDelta,
-                                                __instance.m_Image.rectTransform.pivot
-                                            );
-                    }
-                    Mod.Debug($"Click - localPoint: {adjustedPoint} vs pos: {Position } zoom:{Zoom}");
-                    __instance.ViewModel.OnClick(adjustedPoint, eventData.button == PointerEventData.InputButton.Left);
+        [HarmonyPatch(typeof(LocalMapPCView))]
+        public static class LocalMapPCViewPatch {
+            [HarmonyPatch(nameof(OnPointerClick))]
+            [HarmonyPrefix]
+            public static bool OnPointerClick(LocalMapPCView __instance, PointerEventData eventData) {
+                if (!Settings.toggleZoomableLocalMaps) return true;
+                if (eventData.button == PointerEventData.InputButton.Middle)
                     return false;
-                }
-
-                [HarmonyPatch(nameof(Update))]
-                [HarmonyPrefix]
-                private static bool Update(LocalMapPCView __instance) {
-                    if (!Settings.toggleZoomableLocalMaps) return true;
-                    if (!__instance.m_MouseDown) {
-                        eventState = MouseEventState.Off;
-                        return false;
-                    }
+                Vector2 adjustedPoint = eventStartPosition;
+                if (eventState != MouseEventState.Short) {
                     Vector2 localPoint;
                     RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                        __instance.m_Image.rectTransform, 
-                        Input.mousePosition,
-                        Game.Instance.UI.UICamera, out localPoint
+                            __instance.m_Image.rectTransform,
+                            eventData.position,
+                            Game.Instance.UI.UICamera,
+                            out localPoint
                         );
-                    var adjustedPoint = localPoint + Vector2.Scale(
-                                            __instance.m_Image.rectTransform.sizeDelta * Zoom, 
+                    adjustedPoint = localPoint
+                                    + Vector2.Scale(
+                                            __instance.m_Image.rectTransform.sizeDelta,
                                             __instance.m_Image.rectTransform.pivot
-                                            );
-                    var time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                    bool forwardEvent = false;
-                    if (eventState == MouseEventState.Off) {
-                        eventStartTime = time;
-                        eventState = MouseEventState.Short;
-                        // save off start position for Click can use it if we get Click during the Short phase
-                        eventStartPosition = adjustedPoint; 
-                        forwardEvent = true; // send first event
-                    }
-                    if (eventState == MouseEventState.Short && time - eventStartTime > 100) {
-                        eventState = MouseEventState.Long;
-                    }
-                    else if (eventState == MouseEventState.Long) {
-                        forwardEvent = true; // once we are in long click then start sending updates
-                        eventStartPosition = adjustedPoint; // update start position so that Click will have the right value after a long drag
-                    }
-                    if (forwardEvent) {
-                        Mod.Debug($"Update - localPoint: {localPoint} -> {adjustedPoint} vs pos: {Position} zoom:{Zoom}");
-                        __instance.ViewModel.OnClick(adjustedPoint, true);
-                    }
+                                        );
+                }
+                Mod.Debug($"Click - localPoint: {adjustedPoint} vs pos: {Position} zoom:{Zoom}");
+                __instance.ViewModel.OnClick(adjustedPoint, eventData.button == PointerEventData.InputButton.Left);
+                return false;
+            }
+
+            [HarmonyPatch(nameof(Update))]
+            [HarmonyPrefix]
+            private static bool Update(LocalMapPCView __instance) {
+                if (!Settings.toggleZoomableLocalMaps) return true;
+                if (!__instance.m_MouseDown) {
+                    eventState = MouseEventState.Off;
                     return false;
                 }
+                Vector2 localPoint;
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    __instance.m_Image.rectTransform,
+                    Input.mousePosition,
+                    Game.Instance.UI.UICamera, out localPoint
+                    );
+                var adjustedPoint = localPoint + Vector2.Scale(
+                                        __instance.m_Image.rectTransform.sizeDelta * Zoom,
+                                        __instance.m_Image.rectTransform.pivot
+                                        );
+                var time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                bool forwardEvent = false;
+                if (eventState == MouseEventState.Off) {
+                    eventStartTime = time;
+                    eventState = MouseEventState.Short;
+                    // save off start position for Click can use it if we get Click during the Short phase
+                    eventStartPosition = adjustedPoint;
+                    forwardEvent = true; // send first event
+                }
+                if (eventState == MouseEventState.Short && time - eventStartTime > 100) {
+                    eventState = MouseEventState.Long;
+                } else if (eventState == MouseEventState.Long) {
+                    forwardEvent = true; // once we are in long click then start sending updates
+                    eventStartPosition = adjustedPoint; // update start position so that Click will have the right value after a long drag
+                }
+                if (forwardEvent) {
+                    Mod.Debug($"Update - localPoint: {localPoint} -> {adjustedPoint} vs pos: {Position} zoom:{Zoom}");
+                    __instance.ViewModel.OnClick(adjustedPoint, true);
+                }
+                return false;
             }
-            #endif
-        #endif
+        }
+#endif
 
 
         [HarmonyPatch(typeof(LocalMapMarkerPCView), nameof(LocalMapMarkerPCView.BindViewImplementation))]
@@ -334,27 +308,19 @@ namespace ToyBox.BagOfPatches {
                 if (__instance.ViewModel.MarkerType == LocalMapMarkType.Loot)
                     __instance.AddDisposable(__instance.ViewModel.IsVisible.Subscribe(value => {
                         (__instance as LocalMapLootMarkerPCView)?
-#if Wrath
                             .Hide();
-#elif RT
-                            .gameObject.SetActive(value);
-#endif
                     }));
-#if Wrath // TODO: fix this once we get UnityExplorer        
                 if (Settings.toggleShowInterestingNPCsOnLocalMap) {
                     if (__instance.ViewModel is LocalMapCommonMarkerVM markerVM
                         && markerVM.m_Marker is AddLocalMapMarker.Runtime marker) {
                         var unit = marker.Owner;
                         UpdateMarker(__instance, unit);
-                    }
-                    else if (__instance.ViewModel is LocalMapUnitMarkerVM unitMarkerVM) {
+                    } else if (__instance.ViewModel is LocalMapUnitMarkerVM unitMarkerVM) {
                         UpdateMarker(__instance, unitMarkerVM.m_Unit);
-                    }
-                    else if (__instance.ViewModel is LocalMapCharacterMarkerVM characterMarkerVM) {
+                    } else if (__instance.ViewModel is LocalMapCharacterMarkerVM characterMarkerVM) {
                         UpdateMarker(__instance, characterMarkerVM.m_Unit);
                     }
                 }
-#endif
             }
 
             // Helper Function - Not a Patch
@@ -363,14 +329,15 @@ namespace ToyBox.BagOfPatches {
                 //Mod.Debug($"{unit.CharacterName.orange()} -> unit interestingness: {count}");
                 //var attentionMark = markerView.transform.Find("ToyBoxAttentionMark")?.gameObject;
                 //Mod.Debug($"attentionMark: {attentionMark}");
+#pragma warning disable CS0618 // Type or member is obsolete
                 var markImage = markerView.transform.FindChild("Mark").GetComponent<Image>();
+#pragma warning restore CS0618 // Type or member is obsolete
                 if (count >= 1) {
                     //Mod.Debug($"adding Mark to {unit.CharacterName.orange()}");
                     var mark = markerView.transform;
                     markImage.color = new Color(1, 1f, 0);
-                }
-                else {
-//                    attentionMark?.SetActive(false);
+                } else {
+                    //                    attentionMark?.SetActive(false);
                     markImage.color = new Color(1, 1, 1);
                 }
             }
@@ -382,7 +349,6 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPostfix]
             public static void BindViewImplementation(UnitOvertipView __instance) {
                 if (!Settings.toggleShowInterestingNPCsOnLocalMap) return;
-#if Wrath // TODO: fix this once we get UnityExplorer        
                 if (__instance.ViewModel is EntityOvertipVM entityOvertipVM) {
                     var interestingness = entityOvertipVM.Unit.InterestingnessCoefficent();
                     var charName = __instance.transform.Find("OverUnit/NonCombatOvertip/CharacterName").GetComponent<TextMeshProUGUI>();
@@ -391,19 +357,11 @@ namespace ToyBox.BagOfPatches {
                     else
                         charName.color = new Color(0.1098f, 0.098f, 0.0784f);
                 }
-#endif
             }
-#if Wrath
             [HarmonyPatch(nameof(UnitOvertipView.UpdateInternal))]
             [HarmonyPostfix]
             public static void UpdateInternal(UnitOvertipView __instance, Vector3 canvasPosition) {
-#elif RT
-            [HarmonyPatch(nameof(UnitOvertipView.UpdateVisibility))]
-            [HarmonyPostfix]
-            public static void UpdateInternal(UnitOvertipView __instance) {
-#endif
                 if (!Settings.toggleShowInterestingNPCsOnLocalMap || __instance is null) return;
-#if Wrath // TODO: fix this once we get UnityExplorer        
                 if (__instance.ViewModel is EntityOvertipVM entityOvertipVM) {
                     var interestingness = entityOvertipVM.Unit.InterestingnessCoefficent();
                     var charName = __instance.transform.Find("OverUnit/NonCombatOvertip/CharacterName").GetComponent<TextMeshProUGUI>();
@@ -412,10 +370,9 @@ namespace ToyBox.BagOfPatches {
                     else
                         charName.color = new Color(0.1098f, 0.098f, 0.0784f);
                 }
-#endif
             }
         }
-        #if false
+#if false
         [HarmonyPatch(typeof(LocalMapMarkerPart))]
         public static class LocalMapMarkerPartPatch {
             [HarmonyPatch(nameof(LocalMapMarkerPart.OnTurnOn))]
@@ -440,8 +397,8 @@ namespace ToyBox.BagOfPatches {
                 //Mod.Error($"Marker Add");
             }
         }
-        #endif
-        #if false
+#endif
+#if false
         [HarmonyPatch(typeof(EntityVisibilityForPlayerController))]
         public static class AddLocalMapMarkerRuntimePatch {
             [HarmonyPatch(nameof(EntityVisibilityForPlayerController.IsVisible), new Type[] { typeof(UnitEntityData)})]
@@ -462,11 +419,11 @@ namespace ToyBox.BagOfPatches {
                 return true;
             }
         }
-        #endif
+#endif
 
 
 #if false
-                        #if false
+#if false
                         var mapBlockRotation = mapBlock.localEulerAngles;
                         var frameRotation = frame.localEulerAngles;
                         var frameBlockRotation = frameBlock.localEulerAngles;
@@ -479,7 +436,7 @@ namespace ToyBox.BagOfPatches {
                         //mapBlock.Rotate(new Vector3());
 //                        mapBlock.localEulerAngles = mapBlockRotation;
                         Mod.Log($"frameRotation: {mapBlockRotation}");
-                        #endif
+#endif
 
             // some experimental code to implement map rotation
                     ) {

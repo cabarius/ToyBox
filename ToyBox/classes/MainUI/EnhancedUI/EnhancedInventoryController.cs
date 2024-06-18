@@ -53,14 +53,11 @@ namespace ToyBox {
 
             List<string> options = new List<string>();
 
-            foreach (FilterCategories flag in EnumHelper.ValidFilterCategories)
-            {
-                if (Main.Settings.SearchFilterCategories.HasFlag(flag))
-                {
+            foreach (FilterCategories flag in EnumHelper.ValidFilterCategories) {
+                if (Main.Settings.SearchFilterCategories.HasFlag(flag)) {
                     (int idx, string text) = EnhancedInventory.FilterCategoryMap[flag];
 
-                    if (text == null)
-                    {
+                    if (text == null) {
                         // For whatever reason, the localization DB has the wrong info for some of these options... I suspect someone changed the enum order
                         // around and these particular strings are not used anywhere.
 
@@ -87,13 +84,11 @@ namespace ToyBox {
             List<Image> images = new List<Image>();
             GameObject switch_bar = m_filter_block.Find("SwitchBar").gameObject;
 
-            foreach (Transform child in switch_bar.transform)
-            {
+            foreach (Transform child in switch_bar.transform) {
                 images.Add(child.Find("Icon")?.GetComponent<Image>());
             }
 
-            while (images.Count < options.Count)
-            {
+            while (images.Count < options.Count) {
                 images.Add(null);
             }
 
@@ -105,8 +100,7 @@ namespace ToyBox {
 
             RectTransform search_transform = m_search_bar.GameObject.GetComponent<RectTransform>();
 
-            if (Main.Settings.toggleEnhancedInventory)
-            {
+            if (Main.Settings.toggleEnhancedInventory) {
                 search_transform.localScale = new Vector3(0.6f, 0.6f, 1.0f);
                 search_transform.localPosition = new Vector3(0.0f, -8.0f, 0.0f);
 
@@ -118,10 +112,8 @@ namespace ToyBox {
                 sb_transform.localScale = new Vector3(0.6f, 0.6f, 1.0f);
 
                 // Select the appropriate handler, if possible, in the switch bar, when selected using the dropdown.
-                m_search_bar.Dropdown.onValueChanged.AddListener(delegate (int idx)
-                {
-                    if (idx <= (int)ItemsFilter.FilterType.NonUsable)
-                    {
+                m_search_bar.Dropdown.onValueChanged.AddListener(delegate (int idx) {
+                    if (idx <= (int)ItemsFilter.FilterType.NonUsable) {
                         switch_bar.transform.GetChild(idx).GetComponent<ItemsFilterEntityPCView>().ViewModel.IsSelected.Value = true;
                     }
                 });
@@ -129,9 +121,7 @@ namespace ToyBox {
                 // destroy the top and bottom gfx as they cause a lot of noise
                 Destroy(m_search_bar.GameObject.transform.Find("Background/Decoration/TopLineImage").gameObject);
                 Destroy(m_search_bar.GameObject.transform.Find("Background/Decoration/BottomLineImage").gameObject);
-            }
-            else
-            {
+            } else {
                 search_transform.localScale = new Vector3(0.85f, 0.85f, 1.0f);
                 search_transform.localPosition = new Vector3(0.0f, 2.0f, 0.0f);
                 Destroy(switch_bar);
@@ -151,37 +141,37 @@ namespace ToyBox {
             if (m_apply_handlers) {
                 switch (Type) {
                     case InventoryType.InventoryStash: {
-                        InventoryStashPCView stash_pc_view = GetComponentInParent<InventoryStashPCView>();
-                        m_active_filter = stash_pc_view.ViewModel.ItemsFilter.CurrentFilter;
-                        stash_pc_view.ViewModel.ItemSlotsGroup.CollectionChangedCommand.Subscribe(delegate { m_deferred_update = true; });
-                        stash_pc_view.ViewModel.ItemsFilter.CurrentSorter.Subscribe(delegate { m_deferred_update = true; });
-                        break;
-                    }
-                    case InventoryType.Vendor: {
-                        VendorPCView vendor_pc_view = GetComponentInParent<VendorPCView>();
-                        m_active_filter = vendor_pc_view.ViewModel.VendorItemsFilter.CurrentFilter;
-                        vendor_pc_view.ViewModel.VendorSlotsGroup.CollectionChangedCommand.Subscribe(delegate { m_deferred_update = true; });
-                        vendor_pc_view.ViewModel.VendorItemsFilter.CurrentSorter.Subscribe(delegate { m_deferred_update = true; });
-                        break;
-                    }
-                    case InventoryType.LootCollector: {
-                        LootCollectorPCView collector_pc_view = GetComponent<LootCollectorPCView>();
-                        m_active_filter = collector_pc_view.ViewModel.ItemsFilter?.CurrentFilter;
-                        collector_pc_view.ViewModel.CollectionChangedCommand.Subscribe(delegate { m_deferred_update = true; });
-
-                        if (m_active_filter != null) // can be null if not on stash view
-                        {
-                            collector_pc_view.ViewModel.ItemsFilter.CurrentSorter.Subscribe(delegate { m_deferred_update = true; });
+                            InventoryStashPCView stash_pc_view = GetComponentInParent<InventoryStashPCView>();
+                            m_active_filter = stash_pc_view.ViewModel.ItemsFilter.CurrentFilter;
+                            stash_pc_view.ViewModel.ItemSlotsGroup.CollectionChangedCommand.Subscribe(delegate { m_deferred_update = true; });
+                            stash_pc_view.ViewModel.ItemsFilter.CurrentSorter.Subscribe(delegate { m_deferred_update = true; });
+                            break;
                         }
-                        break;
-                    }
+                    case InventoryType.Vendor: {
+                            VendorPCView vendor_pc_view = GetComponentInParent<VendorPCView>();
+                            m_active_filter = vendor_pc_view.ViewModel.VendorItemsFilter.CurrentFilter;
+                            vendor_pc_view.ViewModel.VendorSlotsGroup.CollectionChangedCommand.Subscribe(delegate { m_deferred_update = true; });
+                            vendor_pc_view.ViewModel.VendorItemsFilter.CurrentSorter.Subscribe(delegate { m_deferred_update = true; });
+                            break;
+                        }
+                    case InventoryType.LootCollector: {
+                            LootCollectorPCView collector_pc_view = GetComponent<LootCollectorPCView>();
+                            m_active_filter = collector_pc_view.ViewModel.ItemsFilter?.CurrentFilter;
+                            collector_pc_view.ViewModel.CollectionChangedCommand.Subscribe(delegate { m_deferred_update = true; });
+
+                            if (m_active_filter != null) // can be null if not on stash view
+                            {
+                                collector_pc_view.ViewModel.ItemsFilter.CurrentSorter.Subscribe(delegate { m_deferred_update = true; });
+                            }
+                            break;
+                        }
                     case InventoryType.LootInventoryStash: {
-                        LootInventoryStashPCView inventory_pc_view = GetComponentInParent<LootInventoryStashPCView>();
-                        m_active_filter = inventory_pc_view.ViewModel.ItemsFilter.CurrentFilter;
-                        inventory_pc_view.ViewModel.ItemSlotsGroup.CollectionChangedCommand.Subscribe(delegate { m_deferred_update = true; });
-                        inventory_pc_view.ViewModel.ItemsFilter.CurrentSorter.Subscribe(delegate { m_deferred_update = true; });
-                        break;
-                    }
+                            LootInventoryStashPCView inventory_pc_view = GetComponentInParent<LootInventoryStashPCView>();
+                            m_active_filter = inventory_pc_view.ViewModel.ItemsFilter.CurrentFilter;
+                            inventory_pc_view.ViewModel.ItemSlotsGroup.CollectionChangedCommand.Subscribe(delegate { m_deferred_update = true; });
+                            inventory_pc_view.ViewModel.ItemsFilter.CurrentSorter.Subscribe(delegate { m_deferred_update = true; });
+                            break;
+                        }
                 }
 #if false
                 Transform switch_bar = m_filter_block.Find("SwitchBar");

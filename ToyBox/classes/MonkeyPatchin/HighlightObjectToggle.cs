@@ -14,9 +14,6 @@ using Kingmaker.View.MapObjects.SriptZones;
 using Kingmaker.View.MapObjects.Traps;
 using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.Highlighting;
 using UnityEngine;
-#if RT
-using Owlcat.Runtime.Visual.Highlighting;
-#endif
 
 namespace ToyBox.classes.MonkeyPatchin {
     public class HighlightObjectToggle {
@@ -46,11 +43,7 @@ namespace ToyBox.classes.MonkeyPatchin {
                         foreach (var mapObjectEntityData in Game.Instance.State.MapObjects) {
                             mapObjectEntityData.View.UpdateHighlight();
                         }
-#if Wrath
                         foreach (var unitEntityData in Game.Instance.State.Units) {
-#elif RT
-                        foreach (var unitEntityData in Game.Instance.State.AllUnits) {
-#endif
                             unitEntityData.View.UpdateHighlight(false);
                         }
                         EventBus.RaiseEvent<IInteractionHighlightUIHandler>(delegate (IInteractionHighlightUIHandler h) {
@@ -58,8 +51,7 @@ namespace ToyBox.classes.MonkeyPatchin {
                         });
                         return false;
                     }
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     Mod.Error(ex);
                 }
                 return true;
@@ -73,8 +65,7 @@ namespace ToyBox.classes.MonkeyPatchin {
                     if (Main.Settings.highlightObjectsToggle) {
                         return false;
                     }
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     Mod.Error(ex);
                 }
                 return true;
@@ -92,12 +83,8 @@ namespace ToyBox.classes.MonkeyPatchin {
         private static void UpdateHighlight(MapObjectView __instance) {
             var data = __instance.Data;
             if (data == null) return;
-#if Wrath
             var pcc = __instance.GetComponent<PerceptionCheckComponent>();
             if (!data.IsPerceptionCheckPassed && pcc != null) {
-#elif RT
-            if (!data.IsRevealed || !data.IsAwarenessCheckPassed) {
-#endif
                 var is_highlighting = Game.Instance?.InteractionHighlightController?.IsHighlighting;
                 var should_highlight = (is_highlighting ?? false) && Main.Settings.highlightHiddenObjects;
 

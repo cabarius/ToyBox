@@ -15,11 +15,8 @@ using System.Linq;
 using Kingmaker;
 using Kingmaker.Utility;
 using Kingmaker.UnitLogic.Mechanics;
-#if Wrath
 using Kingmaker.UI.FullScreenUITypes;
 using Kingmaker.Assets.UI;
-#endif
-#if Wrath        
 namespace ModKit {
     public partial class UI {
         public static string Name(this Alignment a) => UIUtility.GetAlignmentName(a);
@@ -120,17 +117,11 @@ namespace ModKit {
             => AlignmentGrid(null, alignment, action, options);
     }
 }
-#endif
 
 namespace ToyBox {
     public static class WrathExtensions {
         public static string HashKey(this UnitEntityData ch) => ch.CharacterName;  // + ch.UniqueId; }
-#if Wrath        
         public static string HashKey(this UnitDescriptor ch) => ch.CharacterName;
-#elif RT
-        public static string HashKey(this MechanicEntity entity) => 
-            entity is UnitEntityData ch ? ch.CharacterName : entity.Name;
-#endif
         public static string HashKey(this BlueprintCharacterClass cl) => cl.NameSafe();
         public static string HashKey(this BlueprintArchetype arch) => arch.NameSafe();
 
@@ -151,8 +142,7 @@ namespace ToyBox {
                 MechanicsContext context = new MechanicsContext((UnitEntityData)null, mainChar.Value.Descriptor, bp, (MechanicsContext)null, (TargetWrapper)null);
                 return context?.SelectUIData(UIDataType.Description)?.Description ?? "";
 #endif
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Console.Write($"{e}");
 #if DEBUG
                 return "ERROR".red().bold() + $": caught exception {e}";

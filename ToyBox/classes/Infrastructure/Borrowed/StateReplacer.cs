@@ -1,7 +1,5 @@
 ﻿using Kingmaker.Blueprints.Classes;
-#if Wrath
 using Kingmaker.UnitLogic.Class.LevelUp;
-#endif
 
 namespace ToyBox {
     // https://github.com/paxchristos/pk_multiple_classes_per_level_fork
@@ -9,7 +7,7 @@ namespace ToyBox {
         public readonly LevelUpState State;
         public readonly BlueprintCharacterClass? SelectedClass;
         public readonly int NextClassLevel;
-        
+
         public StateReplacer(LevelUpState state) {
             State = state;
             SelectedClass = state.SelectedClass;

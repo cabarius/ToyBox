@@ -27,13 +27,11 @@ using UnityModManagerNet;
 using Kingmaker.Designers;
 using ToyBox.classes.Infrastructure;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.Spellbook;
-#if Wrath
 using Kingmaker.Armies;
 using Kingmaker.Armies.Blueprints;
 using Kingmaker.Kingdom;
 using Kingmaker.Armies.TacticalCombat.Parts;
 using ToyBox.BagOfPatches;
-#endif
 namespace ToyBox {
     public static partial class Actions {
         public static Settings settings => Main.Settings;
@@ -150,12 +148,17 @@ namespace ToyBox {
             //           var worldPosition = Game.Instance.Player.MainCharacter.Value.Position;
             if (!(unit == null)) {
                 for (var i = 0; i < count; i++) {
-                    var offset = 5f * UnityEngine.Random.insideUnitSphere;
-                    Vector3 spawnPosition = new(
-                        worldPosition.x + offset.x,
-                        worldPosition.y,
-                        worldPosition.z + offset.z);
-                    Game.Instance.EntityCreator.SpawnUnit(unit, spawnPosition, Quaternion.identity, Game.Instance.State.LoadedAreaState.MainState);
+                    Vector3 spawnPosition = worldPosition;
+                    try {
+                        var offset = 5f * UnityEngine.Random.insideUnitSphere;
+                        spawnPosition = new(
+                            worldPosition.x + offset.x,
+                            worldPosition.y,
+                            worldPosition.z + offset.z);
+                    } catch {
+                    } finally {
+                        Game.Instance.EntityCreator.SpawnUnit(unit, spawnPosition, Quaternion.identity, Game.Instance.State.LoadedAreaState.MainState);
+                    }
                 }
             }
         }
@@ -165,8 +168,7 @@ namespace ToyBox {
                 if ((partyCharacters != null ? (partyCharacters.Select(r => r.Value).SequenceEqual(Game.Instance.Player.Party) ? 1 : 0) : 1) != 0)
                     return;
                 GlobalMapView.Instance.ChangePartyOnMap();
-            }
-            else {
+            } else {
                 foreach (var temp in Game.Instance.Player.RemoteCompanions.ToTempList())
                     temp.IsInGame = false;
                 Game.Instance.Player.FixPartyAfterChange();
@@ -217,8 +219,7 @@ namespace ToyBox {
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 if (!ch.Descriptor().Abilities.HasFact(ability)) return true;
             }
             return false;
@@ -274,8 +275,7 @@ namespace ToyBox {
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 ch.Descriptor().AddFact(ability);
             }
         }
@@ -324,8 +324,7 @@ namespace ToyBox {
             var playerPosition = Game.Instance.Player.GlobalMap.CurrentPosition;
             if (friendlyorhostile) {
                 Game.Instance.Player.GlobalMap.LastActivated.CreateArmy(ArmyFaction.Crusaders, bp, playerPosition);
-            }
-            else {
+            } else {
                 Game.Instance.Player.GlobalMap.LastActivated.CreateArmy(ArmyFaction.Demons, bp, playerPosition);
             }
         }

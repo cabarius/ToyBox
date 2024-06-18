@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using Kingmaker;
 using Kingmaker.Achievements;
 using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
 using Kingmaker.Blueprints.Items.Weapons;
@@ -47,6 +48,7 @@ using UnityEngine;
 using Utilities = Kingmaker.Cheats.Utilities;
 
 namespace ToyBox.BagOfPatches {
+    [HarmonyPatch]
     internal static partial class Misc {
         public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
@@ -66,6 +68,16 @@ namespace ToyBox.BagOfPatches {
                 Mod.Log("SaveManager_SaveRoutine_Patch");
                 Settings.SavePerSaveSettings();
             }
+        }
+
+        [HarmonyPatch(typeof(BlueprintParametrizedFeature), nameof(BlueprintParametrizedFeature.GetFullSelectionItems))]
+        [HarmonyFinalizer]
+        public static Exception GetFullSelectionItems(Exception __exception, BlueprintParametrizedFeature __instance) {
+            if (__exception != null) {
+                Mod.Warn(__exception.ToString());
+                Mod.Warn($"{__instance.Name ?? "null1"} + {__instance.name ?? "null2"} + {__instance.ToString() ?? "null3"}");
+            }
+            return null;
         }
 
         public static BlueprintAbility ExtractSpell([NotNull] ItemEntity item) {
@@ -176,8 +188,7 @@ namespace ToyBox.BagOfPatches {
                     if (isASpider || isOtherSpiderUnit) {
                         unitEntityData.Descriptor.CustomPrefabGuid = blueprintWolfStandardGUID;
                         return;
-                    }
-                    else if (isASpiderSwarm || isOtherSpiderSwarmUnit) {
+                    } else if (isASpiderSwarm || isOtherSpiderSwarmUnit) {
                         unitEntityData.Descriptor.CustomPrefabGuid = blueprintCR2RatSwarmGUID;
                         return;
                     }
@@ -194,12 +205,10 @@ namespace ToyBox.BagOfPatches {
                     if (isAVescavorGuard || isOtherVescavorGuardUnit) {
                         unitEntityData.Descriptor.CustomPrefabGuid = blueprintWolfStandardGUID;
                         return;
-                    }
-                    else if (isAVescavorSwarm || isOtherVescavorSwarmUnit) {
+                    } else if (isAVescavorSwarm || isOtherVescavorSwarmUnit) {
                         unitEntityData.Descriptor.CustomPrefabGuid = blueprintCR2RatSwarmGUID;
                         return;
-                    }
-                    else if (isAVescavorQueen || isOtherVescavorQueenUnit) {
+                    } else if (isAVescavorQueen || isOtherVescavorQueenUnit) {
                         unitEntityData.Descriptor.CustomPrefabGuid = blueprintDireWolfStandardGUID;
                         return;
                     }
@@ -214,8 +223,7 @@ namespace ToyBox.BagOfPatches {
                     if (isARetriever || isOtherRetrieverUnit) {
                         unitEntityData.Descriptor.CustomPrefabGuid = blueprintBearStandardGUID;
                         return;
-                    }
-                    else if (isAAreshkagelRetriever || isAreshkagelRetrieverUnit) {
+                    } else if (isAAreshkagelRetriever || isAreshkagelRetrieverUnit) {
                         unitEntityData.Descriptor.CustomPrefabGuid = blueprintOwlBearStandardGUID;
                         return;
                     }
@@ -253,8 +261,7 @@ namespace ToyBox.BagOfPatches {
                     if (isASpider || isOtherSpiderUnit) {
                         blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintWolfStandardGUID).Prefab;
                         return;
-                    }
-                    else if (isASpiderSwarm || isOtherSpiderSwarmUnit) {
+                    } else if (isASpiderSwarm || isOtherSpiderSwarmUnit) {
                         blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintCR2RatSwarmGUID).Prefab;
                         return;
                     }
@@ -272,12 +279,10 @@ namespace ToyBox.BagOfPatches {
                     if (isAVescavorGuard || isOtherVescavorGuardUnit) {
                         blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintWolfStandardGUID).Prefab;
                         return;
-                    }
-                    else if (isAVescavorSwarm || isOtherVescavorSwarmUnit) {
+                    } else if (isAVescavorSwarm || isOtherVescavorSwarmUnit) {
                         blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintCR2RatSwarmGUID).Prefab;
                         return;
-                    }
-                    else if (isAVescavorQueen || isOtherVescavorQueenUnit) {
+                    } else if (isAVescavorQueen || isOtherVescavorQueenUnit) {
                         blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintDireWolfStandardGUID).Prefab;
                         return;
                     }
@@ -293,8 +298,7 @@ namespace ToyBox.BagOfPatches {
                     if (isARetriever || isOtherRetrieverUnit) {
                         blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintBearStandardGUID).Prefab;
                         return;
-                    }
-                    else if (isAAreshkagelRetriever || isAreshkagelRetrieverUnit) {
+                    } else if (isAAreshkagelRetriever || isAreshkagelRetrieverUnit) {
                         blueprintUnit.Prefab = Utilities.GetBlueprintByGuid<BlueprintUnit>(blueprintOwlBearStandardGUID).Prefab;
                         return;
                     }
@@ -526,8 +530,7 @@ namespace ToyBox.BagOfPatches {
                                 try {
                                     Mod.Debug($"refill {item.m_Blueprint.Name.cyan()}");
                                     __instance.InsertItem(item);
-                                }
-                                catch (Exception e) {
+                                } catch (Exception e) {
                                     Mod.Error($"{e}");
                                 }
                             });
@@ -615,8 +618,7 @@ namespace ToyBox.BagOfPatches {
                     Mod.Debug($"InventorySlotPCView_OnClick_Patch - Using {item.Name}");
                     try {
                         item.TryUseFromInventory(item.GetBestAvailableUser(), (TargetWrapper)WrathExtensions.GetCurrentCharacter());
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         Mod.Error($"InventorySlotPCView_OnClick_Patch - {e}");
                     }
                     return false;

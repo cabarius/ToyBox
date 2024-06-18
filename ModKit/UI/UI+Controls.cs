@@ -71,8 +71,7 @@ namespace ModKit {
                         Mod.Log($"Edit: {editState}");
                     }
                 }
-            }
-            else {
+            } else {
                 GUI.SetNextControlName(label);
                 using (HorizontalScope(options)) {
                     TextField(ref editState.Item2, null, MinWidth(minWidth), AutoWidth());
@@ -105,8 +104,7 @@ namespace ModKit {
             TextField(ref text, name, options);
             if (int.TryParse(text, out var val)) {
                 value = val;
-            }
-            else if (text == "") {
+            } else if (text == "") {
                 value = 0;
             }
             return value;
@@ -116,8 +114,7 @@ namespace ModKit {
             TextField(ref text, name, options);
             if (float.TryParse(text, out var val)) {
                 value = val;
-            }
-            else if (text == "") {
+            } else if (text == "") {
                 value = 0;
             }
             return value;
@@ -238,8 +235,7 @@ namespace ModKit {
             else if (showMinMax) {
                 Space(-21);
                 ActionButton("min".localize().cyan() + " ", () => { }, textBoxStyle, AutoWidth());
-            }
-            else {
+            } else {
                 34.space();
             }
             var temp = false;
@@ -249,8 +245,7 @@ namespace ModKit {
             else if (showMinMax) {
                 ActionButton(" " + "max".localize().cyan(), () => { }, textBoxStyle, AutoWidth());
                 Space(-27);
-            }
-            else
+            } else
                 34.space();
             if (v != value) {
                 value = v;

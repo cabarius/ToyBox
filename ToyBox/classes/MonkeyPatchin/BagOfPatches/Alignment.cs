@@ -63,8 +63,7 @@ namespace ToyBox {
                         __instance.OnChanged(direction, vector, provider, true);
                         return false;
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Mod.Error(e);
                 }
                 return true;

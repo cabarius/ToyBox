@@ -42,7 +42,7 @@ namespace ToyBox {
                 _collectionVirtualView.m_VirtualList.ScrollController.ForceScrollToTop();
                 var saveLoadVM = saveLoadView.ViewModel;
                 saveLoadView.ViewModel.UpdateSavesCollection();
-                #if false
+#if false
                 saveLoadView.m_SlotCollectionView.m_VirtualList.Elements.Sort((e1, e2) => {
                     switch (e1.Data) {
                         case SaveSlotGroupVM ssgVMa1 when e2.Data is SaveSlotGroupVM ssgVMa2: 
@@ -56,7 +56,7 @@ namespace ToyBox {
                             return 0;
                     }
                 });
-                #endif
+#endif
                 //m_scroll_bar.ScrollToTop();
 
             }
@@ -110,9 +110,9 @@ namespace ToyBox {
 
         [HarmonyPatch(typeof(SaveLoadVM))]
         public static class SaveLoadVMPatch {
-            [HarmonyPatch(MethodType.Constructor, new Type[] {typeof(SaveLoadMode), typeof(bool), typeof(Action), typeof(IUILoadService)})]
+            [HarmonyPatch(MethodType.Constructor, new Type[] { typeof(SaveLoadMode), typeof(bool), typeof(Action), typeof(IUILoadService) })]
             [HarmonyPrefix]
-            public static void SaveLoadVMConstructor(           
+            public static void SaveLoadVMConstructor(
                 SaveLoadVM __instance,
                 SaveLoadMode mode,
                 bool singleMode,
@@ -135,7 +135,7 @@ namespace ToyBox {
                                                                         rc.Name.Matches(searchText)
                                                                         || rc.Description.Matches(searchText)
                                                                         || rc.Area.name.Matches(searchText)
-                                                                        // || rc.Campaign.GetDisplayName().Matches(searchText)
+                        // || rc.Campaign.GetDisplayName().Matches(searchText)
                         ).ToList();
                 referenceCollection.Sort((s1, s2) => -s1.SystemSaveTime.CompareTo(s2.SystemSaveTime));
                 __instance.ShowCorruptionDialog = false;
@@ -167,7 +167,7 @@ namespace ToyBox {
                 foreach (var groupVM in __instance.SaveSlotCollectionVm.SaveSlotGroups) {
                     var items = groupVM.SaveLoadSlots;
                     if (items?.Count() == 0) continue;
-                    items.Sort((vm1, vm2) =>  -vm1.Reference.SystemSaveTime.CompareTo(vm2.Reference.SystemSaveTime));
+                    items.Sort((vm1, vm2) => -vm1.Reference.SystemSaveTime.CompareTo(vm2.Reference.SystemSaveTime));
                     Mod.Debug(groupVM.CharacterName.orange());
                     var sortedStrings = items.Select(i => $"{i.Reference.SystemSaveTime} - {i.GameName}");
                     //Mod.Debug($"sorted: {string.Join("\n    ", sortedStrings)}");

@@ -8,8 +8,7 @@ using Kingmaker.Blueprints;
 using Kingmaker.BundlesLoading;
 using ModKit;
 using Kingmaker.Blueprints.Facts;
-using System.Web.Caching;
-
+#if false
 namespace ToyBox {
     using BlueprintGuid = String;
     internal class BlueprintDataSource : DataSource<SimpleBlueprint> {
@@ -52,3 +51,4 @@ namespace ToyBox {
         }
     }
 }
+#endif

@@ -14,17 +14,12 @@ using ToyBox.classes.Infrastructure;
 using UnityEngine;
 using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
-#if Wrath
 using Kingmaker.Blueprints.Classes.Spells;
-#elif RT
-using Kingmaker.Code.UnitLogic;
-#endif
 
 namespace ToyBox {
     public partial class PartyEditor {
         public static Dictionary<UnitEntityData, Browser<BlueprintSpellbook, Spellbook>> SpellbookBrowserDict = new();
         public static Dictionary<UnitEntityData, Browser<BlueprintAbility, AbilityData>> SpellBrowserDict = new();
-        private static bool _startedLoading = false;
         public static List<Action> OnSpellsGUI(UnitEntityData ch, List<Spellbook> spellbooks) {
             List<Action> todo = new();
             Space(20);
@@ -39,15 +34,13 @@ namespace ToyBox {
                     selectedSpellBookChanged = SelectionGrid(ref selectedSpellbook, titles, Math.Min(titles.Length, 7), AutoWidth());
                     if (selectedSpellbook >= names.Length) selectedSpellbook = 0;
                     DisclosureToggle("Edit".localize().orange().bold(), ref editSpellbooks);
-#if Wrath
                     Space(-50);
                     var mergeableClasses = ch.MergableClasses().ToList();
                     if (spellbook.IsStandaloneMythic || mergeableClasses.Count() == 0) {
                         Label($"Mythic Merging".localize().cyan(), AutoWidth());
                         25.space();
                         Label("When you get standalone mythic spellbooks you can merge them here by select.".localize().green());
-                    }
-                    else {
+                    } else {
                         Label($"Merge Mythic:".localize().cyan(), 175.width());
                         25.space();
                         foreach (var cl in mergeableClasses) {
@@ -61,14 +54,12 @@ namespace ToyBox {
                             Label("Warning: This is irreversible. Please save before continuing!".localize().Orange());
                         }
                     }
-#endif
                 }
                 spellbook = spellbooks.ElementAt(selectedSpellbook);
                 if (editSpellbooks) {
                     spellbookEditCharacter = ch;
                     SpellBookBrowserOnGUI(ch, spellbooks, todo);
-                }
-                else {
+                } else {
                     var spellBrowser = SpellBrowserDict.GetValueOrDefault(ch, null);
                     if (spellBrowser == null) {
                         spellBrowser = new Browser<BlueprintAbility, AbilityData>(Mod.ModKitSettings.searchAsYouType);
@@ -89,8 +80,7 @@ namespace ToyBox {
                                     var knownCount = spellbook.GetKnownSpells(lvl).Count;
                                     var countText = knownCount > 0 ? $" ({knownCount})".white() : "";
                                     return levelText + countText;
-                                }
-                                else {
+                                } else {
                                     return "All Spells".localize();
                                 }
                             },
@@ -108,7 +98,6 @@ namespace ToyBox {
                             ActionButton("+1 CL", () => CasterHelpers.AddCasterLevel(spellbook), AutoWidth());
                         }
                         // removes opposition schools; these are not cleared when removing facts; to add new opposition schools, simply add the corresponding fact again
-#if Wrath
                         if (spellbook.OppositionSchools.Any()) {
                             ActionButton("Clear Opposition Schools".localize(), () => {
                                 spellbook.OppositionSchools.Clear();
@@ -122,9 +111,11 @@ namespace ToyBox {
                                 ch.Facts.RemoveAll<UnitFact>(r => r.Blueprint.GetComponent<AddOppositionDescriptor>(), true);
                             }, AutoWidth());
                         }
-#endif
                     }
                     var unorderedSpells = selectedSpellbookLevel <= spellbook.Blueprint.MaxSpellLevel ? spellbook.GetKnownSpells(selectedSpellbookLevel) : spellbook.GetAllKnownSpells();
+                    if (Settings.showSpecialSpells) {
+                        unorderedSpells = selectedSpellbookLevel <= spellbook.Blueprint.MaxSpellLevel ? unorderedSpells.Concat(spellbook.m_CustomSpells?[selectedSpellbookLevel] ?? []) : unorderedSpells.Concat(spellbook.GetAllCustomSpells());
+                    }
                     var spells = unorderedSpells.OrderBy(d => d.Name).ToList();
                     SelectedSpellbook[ch.HashKey()] = spellbook;
                     spellBrowser.OnGUI(
@@ -134,12 +125,10 @@ namespace ToyBox {
                             if (Settings.showFromAllSpellbooks || (spellbook.Blueprint.MaxSpellLevel + 1) == selectedSpellbookLevel) {
                                 if ((spellbook.Blueprint.MaxSpellLevel + 1) == selectedSpellbookLevel) {
                                     availableSpells = new List<BlueprintAbility>(CasterHelpers.GetAllSpells(-1));
-                                }
-                                else {
+                                } else {
                                     availableSpells = new List<BlueprintAbility>(CasterHelpers.GetAllSpells(selectedSpellbookLevel));
                                 }
-                            }
-                            else {
+                            } else {
                                 availableSpells = new List<BlueprintAbility>(spellbook.Blueprint.SpellList.GetSpells(selectedSpellbookLevel));
                             }
                             if (!((spellbook.Blueprint.MaxSpellLevel + 1) == selectedSpellbookLevel)) {
@@ -163,7 +152,10 @@ namespace ToyBox {
                                 20.space();
                                 if (Toggle("Search All Spellbooks".localize(), ref Settings.showFromAllSpellbooks)) {
                                     spellBrowser.ResetSearch();
-                                    _startedLoading = true;
+                                }
+                                20.space();
+                                if (Toggle("Show Special Spells".localize(), ref Settings.showSpecialSpells)) {
+                                    spellBrowser.ResetSearch();
                                 }
                                 if (needsReload) spellBrowser.ResetSearch();
                                 GUI.enabled = !spellBrowser.isSearching;
@@ -180,8 +172,7 @@ namespace ToyBox {
                                         if (SelectedNewSpellLvl >= 0) {
                                             if (SelectedNewSpellLvl == 0) {
                                                 SelectedNewSpellLvl = spellbook.Blueprint.MaxSpellLevel;
-                                            }
-                                            else {
+                                            } else {
                                                 SelectedNewSpellLvl -= 1;
                                             }
                                         }
@@ -189,8 +180,7 @@ namespace ToyBox {
                                     ActionButton("+", () => {
                                         if (SelectedNewSpellLvl == spellbook.MaxSpellLevel) {
                                             SelectedNewSpellLvl = 1;
-                                        }
-                                        else {
+                                        } else {
                                             SelectedNewSpellLvl += 1;
                                         }
                                     }, AutoWidth());
@@ -203,8 +193,7 @@ namespace ToyBox {
                             ReflectionTreeView.OnDetailGUI(blueprint);
                         }, 50, false, true, 100, 300, "", true);
                 }
-            }
-            else {
+            } else {
                 SpellBookBrowserOnGUI(ch, spellbooks, todo, true);
             }
             return todo;

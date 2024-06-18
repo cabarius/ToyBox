@@ -27,7 +27,6 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(CameraZoom))]
         private static class CameraZoomPatch {
-            private static bool firstCall = true;
             private static float BaseFovMin => (Settings.toggleZoomOnAllMaps || Settings.toggleZoomableLocalMaps) ? 12 : 17.5f;
             private static readonly float BaseFovMax = 30;
             private static float FovMin => BaseFovMin / Settings.fovMultiplier;
@@ -214,8 +213,7 @@ namespace ToyBox.BagOfPatches {
                 if (__instance.m_RotationByMouse) {
                     if (!Settings.toggleInvertXAxis) xRotationSign = -1;
                     mouseMovement = __instance.CameraDragToRotate2D();
-                }
-                else if (__instance.m_RotationByKeyboard) {
+                } else if (__instance.m_RotationByKeyboard) {
                     mouseMovement.x = __instance.m_RotateOffset;
                     if (Settings.toggleInvertKeyboardXAxis) xRotationSign = -1;
                 }
@@ -231,13 +229,11 @@ namespace ToyBox.BagOfPatches {
                         highlightingFeature.DepthClip.NearCameraClipDistance = 10;
                         highlightingFeature.DepthClip.ClipTreshold = 0;
                         Main.resetExtraCameraAngles = false;
-                    }
-                    else {
+                    } else {
                         if (Input.GetKey(KeyCode.LeftControl)) {
                             ___m_TargetPosition.y += yRotationSign * mouseMovement.y / 10f;
                             CameraElevation = ___m_TargetPosition.y;
-                        }
-                        else if (usePitch) {
+                        } else if (usePitch) {
                             eulerAngles.x += yRotationSign * mouseMovement.y * __instance.m_RotationSpeed * CameraRig.ConsoleRotationMod;
                             //Mod.Debug($"eulerX: {eulerAngles.x} Y: {eulerAngles.y} Z: {eulerAngles.z}");
                         }

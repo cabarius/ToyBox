@@ -22,7 +22,7 @@ namespace ModKit.DataViewer {
             _cachedReflectionTrees.Add(key, tree);
         }
 #endif
-        private static readonly Dictionary<object, ReflectionTreeView> ExpandedObjects = new();
+        private static readonly Dictionary<object, ReflectionTreeView> ExpandedObjects = [];
         public static void ClearExpanded() => ExpandedObjects.Clear();
         public static void DetailToggle(string? title, object key, object? target = null, int width = 600) {
             target ??= key;
@@ -49,22 +49,20 @@ namespace ModKit.DataViewer {
 
 
         private ReflectionTree _tree;
-        private ReflectionSearchResult _searchResults = new();
-        private float _height;
+        private readonly ReflectionSearchResult _searchResults = new();
         private bool _mouseOver;
         private GUIStyle _buttonStyle;
         private GUIStyle _valueStyle;
         private int _totalNodeCount;
         private int _nodesCount;
         private int _startIndex;
-        private int _skipLevels;
+        private readonly int _skipLevels = default;
         private string _searchText = "";
 
         internal string[] SearchTerms => _searchText.Length == 0
-                                             ? Array.Empty<string>()
+                                             ? []
                                              : _searchText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-        private bool enableCopy = false;
         private int visitCount = 0;
         private int searchDepth = 0;
         private int searchBreadth = 0;
@@ -106,10 +104,8 @@ namespace ModKit.DataViewer {
         public void OnGUI(bool drawRoot = true, bool collapse = false) {
             if (_tree == null)
                 return;
-            if (_buttonStyle == null)
-                _buttonStyle = new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleLeft, stretchHeight = false };
-            if (_valueStyle == null)
-                _valueStyle = new GUIStyle(GUI.skin.box) { alignment = TextAnchor.MiddleLeft, stretchHeight = false };
+            _buttonStyle ??= new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleLeft, stretchHeight = false };
+            _valueStyle ??= new GUIStyle(GUI.skin.box) { alignment = TextAnchor.MiddleLeft, stretchHeight = false };
             if (Event.current.type == EventType.Layout) {
                 var count = ReflectionSearch.ApplyUpdates();
                 if (count > 0) Mod.Log($"ReflectionTreeView.OnGUI - {count} Search Updates Applied");
@@ -275,7 +271,6 @@ namespace ModKit.DataViewer {
                                 _mouseOver = _viewerRect.Contains(Event.current.mousePosition);
                                 //Main.Log($"mousePos: {mousePos} Rect: {_viewerRect} --> {_mouseOver}");
                                 _viewerRect = GUILayoutUtility.GetLastRect();
-                                _height = _viewerRect.height + 5f;
                             }
                             //                  }
                         }
@@ -297,7 +292,7 @@ namespace ModKit.DataViewer {
                     if (!Mod.ModKitSettings.toggleDataViewerShowNullAndEmpties
                         && (enumerableCount == 0 || node.IsNull))
                         return;
-                    if (enumerableCount >= 0) name = name + $"[{enumerableCount}]".yellow();
+                    if (enumerableCount >= 0) name += $"[{enumerableCount}]".yellow();
                     var typeName = node.InstType?.Name ?? node.Type?.Name;
                     ToggleButton(ref expanded,
                                  $"[{node.NodeTypePrefix}] ".color(RGBA.grey)
@@ -361,13 +356,13 @@ namespace ModKit.DataViewer {
                 // children
                 if (expanded.IsOn()) DrawChildren(node, depth + 1, collapse);
             }
-            catch (Exception e) { }
+            catch (Exception) { }
         }
 
         private void DrawChildren(Node node, int depth, bool collapse, Func<Node, bool>? hoist = null) {
             if (node.IsBaseType)
                 return;
-            if (hoist == null) hoist = (n) => n.Matches;
+            hoist ??= (n) => n.Matches;
             var toHoist = new List<Node>();
             var others = new List<Node>();
             var nodesCount = _nodesCount;

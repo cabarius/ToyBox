@@ -25,7 +25,7 @@ namespace ToyBox {
                        Label(("Note:".orange() + " For cutscenes and some situations the rotation keys are disabled so you have to hold down Mouse3 to drag in order to get rotation".green()).localize());
                    },
                    () => {
-                       if (Toggle("Enable Mouse3 Dragging To Aim The Camera".localize(), ref Settings.toggleCameraPitch,400.width())) {
+                       if (Toggle("Enable Mouse3 Dragging To Aim The Camera".localize(), ref Settings.toggleCameraPitch, 400.width())) {
                            Main.resetExtraCameraAngles = true;
                        }
                        153.space();
@@ -37,11 +37,9 @@ namespace ToyBox {
                        25.space();
                        Toggle("Free Camera".localize(), ref Settings.toggleFreeCamera);
                    },
-#if Wrath
                    () => {
                        Toggle("Alt + Mouse Wheel To Adjust Clip Plane".localize(), ref Settings.toggleUseAltMouseWheelToAdjustClipPlane);
                    },
-#endif
                    () => Label("Rotation Options".localize().cyan()),
                    () => {
                        50.space();

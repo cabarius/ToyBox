@@ -26,29 +26,20 @@ namespace ToyBox {
     }
     public class MulticlassOptions : SerializableDictionary<string, ArchetypeOptions> {
         public const string CharGenKey = @"$CharacterGeneration";
-#if Wrath
         public static MulticlassOptions Get(UnitDescriptor ch) {
-#elif RT
-        public static MulticlassOptions Get(UnitEntityData ch) {
-#endif
             //Main.Log($"stack: {System.Environment.StackTrace}");
             MulticlassOptions options;
             if (ch == null || ch.CharacterName == "Knight Commander" || ch.CharacterName == "Player Character") {
                 options = Main.Settings.multiclassSettings.GetValueOrDefault(CharGenKey, new MulticlassOptions());
                 //Mod.Debug($"MulticlassOptions.Get - chargen - options: {options}");
-            }
-            else {
+            } else {
                 if (ch.HashKey() == null) return null;
                 options = Main.Settings.perSave.multiclassSettings.GetValueOrDefault(ch.HashKey(), new MulticlassOptions());
                 //Mod.Debug($"MulticlassOptions.Get - {ch.CharacterName} - set: {options}");
             }
             return options;
         }
-#if Wrath
         public static bool CanSelectClassAsMulticlass(UnitDescriptor ch, BlueprintCharacterClass cl) {
-#elif RT
-        public static bool CanSelectClassAsMulticlass(UnitEntityData ch, BlueprintCharacterClass cl) {
-#endif
             if (!Main.IsInGame) return true;
             if (ch == null) return true;
             if (cl == null) return false;
@@ -73,13 +64,9 @@ namespace ToyBox {
             //Mod.Trace($"canSelect {cl.Name} - foundIt : {foundIt} count: {classCount} selected: {selectedCount} => {result}");
             return result;
         }
-#if Wrath
         public static void Set(UnitDescriptor ch, MulticlassOptions options) {
-#elif RT
-        public static void Set(UnitEntityData ch, MulticlassOptions options) {
-#endif
             //modLogger.Log($"stack: {System.Environment.StackTrace}");
-            if (ch == null || ch.CharacterName == "Knight Commander" || ch.CharacterName == "Player Character") 
+            if (ch == null || ch.CharacterName == "Knight Commander" || ch.CharacterName == "Player Character")
                 Main.Settings.multiclassSettings[CharGenKey] = options;
             else {
                 if (ch.HashKey() == null) return;

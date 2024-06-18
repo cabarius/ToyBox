@@ -126,8 +126,7 @@ namespace ToyBox.classes.MainUI {
                     if (settings.toggleLargeArmies) {
                         BlueprintRoot.Instance.Kingdom.StartArmySquadsCount = 14;
                         BlueprintRoot.Instance.Kingdom.MaxArmySquadsCount = 14;
-                    }
-                    else {
+                    } else {
                         BlueprintRoot.Instance.Kingdom.StartArmySquadsCount = 4;
                         BlueprintRoot.Instance.Kingdom.MaxArmySquadsCount = 7;
                     }
@@ -160,8 +159,7 @@ namespace ToyBox.classes.MainUI {
                            ActionButton("Add All Current Units".localize(), () => AddAllCurrentUnits(), 200.width());
                            110.space();
                            Label("Adds all currently active friendly units that are neither recruitable nor Mercanries to Mercenary units.".localize().green());
-                       }
-                       else {
+                       } else {
                            Label("Need Armies To Add All Current Units".localize().yellow());
                            25.space();
                            HelpLabel("You should be on the global map and have the Crusade active".localize());
@@ -238,8 +236,7 @@ namespace ToyBox.classes.MainUI {
                                                                 if (isInMercPool) {
                                                                     mercenaryManager.RemoveMercenary(unit);
                                                                     isInMercPool = false;
-                                                                }
-                                                                else {
+                                                                } else {
                                                                     mercenaryManager.AddMercenary(unit, 1);
                                                                     isInMercPool = true;
                                                                 }
@@ -257,8 +254,7 @@ namespace ToyBox.classes.MainUI {
                                                        if (LogSliderCustomLabelWidth("Weight".localize(), ref weight, 0.01f, 1000, 1, 2, "", 70, AutoWidth())) {
                                                            poolInfo.UpdateWeight(weight);
                                                        }
-                                                   }
-                                                   else {
+                                                   } else {
                                                        Label("Weird".localize(), AutoWidth());
                                                    }
                                                }
@@ -274,8 +270,7 @@ namespace ToyBox.classes.MainUI {
                                                                     recruitsManager.DecreaseGrowth(unit, count);
                                                                     recruitsManager.DecreasePool(unit, poolInfo?.Growth ?? 0);
                                                                     isInKingdomPool = false;
-                                                                }
-                                                                else {
+                                                                } else {
                                                                     settings.perSave.armyRecruitGrowthAdjustment[unit.GetHashCode()] = 10;
                                                                     recruitsManager.IncreaseGrowth(unit, 10);
                                                                     recruitsManager.IncreasePool(unit, 10);
@@ -298,16 +293,14 @@ namespace ToyBox.classes.MainUI {
                                                            var change = (int)growthTMP - count;
                                                            if (change > 0) {
                                                                recruitsManager.IncreaseGrowth(unit, change);
-                                                           }
-                                                           else {
+                                                           } else {
                                                                recruitsManager.DecreaseGrowth(unit, change);
                                                            }
                                                            if (!settings.perSave.armyRecruitGrowthAdjustment.ContainsKey(unit.GetHashCode())) settings.perSave.armyRecruitGrowthAdjustment[unit.GetHashCode()] = 0;
                                                            settings.perSave.armyRecruitGrowthAdjustment[unit.GetHashCode()] += change;
                                                            Settings.SavePerSaveSettings();
                                                        }
-                                                   }
-                                                   else {
+                                                   } else {
                                                        Label("Weird".localize(), AutoWidth());
                                                    }
                                                }
@@ -367,8 +360,7 @@ namespace ToyBox.classes.MainUI {
                                             selectedArmy = army == selectedArmy ? null : army;
                                             toggleStates[leader] = showLeader;
                                         }
-                                    }
-                                    else Space(353);
+                                    } else Space(353);
                                     var squads = army.Data.Squads;
                                     Label(squads.Count.ToString().cyan(), Width(35));
                                     showSquads = toggleStates.GetValueOrDefault(squads, false);
@@ -632,8 +624,7 @@ namespace ToyBox.classes.MainUI {
                 );
                 if (selectedArmy != null) {
                     armySelection[title] = selectedArmy;
-                }
-                else {
+                } else {
                     armySelection.Remove(title);
                 }
             }
@@ -671,8 +662,7 @@ namespace ToyBox.classes.MainUI {
                 var travelData = mapState?.PathManager?.CalculateArmyPathToPosition(army, position);
                 var length = travelData?.GetLength(false);
                 dist = length.HasValue ? length.GetValueOrDefault() : -1.0f;
-            }
-            catch { }
+            } catch { }
             return dist;
         }
         public static IEnumerable<(GlobalMapArmyState, float)> ArmiesByDistanceFromPlayer() {

@@ -29,23 +29,16 @@ using Kingmaker.Designers.Mechanics.EquipmentEnchants;
 using Kingmaker.Blueprints.Items.Ecnchantments;
 using Kingmaker.Designers.Mechanics.Facts;
 using static Kingmaker.EntitySystem.Stats.ModifiableValue;
-#if Wrath
 using ToyBox.Inventory;
 using Kingmaker.Blueprints.Classes.Selection;
 using static Kingmaker.EntitySystem.EntityDataBase;
-#endif
-#if Wrath
 namespace ToyBox {
     public static class ItemEntityUtils {
         public static bool HasModifierConflicts(this UnitEntityData unit, ItemEntity item) {
             var itemModifiers = item.GetModifierDescriptors();
             return unit.Stats.AllStats.SelectMany(stat => stat.Modifiers)
-                       .Any(m => !m.Stacks 
-#if Wrath
+                       .Any(m => !m.Stacks
                                  && m.ItemSource != (Loot.selectedSlot?.Item ?? null)
-#elif RT
-                                 && m.SourceItem != (Loot.selectedSlot?.Item ?? null)
-#endif
                                  && itemModifiers.Contains(m.ModDescriptor));
         }
         public static HashSet<ModifierDescriptor> GetNonStackingModifiers(this UnitEntityData unit) {
@@ -80,4 +73,3 @@ namespace ToyBox {
         }
     }
 }
-#endif

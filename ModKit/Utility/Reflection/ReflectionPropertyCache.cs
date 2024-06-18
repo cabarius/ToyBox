@@ -90,8 +90,7 @@ namespace ModKit.Utility {
                     il.Emit(OpCodes.Call, getter);
                     il.Emit(OpCodes.Ret);
                     return method.CreateDelegate(delType);
-                }
-                else {
+                } else {
                     return Delegate.CreateDelegate(delType, getter);
                 }
             }
@@ -111,8 +110,7 @@ namespace ModKit.Utility {
                     il.Emit(OpCodes.Call, setter);
                     il.Emit(OpCodes.Ret);
                     return method.CreateDelegate(delType);
-                }
-                else {
+                } else {
                     return Delegate.CreateDelegate(delType, setter);
                 }
             }

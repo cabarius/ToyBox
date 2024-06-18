@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ModKit.Utility;
-
+#if false
 namespace ModKit {
     public class Entry {
         private Type[] Inheritance; // this may be able to become type
@@ -108,3 +108,4 @@ namespace ModKit {
         public HashSet<string> Tags { get; }
     }
 }
+#endif

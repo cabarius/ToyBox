@@ -36,24 +36,21 @@ namespace ToyBox {
         public static void ActionButton<T>(this NamedAction<T> namedAction, T value, Action buttonAction, float width = 0) {
             if (namedAction != null && namedAction.canPerform(value)) {
                 UI.ActionButton(namedAction.name, buttonAction, width == 0 ? UI.AutoWidth() : UI.Width(width));
-            }
-            else {
+            } else {
                 UI.Space(width + 3);
             }
         }
         public static void MutatorButton<U, T>(this NamedMutator<U, T> mutator, U unit, T value, Action buttonAction, float width = 0) {
             if (mutator != null && mutator.canPerform(unit, value)) {
                 UI.ActionButton(mutator.name, buttonAction, width == 0 ? UI.AutoWidth() : UI.Width(width));
-            }
-            else {
+            } else {
                 UI.Space(width + 3);
             }
         }
         public static void BlueprintActionButton(this BlueprintAction action, UnitEntityData unit, SimpleBlueprint bp, Action buttonAction, float width) {
             if (action != null && action.canPerform(bp, unit)) {
                 UI.ActionButton(action.name, buttonAction, width == 0 ? UI.AutoWidth() : UI.Width(width));
-            }
-            else {
+            } else {
                 UI.Space(width + 3);
             }
         }

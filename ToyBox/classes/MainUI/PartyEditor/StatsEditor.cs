@@ -55,8 +55,7 @@ namespace ToyBox {
                 portraitData = new PortraitData(customID);
                 if (portraitData.DirectoryExists()) {
                     _portraitsByID[customID] = CustomPortraitsManager.CreatePortraitData(customID);
-                }
-                else {
+                } else {
                     loaded = false;
                 }
             }
@@ -66,8 +65,7 @@ namespace ToyBox {
                 if (targetWidth == 0) {
                     w = (int)(sprite.rect.width * scaling);
                     h = (int)(sprite.rect.height * scaling);
-                }
-                else {
+                } else {
                     w = targetWidth;
                     h = (int)(targetWidth * (sprite.rect.height / sprite.rect.width));
                 }
@@ -76,8 +74,7 @@ namespace ToyBox {
                         if (GUILayout.Button(sprite.texture, rarityStyle, w.width(), h.height())) {
                             newPortraitName = customID;
                         }
-                    }
-                    else {
+                    } else {
                         GUILayout.Label(sprite.texture, rarityStyle, w.width(), h.height());
                     }
                     Label(customID);
@@ -92,8 +89,7 @@ namespace ToyBox {
                 if (targetWidth == 0) {
                     w = (int)(sprite.rect.width * scaling);
                     h = (int)(sprite.rect.height * scaling);
-                }
-                else {
+                } else {
                     w = targetWidth;
                     h = (int)(targetWidth * (sprite.rect.height / sprite.rect.width));
                 }
@@ -102,8 +98,7 @@ namespace ToyBox {
                         if (GUILayout.Button(sprite.texture, rarityStyle, w.width(), h.height())) {
                             newBlueprintPortrait = portrait;
                         }
-                    }
-                    else {
+                    } else {
                         GUILayout.Label(sprite.texture, rarityStyle, w.width(), h.height());
                     }
                     Label(BlueprintExtensions.GetTitle(portrait), MinWidth(200), AutoWidth());
@@ -118,8 +113,7 @@ namespace ToyBox {
                     if (ch.UISettings.Portrait.IsCustom) {
                         Label("Current Custom Portrait".localize());
                         OnPortraitGUI(ch.UISettings.Portrait.CustomId, 0.25f, false);
-                    }
-                    else {
+                    } else {
                         Label("Current Blueprint Portrait".localize());
                         OnPortraitGUI(ch.UISettings.PortraitBlueprint, 0.25f, false, (int)(0.25f * 692));
                     }
@@ -134,8 +128,7 @@ namespace ToyBox {
                                     ch.UISettings.SetPortrait(new PortraitData(newPortraitName));
                                     Mod.Debug($"Changed portrait of {ch.CharacterName} to {newPortraitName}");
                                     unknownID = false;
-                                }
-                                else {
+                                } else {
                                     Mod.Warn($"No portrait with name {newPortraitName}");
                                     unknownID = true;
                                 }
@@ -213,8 +206,16 @@ namespace ToyBox {
                     }
                 }
             }
+            using (HorizontalScope()) {
+                100.space();
+                var cName = ch.Blueprint?.CharacterName?.ToLower() ?? ch.Blueprint.AssetGuid.ToString();
+                bool DisableVO = Settings.namesToDisableVoiceOver.Contains(cName);
+                if (Toggle("Disable Voice Over and Barks for this character".localize(), ref DisableVO, Width(425))) {
+                    if (DisableVO) Settings.namesToDisableVoiceOver.Add(cName);
+                    else Settings.namesToDisableVoiceOver.Remove(cName);
+                }
+            }
             Div(100, 20, 755);
-#if Wrath
             var alignment = ch.Descriptor().Alignment.ValueRaw;
             using (HorizontalScope()) {
                 100.space();
@@ -232,8 +233,7 @@ namespace ToyBox {
                 var text = "Shift Alignment % by".localize()?.Split('%');
                 if (text.Length < 2) {
                     Label($"Shift Alignment {alignment.Acronym().color(alignment.Color()).bold()} {(charAlignment.VectorRaw * 50).ToString().Cyan()} by", 340.width());
-                }
-                else {
+                } else {
                     Label($"{text?[0]}{alignment.Acronym().color(alignment.Color()).bold()} {(charAlignment.VectorRaw * 50).ToString().Cyan()}{text?[1]}", 340.width());
                 }
                 5.space();
@@ -264,47 +264,6 @@ namespace ToyBox {
                 }
             }
             Div(100, 20, 755);
-#elif RT
-            var soulMarks = ch.GetSoulMarks();
-            using (HorizontalScope()) {
-                100.space();
-                Label("Soul Marks".localize(), Width(200));
-                using (VerticalScope()) {
-                    var names = Enum.GetNames(typeof(SoulMarkDirection));
-                    var index = 0;
-                    foreach (var name in names) {
-                        if (name == "None") continue;
-                        var soulMarkDirection = (SoulMarkDirection)index;
-                        var soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, soulMarkDirection);
-                        using (HorizontalScope()) {
-                            Label(name.localize().orange(), 200.width());
-                            var oldRank = soulMark?.GetRank() - 1 ?? 0;
-                            ValueAdjuster(
-                                "Rank".localize(), () => oldRank,
-                                v => {
-                                    var change = v - oldRank;
-                                    if (Math.Abs(change) > 0) {
-                                        var soulMarkShift = new SoulMarkShift {
-                                            Direction = soulMarkDirection,
-                                            Value = change
-                                        };
-                                        new BlueprintAnswer {
-                                            SoulMarkShift = soulMarkShift
-                                        }.ApplyShiftDialog();
-
-                                    }
-                                }, 1, 0, 120);
-                        }
-                        index++;
-                    }
-                }
-            }
-            using (HorizontalScope()) {
-                528.space();
-                //                AlignmentGrid(alignment, (a) => ch.Descriptor().Alignment.Set(a));
-            }
-            Div(100, 20, 755);
-#endif
 #if false
                                     var soulMark = SoulMarkShiftExtension.GetSoulMarkFor(ch, (SoulMarkDirection)index);
                         using (HorizontalScope()) {
@@ -327,7 +286,6 @@ namespace ToyBox {
                         }
 #endif
             if (ch != null && ch.HashKey() != null) {
-#if Wrath
                 using (HorizontalScope()) {
                     Space(100);
                     using (VerticalScope()) {
@@ -358,8 +316,7 @@ namespace ToyBox {
                                        ch.Descriptor().State.Size = newSize;
                                        Main.Settings.perSave.characterSizeModifier[ch.HashKey()] = newSize;
                                        Settings.SavePerSaveSettings();
-                                   }
-                                   else {
+                                   } else {
                                        Main.Settings.perSave.characterSizeModifier.Remove(ch.HashKey());
                                        Settings.SavePerSaveSettings();
                                        ch.Descriptor().State.Size = ch.Descriptor().OriginalSize;
@@ -369,7 +326,6 @@ namespace ToyBox {
                         }
                     }
                 }
-#endif
                 using (HorizontalScope()) {
                     Space(100);
                     if (ch.View?.gameObject?.transform?.localScale[0] is float scaleMultiplier) {
@@ -386,7 +342,6 @@ namespace ToyBox {
                     }
                 }
             }
-#if Wrath
             if (ch.Descriptor().Progression.GetCurrentMythicClass()?.CharacterClass.Name == "Swarm That Walks") {
                 UnitPartLocustSwarm SwarmPart = null;
                 UnitPartLocustClonePets SwarmClones = null;
@@ -454,7 +409,6 @@ namespace ToyBox {
                 }
             }
             Div(100, 20, 755);
-#endif
             using (HorizontalScope()) {
                 Space(100);
                 Label("Gender".localize(), Width(400));
@@ -477,21 +431,13 @@ namespace ToyBox {
                 try {
                     var statType = (StatType)obj;
                     Mod.Debug($"stat: {statType}");
-#if Wrath
                     var modifiableValue = ch.Stats.GetStat(statType);
-#elif RT
-                    var modifiableValue = ch.Stats.GetStatOptional(statType);
-#endif
                     if (modifiableValue == null) {
                         continue;
                     }
 
                     var key = $"{ch.CharacterName}-{statType}";
-#if Wrath
                     var storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.BaseValue;
-#elif RT
-                    var storedValue = statEditorStorage.ContainsKey(key) ? statEditorStorage[key] : modifiableValue.ModifiedValue;
-#endif
                     var statName = statType.ToString();
                     if (statName == "BaseAttackBonus" || statName == "SkillAthletics" || statName == "HitPoints") {
                         Div(100, 20, 755);
@@ -504,52 +450,31 @@ namespace ToyBox {
                                      () => {
                                          modifiableValue.BaseValue -= 1;
                                          modifiableValue.UpdateValue();
-#if Wrath
                                          storedValue = modifiableValue.BaseValue;
-#elif RT
-                                         storedValue = modifiableValue.ModifiedValue;
-#endif
                                      },
                                      GUI.skin.box,
                                      AutoWidth());
                         Space(20);
-#if Wrath
                         var val = modifiableValue.BaseValue;
-#elif RT
-                        var val = modifiableValue.ModifiedValue;
-#endif
                         Label($"{val}".orange().bold(), Width(50f));
                         ActionButton(" > ",
                                      () => {
                                          modifiableValue.BaseValue += 1;
                                          modifiableValue.UpdateValue();
-#if Wrath
                                          storedValue = modifiableValue.BaseValue;
-#elif RT
-                                         storedValue = modifiableValue.ModifiedValue;
-#endif
                                      },
                                      GUI.skin.box,
                                      AutoWidth());
                         Space(25);
                         ActionIntTextField(ref storedValue, (v) => {
 
-#if Wrath
                             modifiableValue.BaseValue += v - modifiableValue.BaseValue;
                             storedValue = modifiableValue.BaseValue;
-#elif RT
-                            modifiableValue.BaseValue += v - modifiableValue.ModifiedValue;
-                            storedValue = modifiableValue.ModifiedValue;
-#endif
                             modifiableValue.UpdateValue();
-#if Wrath
-#elif RT
-#endif
                         }, Width(75));
                         statEditorStorage[key] = storedValue;
                     }
-                }
-                catch (Exception ex) {
+                } catch (Exception) {
                     // Mod.Error(ex);
                 }
             }

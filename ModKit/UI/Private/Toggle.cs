@@ -54,32 +54,32 @@ namespace ModKit.Private {
                     break;
 
                 case EventType.Repaint: {
-                    //bool leftAlign = stateStyle.alignment == TextAnchor.MiddleLeft
-                    //                || stateStyle.alignment == TextAnchor.UpperLeft
-                    //                || stateStyle.alignment == TextAnchor.LowerLeft
-                    //                ;
-                    var rightAlign = stateStyle.alignment == TextAnchor.MiddleRight
-                                     || stateStyle.alignment == TextAnchor.UpperRight
-                                     || stateStyle.alignment == TextAnchor.LowerRight
-                        ;
-                    // stateStyle.alignment determines position of state element
-                    var state = isEmpty
-                                    ? DisclosureEmpty
-                                    : value
-                                        ? on
-                                        : off;
-                    var stateSize = stateStyle.CalcSize(value ? on : off); // don't use the empty content to calculate size so titles line up in lists
-                    var x = rightAlign ? rect.xMax - stateSize.x : rect.x;
-                    Rect stateRect = new(x, rect.y, stateSize.x, stateSize.y);
+                        //bool leftAlign = stateStyle.alignment == TextAnchor.MiddleLeft
+                        //                || stateStyle.alignment == TextAnchor.UpperLeft
+                        //                || stateStyle.alignment == TextAnchor.LowerLeft
+                        //                ;
+                        var rightAlign = stateStyle.alignment == TextAnchor.MiddleRight
+                                         || stateStyle.alignment == TextAnchor.UpperRight
+                                         || stateStyle.alignment == TextAnchor.LowerRight
+                            ;
+                        // stateStyle.alignment determines position of state element
+                        var state = isEmpty
+                                        ? DisclosureEmpty
+                                        : value
+                                            ? on
+                                            : off;
+                        var stateSize = stateStyle.CalcSize(value ? on : off); // don't use the empty content to calculate size so titles line up in lists
+                        var x = rightAlign ? rect.xMax - stateSize.x : rect.x;
+                        Rect stateRect = new(x, rect.y, stateSize.x, stateSize.y);
 
-                    // layout state before or after following alignment
-                    var labelSize = labelStyle.CalcSize(label);
-                    x = rightAlign ? stateRect.x - stateSize.x - 5 : stateRect.xMax + 5;
-                    Rect labelRect = new(x, rect.y, labelSize.x, labelSize.y);
+                        // layout state before or after following alignment
+                        var labelSize = labelStyle.CalcSize(label);
+                        x = rightAlign ? stateRect.x - stateSize.x - 5 : stateRect.xMax + 5;
+                        Rect labelRect = new(x, rect.y, labelSize.x, labelSize.y);
 
-                    stateStyle.Draw(stateRect, state, controlID);
-                    labelStyle.Draw(labelRect, label, controlID);
-                }
+                        stateStyle.Draw(stateRect, state, controlID);
+                        labelStyle.Draw(labelRect, label, controlID);
+                    }
                     break;
             }
             return result;

@@ -1,12 +1,12 @@
 ﻿{
   "Id": "0ToyBox0",
-  "DisplayName": "{ToyBox} is preparing to conquer the Imperium",
+  "DisplayName": "ToyBox",
   "Author": "Narria",
-  "Version": "1.5.7a",
-  "ManagerVersion": "0.23.0",
+  "Version": "1.5.18",
+  "ManagerVersion": "0.27.11",
   "Requirements": [],
   "AssemblyName": "ToyBox.dll",
   "EntryMethod": "ToyBox.Main.Load",
   "HomePage": "https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/8?tab=posts&BH=0",
-  "Repository": "https://raw.githubusercontent.com/cabarius/ToyBox/master/ToyBox/Repository.json"
+  "Repository": "https://raw.githubusercontent.com/xADDBx/ToyBox-Wrath/main/ToyBox/Repository.json"
 }

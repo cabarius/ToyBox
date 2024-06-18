@@ -56,10 +56,10 @@ namespace ModKit.DataViewer {
             IsNullable = Type.IsGenericType && !Type.IsGenericTypeDefinition && Type.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
-        [ObsoleteAttribute("TODO - move this into a proper view model", false)]
+        //[ObsoleteAttribute("TODO - move this into a proper view model", false)]
         public ToggleState Expanded { get; set; }
 
-        [ObsoleteAttribute("TODO - move this into a proper view model", false)]
+        //[ObsoleteAttribute("TODO - move this into a proper view model", false)]
         public bool Matches { get; set; }
 
         public string NodeTypePrefix {
@@ -393,11 +393,7 @@ namespace ModKit.DataViewer {
                                                                                                child.Name)).ToList();
             // TODO: generalize this and implement custom data extractors
             if (Value is BlueprintReferenceBase bpRefBase) {
-#if Wrath
                 var customNode = new CustomNode<SimpleBlueprint>("Cached", bpRefBase.GetBlueprint(), NodeType.Property);
-#elif RT
-                var customNode = new CustomNode<BlueprintScriptableObject>("Cached", bpRefBase.GetBlueprint(), NodeType.Property);
-#endif
                 _propertyNodes.Add(customNode);
             }
             _propertyNodes.Sort((x, y) => x.Name.CompareTo(y.Name));
@@ -537,8 +533,7 @@ namespace ModKit.DataViewer {
             if (TryGetParentValue(out var parentValue)) {
                 _isException = false;
                 Value = parentValue.GetFieldValue<TParentInst, TNode>(Name);
-            }
-            else {
+            } else {
                 _isException = true;
                 Value = default;
             }
@@ -553,8 +548,7 @@ namespace ModKit.DataViewer {
                 try {
                     _isException = false;
                     Value = parentValue.GetPropertyValue<TParentInst, TNode>(Name);
-                }
-                catch {
+                } catch {
                     _isException = true;
                     Value = default;
                 }
@@ -572,8 +566,7 @@ namespace ModKit.DataViewer {
             if (TryGetParentValue(out var parentValue)) {
                 _isException = false;
                 Value = parentValue.GetFieldValue<TUnderlying, TNode>(Name);
-            }
-            else {
+            } else {
                 _isException = true;
                 Value = default;
             }
@@ -588,8 +581,7 @@ namespace ModKit.DataViewer {
                 try {
                     _isException = false;
                     Value = parentValue.GetPropertyValue<TUnderlying, TNode>(Name);
-                }
-                catch {
+                } catch {
                     _isException = true;
                     Value = default;
                 }
@@ -607,8 +599,7 @@ namespace ModKit.DataViewer {
             if (TryGetParentValue(out var parentValue)) {
                 _isException = false;
                 Value = parentValue.GetFieldValue<TParentInst, TNode>(Name);
-            }
-            else {
+            } else {
                 _isException = true;
                 Value = default;
             }
@@ -623,8 +614,7 @@ namespace ModKit.DataViewer {
                 try {
                     _isException = false;
                     Value = parentValue.GetPropertyValue<TParentInst, TNode>(Name);
-                }
-                catch {
+                } catch {
                     _isException = true;
                     Value = default;
                 }

@@ -30,9 +30,6 @@ using ModKit;
 using Kingmaker.PubSubSystem;
 using Kingmaker.UI._ConsoleUI.InputLayers.InGameLayer;
 using Kingmaker;
-#if RT
-
-#endif
 
 namespace ToyBox {
     public class DummyKnownSpellsView : SpellbookKnownSpellsPCView {
@@ -40,7 +37,7 @@ namespace ToyBox {
         public override void DestroyViewImplementation() { }
     }
 
-    public class EnhancedSpellbookController : MonoBehaviour, 
+    public class EnhancedSpellbookController : MonoBehaviour,
                                                IGlobalSubscriber,
                                                ISubscriber {
         private SearchBar m_search_bar;
@@ -132,7 +129,7 @@ namespace ToyBox {
             dummy.m_KnownSpellView = m_known_spell_prefab;
             dummy.m_PossibleSpellView = m_possible_spell_prefab;
             var spellbookPCView = GetComponentInParent<SpellbookPCView>();
-            if (spellbookPCView) 
+            if (spellbookPCView)
                 spellbookPCView.m_KnownSpellsView = dummy;
 
             // Disable the current spell level indicator, it isn't used any more.
@@ -250,7 +247,7 @@ namespace ToyBox {
                                                                 .GetComponentsInChildren<SpellbookKnownSpellPCView>()) {
                         if (m_all_spells_checkbox.isOn) {
                             // Event per slot in the prefab to change the selected option.
-                            m_handlers.Add(spell.m_Button.OnLeftClickAsObservable().Subscribe(delegate(Unit _) { SelectMemorisationLevel(spell.ViewModel.SpellLevel); }));
+                            m_handlers.Add(spell.m_Button.OnLeftClickAsObservable().Subscribe(delegate (Unit _) { SelectMemorisationLevel(spell.ViewModel.SpellLevel); }));
 
                             // Draw the level...
                             if (Main.Settings.toggleSpellbookShowLevelWhenViewingAllSpells) {
@@ -282,8 +279,8 @@ namespace ToyBox {
         private bool ShouldShowSpell(BlueprintAbility spell, SpellbookFilter filter) {
             string save = spell.LocalizedSavingThrow;
 
-            if (filter == SpellbookFilter.TargetsFortitude 
-                || filter == SpellbookFilter.TargetsReflex 
+            if (filter == SpellbookFilter.TargetsFortitude
+                || filter == SpellbookFilter.TargetsReflex
                 || filter == SpellbookFilter.TargetsWill
                 || filter == SpellbookFilter.SupportsMetamagic
                 ) {
@@ -299,17 +296,13 @@ namespace ToyBox {
 
             if (string.IsNullOrWhiteSpace(text)) {
                 return true;
-            }
-            else if (Main.Settings.SpellbookSearchCriteria.HasFlag(SpellbookSearchCriteria.SpellName) && spell.Name.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0) {
+            } else if (Main.Settings.SpellbookSearchCriteria.HasFlag(SpellbookSearchCriteria.SpellName) && spell.Name.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0) {
                 return true;
-            }
-            else if (Main.Settings.SpellbookSearchCriteria.HasFlag(SpellbookSearchCriteria.SpellDescription) && spell.Description.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0) {
+            } else if (Main.Settings.SpellbookSearchCriteria.HasFlag(SpellbookSearchCriteria.SpellDescription) && spell.Description.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0) {
                 return true;
-            }
-            else if (Main.Settings.SpellbookSearchCriteria.HasFlag(SpellbookSearchCriteria.SpellSaves) && save.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0) {
+            } else if (Main.Settings.SpellbookSearchCriteria.HasFlag(SpellbookSearchCriteria.SpellSaves) && save.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0) {
                 return true;
-            }
-            else if (Main.Settings.SpellbookSearchCriteria.HasFlag(SpellbookSearchCriteria.SpellSchool) && spell.School.ToString().IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0) {
+            } else if (Main.Settings.SpellbookSearchCriteria.HasFlag(SpellbookSearchCriteria.SpellSchool) && spell.School.ToString().IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0) {
                 return true;
             }
 
@@ -323,7 +316,7 @@ namespace ToyBox {
             m_spellbook_level = spellbook_pc_view.ViewModel.CurrentSpellbookLevel;
             m_selected_spell = spellbook_pc_view.ViewModel.CurrentSelectedSpell;
 
-            m_spellbook_level.Subscribe(delegate(SpellbookLevelVM level) {
+            m_spellbook_level.Subscribe(delegate (SpellbookLevelVM level) {
                 if (level == null) return;
 
                 // Changing the selected level nothing for our view unless we're viewing all spells.
@@ -336,7 +329,7 @@ namespace ToyBox {
             });
 
             // This event is fired when the metamagic builder is opened or shut.
-            spellbook_pc_view.ViewModel.MetamagicBuilderMode.Subscribe(delegate(bool state) {
+            spellbook_pc_view.ViewModel.MetamagicBuilderMode.Subscribe(delegate (bool state) {
                 if (!state) return;
 
                 // If we've been opened, we need to register for the callback every time a new spell is created.
@@ -352,7 +345,7 @@ namespace ToyBox {
             });
 
             // This event is fired when changing spellbook or updating the spells inside the spellbook.
-            spellbook_pc_view.m_CharacteristicsView.ViewModel.RefreshCommand.ObserveLastValueOnLateUpdate().Subscribe(delegate(Unit _) {
+            spellbook_pc_view.m_CharacteristicsView.ViewModel.RefreshCommand.ObserveLastValueOnLateUpdate().Subscribe(delegate (Unit _) {
                 m_deferred_update = true;
                 m_scroll_bar.ScrollToTop();
             });
@@ -371,7 +364,7 @@ namespace ToyBox {
                 if (!m_all_spells_checkbox.isOn && spellbook_level != 11 && level != spellbook_level) continue;
 
                 foreach (AbilityData spell in UIUtilityUnit.GetKnownSpellsForLevel(level, m_spellbook.Value)) {
-//                    if (!m_metamagic_checkbox.isOn && spell.MetamagicData != null) continue;
+                    //                    if (!m_metamagic_checkbox.isOn && spell.MetamagicData != null) continue;
                     if (spellbook_level == 11 && spell.MetamagicData == null) continue;
 
                     if (ShouldShowSpell(spell.Blueprint, (SpellbookFilter)m_search_bar.Dropdown.value)) {

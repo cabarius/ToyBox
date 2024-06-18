@@ -8,6 +8,7 @@ using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Items.Armors;
 using Kingmaker.Blueprints.Items.Components;
 using Kingmaker.Blueprints.Items.Equipment;
+using Kingmaker.Blueprints.Root;
 using Kingmaker.Cheats;
 using Kingmaker.Controllers;
 using Kingmaker.Controllers.Combat;
@@ -39,9 +40,13 @@ using Kingmaker.UnitLogic.Abilities.Blueprints;
 using Kingmaker.UnitLogic.Abilities.Components.CasterCheckers;
 using Kingmaker.UnitLogic.Abilities.Components.TargetCheckers;
 using Kingmaker.UnitLogic.ActivatableAbilities;
+using Kingmaker.UnitLogic.ActivatableAbilities.Restrictions;
 using Kingmaker.UnitLogic.Buffs;
 using Kingmaker.UnitLogic.Class.Kineticist;
 using Kingmaker.UnitLogic.Class.Kineticist.ActivatableAbility;
+using Kingmaker.UnitLogic.Commands;
+using Kingmaker.UnitLogic.Commands.Base;
+using Kingmaker.UnitLogic.FactLogic;
 using Kingmaker.UnitLogic.Mechanics;
 using Kingmaker.UnitLogic.Mechanics.Actions;
 using Kingmaker.UnitLogic.Parts;
@@ -53,10 +58,14 @@ using Owlcat.Runtime.Core.Utils;
 using Owlcat.Runtime.Visual.RenderPipeline.RendererFeatures.FogOfWar;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using ToyBox;
+using TurnBased.Controllers;
+using TurnBased.Utility;
 using UnityEngine;
 using static Kingmaker.Utility.MassLootHelper;
 using Object = UnityEngine.Object;
@@ -460,7 +469,13 @@ namespace ToyBox.BagOfPatches {
                 return true;
             }
         }
-
+        [HarmonyPatch(typeof(TutorialSystem), nameof(TutorialSystem.Trigger))]
+        private static class TutorialSystem_Trigger_Patch {
+            [HarmonyPrefix]
+            private static bool Trigger() {
+                return !Settings.toggleForceDisableTutorials;
+            }
+        }
         [HarmonyPatch(typeof(ItemsCollection), nameof(ItemsCollection.DeltaWeight))]
         public static class NoWeight_Patch1 {
             public static void Refresh(bool SetEquipmentWeightZero) {
@@ -481,6 +496,15 @@ namespace ToyBox.BagOfPatches {
 
         [HarmonyPatch(typeof(UnitBody), nameof(UnitBody.EquipmentWeight), MethodType.Getter)]
         public static class NoWeight_Patch2 {
+            public static bool Prefix(ref float __result) {
+                if (!Settings.toggleEquipmentNoWeight) return true;
+
+                __result = 0f;
+                return false;
+            }
+        }
+        [HarmonyPatch(typeof(UnitBody), nameof(UnitBody.EquipmentWeightAfterBuff), MethodType.Getter)]
+        public static class NoWeight_Patch3 {
             public static bool Prefix(ref float __result) {
                 if (!Settings.toggleEquipmentNoWeight) return true;
 
@@ -564,13 +588,47 @@ namespace ToyBox.BagOfPatches {
         public static class KineticistAbilityBurnCost_GetTotal_Patch {
             public static void Postfix(ref int __result) => __result = Math.Max(0, __result - Settings.kineticistBurnReduction);
         }
-
-        [HarmonyPatch(typeof(UnitPartMagus), nameof(UnitPartMagus.IsSpellCombatThisRoundAllowed))]
-        public static class UnitPartMagus_IsSpellCombatThisRoundAllowed_Patch {
-            public static void Postfix(ref bool __result, UnitPartMagus __instance) {
+        [HarmonyPatch(typeof(UnitPartMagus))]
+        public static class UnitPartMagus_Patches {
+            [HarmonyPatch(nameof(UnitPartMagus.IsSpellCombatThisRoundAllowed)), HarmonyPostfix]
+            public static void IsSpellCombatThisRoundAllowed(ref bool __result, UnitPartMagus __instance) {
                 if (Settings.toggleAlwaysAllowSpellCombat && __instance.Owner != null && __instance.Owner.IsPartyOrPet()) {
                     __result = true;
                 }
+            }
+            [HarmonyPatch(nameof(UnitPartMagus.CanUseSpellCombat), MethodType.Getter), HarmonyPostfix]
+            public static void CanUseSpellCombat(ref bool __result, UnitPartMagus __instance) {
+                if (Settings.toggleAlwaysAllowSpellCombat && __instance.Owner != null && __instance.Owner.IsPartyOrPet()) {
+                    __result = true;
+                }
+            }
+            [HarmonyPatch(nameof(UnitPartMagus.IsSpellFromMagusSpellList)), HarmonyFinalizer]
+            public static Exception IsSpellFromMagusSpellList(ref bool __result, UnitPartMagus __instance) {
+                if (Settings.toggleAlwaysAllowSpellCombat && __instance.Owner != null && __instance.Owner.IsPartyOrPet()) {
+                    __result = true;
+                }
+                return null;
+            }
+        }
+        [HarmonyPatch(typeof(ActivatableAbilityRestrictionByEquipmentSet), nameof(ActivatableAbilityRestrictionByEquipmentSet.IsAvailable))]
+        public static class ActivatableAbilityRestrictionByEquipmentSet_IsAvailable_Patch {
+            [HarmonyPostfix]
+            public static void IsAvailable(ActivatableAbilityRestrictionByEquipmentSet __instance, ref bool __result) {
+                const string SpellCombatAbilityGUID = "8898a573e8a8a184b8186dbc3a26da74";
+                if (Settings.toggleAlwaysAllowSpellCombat && __instance.Fact.Blueprint.AssetGuid.ToString().ToLower() == SpellCombatAbilityGUID && __instance.Owner.IsPartyOrPet()) {
+                    __result = true;
+                }
+            }
+        }
+        [HarmonyPatch(typeof(DeactivateOnGripChanged), nameof(DeactivateOnGripChanged.TryDeactivate))]
+        public static class DeactivateOnGripChanged_TryDeactivate {
+            [HarmonyPrefix]
+            public static bool TryDeactivate(DeactivateOnGripChanged __instance) {
+                const string SpellCombatAbilityGUID = "8898a573e8a8a184b8186dbc3a26da74";
+                if (Settings.toggleAlwaysAllowSpellCombat && __instance.Fact.Blueprint.AssetGuid.ToString().ToLower() == SpellCombatAbilityGUID && __instance.Owner.IsPartyOrPet()) {
+                    return false;
+                }
+                return true;
             }
         }
 
@@ -616,8 +674,7 @@ namespace ToyBox.BagOfPatches {
                 foreach (var instr in instructions) {
                     if (instr.Calls(HasMotionThisTick_Method)) {
                         yield return new CodeInstruction(OpCodes.Call, CanRollPerception_Method);
-                    }
-                    else {
+                    } else {
                         yield return instr;
                     }
                 }
@@ -667,8 +724,7 @@ namespace ToyBox.BagOfPatches {
             private static bool Prefix(AkSoundEngineController __instance) {
                 if (Settings.toggleContinueAudioOnLostFocus) {
                     return false;
-                }
-                else {
+                } else {
                     return true;
                 }
             }
@@ -691,8 +747,7 @@ namespace ToyBox.BagOfPatches {
                     revealer.DefaultRadius = false;
                     revealer.UseDefaultFowBorder = false;
                     revealer.Radius = FogOfWarController.VisionRadius * Settings.fowMultiplier;
-                }
-                else {
+                } else {
                     revealer.DefaultRadius = true;
                     revealer.UseDefaultFowBorder = true;
                     revealer.Radius = 1.0f;

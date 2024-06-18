@@ -39,8 +39,9 @@ namespace ToyBox {
         private static Dictionary<BlueprintParametrizedFeature, IFeatureSelectionItem[]> parametrizedSelectionItems = new();
         public static IFeatureSelectionItem ParametrizedSelectionItems(this BlueprintParametrizedFeature feature, int index) {
             if (parametrizedSelectionItems.TryGetValue(feature, out var value)) return index < value.Length ? value[index] : null;
-            value = feature.Items.OrderBy(x => x.Name).ToArray();
-            if (value == null) return null;
+            var tmp = feature?.Items;
+            if (tmp == null) return null;
+            value = tmp.OrderBy(x => x.Name).ToArray();
             parametrizedSelectionItems[feature] = value;
             return index < value.Length ? value[index] : null;
         }
@@ -69,15 +70,13 @@ namespace ToyBox {
                                                            var feature = ch.Progression.Features.GetFact(bp);
                                                            return feature != null && feature.GetRank() < feature.Blueprint.Ranks;
                                                        });
-#if Wrath
             // Paramaterized Feature
             BlueprintAction.Register<BlueprintParametrizedFeature>("Add".localize(),
                  (bp, ch, n, index) => {
                      int itemIndex;
                      if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
                          itemIndex = SearchAndPick.ParamSelected[index];
-                     }
-                     else {
+                     } else {
                          itemIndex = BlueprintListUI.ParamSelected[index];
                      }
                      var value = bp.ParametrizedSelectionItems(itemIndex)?.Param;
@@ -87,8 +86,7 @@ namespace ToyBox {
                     int itemIndex;
                     if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
                         itemIndex = SearchAndPick.ParamSelected[index];
-                    }
-                    else {
+                    } else {
                         itemIndex = BlueprintListUI.ParamSelected[index];
                     }
                     var value = bp.ParametrizedSelectionItems(itemIndex)?.Param;
@@ -100,8 +98,7 @@ namespace ToyBox {
                     int itemIndex;
                     if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
                         itemIndex = SearchAndPick.ParamSelected[index];
-                    }
-                    else {
+                    } else {
                         itemIndex = BlueprintListUI.ParamSelected[index];
                     }
                     var value = bp.ParametrizedSelectionItems(itemIndex)?.Param;
@@ -109,27 +106,24 @@ namespace ToyBox {
                     ch?.Progression?.Features?.RemoveFact(fact);
                 },
                 (bp, ch, index) => {
-                    if (bp.Items.Count() == 0) return false;
+                    if ((bp.Items?.Count() ?? 0) == 0) return false;
                     int itemIndex;
                     if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
                         itemIndex = SearchAndPick.ParamSelected[index];
-                    }
-                    else {
+                    } else {
                         itemIndex = BlueprintListUI.ParamSelected[index];
                     }
                     var value = bp.ParametrizedSelectionItems(itemIndex)?.Param;
                     var existing = ch?.Descriptor?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
                     return existing != null;
                 });
-#endif
             // Feature Selection
             BlueprintAction.Register<BlueprintFeatureSelection>("Add".localize(),
                  (bp, ch, n, index) => {
                      int itemIndex;
                      if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
                          itemIndex = SearchAndPick.ParamSelected[index];
-                     }
-                     else {
+                     } else {
                          itemIndex = BlueprintListUI.ParamSelected[index];
                      }
                      var source = new FeatureSource();
@@ -159,16 +153,13 @@ namespace ToyBox {
                     int itemIndex;
                     if (Main.tabs[Main.Settings.selectedTab].action == SearchAndPick.OnGUI) {
                         itemIndex = SearchAndPick.ParamSelected[index];
-                    }
-                    else {
+                    } else {
                         itemIndex = BlueprintListUI.ParamSelected[index];
                     }
                     var value = bp.FeatureSelectionItems(itemIndex);
                     //Feature fact = progression.Features.GetFact(bp);
                     var fact = ch.Descriptor()?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == value);
                     var selections = ch?.Descriptor?.Progression.Selections;
-                    BlueprintFeatureSelection featureSelection = null;
-                    FeatureSelectionData featureSelectionData = null;
                     foreach (var selection in selections) {
                         if (selection.Key == bp) {
                             foreach (var keyValuePair in selection.Value.SelectionsByLevel.ToList()) {
@@ -232,12 +223,10 @@ namespace ToyBox {
 
                                                                  if (spellbook.IsMythic) {
                                                                      spellbook.AddMythicLevel();
-                                                                 }
-                                                                 else {
+                                                                 } else {
                                                                      spellbook.AddBaseLevel();
                                                                  }
-                                                             }
-                                                             catch (Exception e) { Mod.Error(e); }
+                                                             } catch (Exception e) { Mod.Error(e); }
                                                          },
                                                          (bp, ch, index) => ch.Descriptor().Spellbooks.Any(sb => sb.Blueprint == bp && sb.CasterLevel < bp.MaxSpellLevel));
             // Abilities

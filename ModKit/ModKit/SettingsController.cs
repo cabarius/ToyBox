@@ -34,8 +34,7 @@ namespace ModKit {
                         settings = JsonConvert.DeserializeObject<T>(text);
                         //Logger.Log($"read settings: {string.Join(Environment.NewLine, settings)}");
                     }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Mod.Error($"{fileName} resource is not present or is malformed. exception: {e}");
             }
             if (File.Exists(userPath)) {
@@ -43,18 +42,17 @@ namespace ModKit {
                 try {
                     var userSettings = JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
                     if (userSettings is IUpdatableSettings updatableSettings) updatableSettings?.AddMissingKeys((IUpdatableSettings)settings);
-                    settings = userSettings ?? new();
-                }
-                catch {
+                    settings = userSettings;
+                } catch {
                     Mod.Error("Failed to load user settings. Settings will be rebuilt.");
                     try {
                         File.Copy(userPath, userConfigFolder + $"{Path.DirectorySeparatorChar}BROKEN_{fileName}", true);
-                    }
-                    catch {
+                    } catch {
                         Mod.Error("Failed to archive broken settings.");
                     }
                 }
             }
+            settings ??= new();
             File.WriteAllText(userPath, JsonConvert.SerializeObject(settings, Formatting.Indented));
         }
     }

@@ -19,18 +19,11 @@ namespace ToyBox {
                 PartyFilterChoices = new NamedFunc<List<UnitEntityData>>[] {
                     new NamedFunc<List<UnitEntityData>>("Party".localize(), () => Game.Instance.Player.Party),
                     new NamedFunc<List<UnitEntityData>>("Party & Pets".localize(), () => Game.Instance.Player.m_PartyAndPets),
-#if Wrath
                     new NamedFunc<List<UnitEntityData>>("All".localize(), () => Game.Instance.Player.AllCharacters),
-#elif RT
-                    new NamedFunc<List<UnitEntityData>>("All".localize(), () => Game.Instance.Player.AllCharactersAndStarships.ToList()),
-#endif
                     new NamedFunc<List<UnitEntityData>>("Active".localize(), () => Game.Instance.Player.ActiveCompanions),
                     new NamedFunc<List<UnitEntityData>>("Remote".localize(), () => Game.Instance.Player.m_RemoteCompanions),
                     new NamedFunc<List<UnitEntityData>>("Custom".localize(), PartyUtils.GetCustomCompanions),
                     new NamedFunc<List<UnitEntityData>>("Pets".localize(), PartyUtils.GetPets),
-#if RT
-                    new NamedFunc<List<UnitEntityData>>("Starships".localize(), () => Game.Instance.Player.AllStarships.ToList()),
-#endif
                     //new NamedFunc<List<UnitEntityData>>("Familiars", Game.Instance.Player.Party.SelectMany(ch => ch.Familiars),
                     new NamedFunc<List<UnitEntityData>>("Nearby".localize(), () => {
                         var player = GameHelper.GetPlayerCharacter();

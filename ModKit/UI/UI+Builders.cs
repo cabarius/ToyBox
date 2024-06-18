@@ -68,8 +68,7 @@ namespace ModKit {
                     if (title != null) {
                         if (ii == 0) {
                             Label(title.bold(), Width(150f));
-                        }
-                        else {
+                        } else {
                             Space(153);
                         }
                     }
@@ -92,7 +91,6 @@ namespace ModKit {
             using (VerticalScope(options)) {
                 if (title != null)
                     Label(title);
-                var ii = 0;
                 foreach (var item in items) {
                     //Mod.Log($"    row: {ii++} - {item.GetType().ToString()}");
                     action(item);
@@ -107,7 +105,6 @@ namespace ModKit {
                         Label(title);
                     }
                 }
-                var ii = 0;
                 foreach (var item in items) {
                     using (VerticalScope(options)) {
                         //Mod.Log($"        col: {ii++} - {item.GetType().ToString()}");
@@ -158,8 +155,7 @@ namespace ModKit {
             IEnumerable<string> titles;
             if (titleFormatter != null) {
                 titles = actions.Select((a, i) => i == sel ? titleFormatter(a.name).orange().bold() : titleFormatter(a.name));
-            }
-            else {
+            } else {
                 titles = actions.Select((a, i) => i == sel ? a.name.orange().bold() : a.name);
             }
             if (SelectionGrid(ref selected, titles.ToArray(), 8, Width(ummWidth - 60))) onChangeTab(sel, selected);

@@ -62,8 +62,7 @@ namespace ToyBox.Inventory {
             var becomeActive = forceState ?? !SelectedLootSlotFilters.Contains(slotType);
             if (becomeActive && !SelectedLootSlotFilters.Contains(slotType)) {
                 SelectedLootSlotFilters.Add(slotType);
-            }
-            else if (SelectedLootSlotFilters.Contains(slotType))
+            } else if (SelectedLootSlotFilters.Contains(slotType))
                 SelectedLootSlotFilters.Remove(slotType);
             return becomeActive;
         }
@@ -167,8 +166,7 @@ namespace ToyBox.Inventory {
                     if (itemSlotPCView.ViewModel.HasItem && itemSlotPCView.ViewModel.IsScroll && Settings.toggleHighlightCopyableScrolls) {
                         //                            modLogger.Log($"found {itemSlotPCView.ViewModel}");
                         itemSlotPCView.m_Icon.CrossFadeColor(new Color(0.5f, 1.0f, 0.5f, 1.0f), 0.2f, true, true);
-                    }
-                    else {
+                    } else {
                         itemSlotPCView.m_Icon.CrossFadeColor(Color.white, 0.2f, true, true);
                     }
                 }
@@ -184,8 +182,7 @@ namespace ToyBox.Inventory {
                 if (__instance.ViewModel.HasItem && __instance.ViewModel.IsScroll && Settings.toggleHighlightCopyableScrolls) {
                     //                            modLogger.Log($"found {itemSlotPCView.ViewModel}");
                     __instance.m_Icon.CrossFadeColor(new Color(0.5f, 1.0f, 0.5f, 1.0f), 0.2f, true, true);
-                }
-                else {
+                } else {
                     __instance.m_Icon.CrossFadeColor(Color.white, 0.2f, true, true);
                 }
                 var item = __instance.Item;
@@ -201,12 +198,10 @@ namespace ToyBox.Inventory {
                                 conflictFeedback.gameObject.SetActive(hasConflicts);
                                 var icon = conflictFeedback.GetComponent<Image>();
                                 icon.color = new Color(1.0f, 0.8f, 0.3f, 0.75f);
-                            }
-                            else 
+                            } else
                                 conflictFeedback.gameObject.SetActive(false);
                         }
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         Mod.Error(e);
                     }
                 }
@@ -223,8 +218,7 @@ namespace ToyBox.Inventory {
                     if (rarity == RarityType.Notable && __instance.m_NotableLayer != null) {
                         var objFX = __instance.m_NotableLayer.Find("NotableLayerFX");
                         if (objFX != null && objFX.TryGetComponent<Image>(out var image)) image.color = color;
-                    }
-                    else if (rarity != RarityType.Notable) {
+                    } else if (rarity != RarityType.Notable) {
                         if (rarity >= RarityType.Uncommon) // Make sure things uncommon or better get their color circles despite not being magic. Colored loot offers sligtly different UI assumptions
                             __instance.SlotVM.IsMagic.SetValueAndForceNotify(true);
 
@@ -382,8 +376,7 @@ namespace ToyBox.Inventory {
                 IEnumerable<UnitEntityData> all_units = Game.Instance.State.Units.All;
                 if (Settings.toggleLootAliveUnits) {
                     all_units = all_units.Where(unit => unit.IsInGame && unit.HasLoot);
-                }
-                else {
+                } else {
                     all_units = all_units.Where(unit => unit.IsInGame && unit.IsDeadAndHasLoot);
                 }
 
@@ -421,8 +414,7 @@ namespace ToyBox.Inventory {
             }
         }
         [HarmonyPatch(typeof(SceneLoader), nameof(SceneLoader.MatchStateWithScene))]
-        static class SceneLoader_MatchStateWithScene_Patch
-        {
+        static class SceneLoader_MatchStateWithScene_Patch {
             const string BundleName = "dungeons_areshkagal.worldtex";
             static readonly HashSet<string> areshKagalNames = new HashSet<string> {
                 "areshkagal_puzzle_cian_d", "areshkagal_puzzle_cian_dark_d",  "areshkagal_puzzle_cian_m",
@@ -472,14 +464,12 @@ namespace ToyBox.Inventory {
                             var buffer = new byte[stream.Length];
                             stream.Read(buffer, 0, buffer.Length);
                             t.LoadImage(buffer);
-                        }
-                        else {
+                        } else {
                             Mod.Error($"BundlesLoadService_RequestBundle_Patch - failed to load {name} from {assembly.FullName}");
                             var resourceNames = assembly.GetManifestResourceNames();
                             Mod.Log(string.Join("\n", resourceNames));
                         }
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         Mod.Error(e);
                     }
                 }

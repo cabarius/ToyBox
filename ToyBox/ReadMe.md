@@ -1,50 +1,14 @@
 # ToyBox
 
-### Now with 500+ Cheats, Tweaks and Quality of Life Improvements
-
-* **Bag of Tricks**: 142 (or 173 depending on how you count)
-* **Level Up & Multiclass**: 57
-* **Party Editor**: 67
-* **Loot Checklist**: 4
-* **Enchantment**: 20 ways to view add, remove enchantments from your favorite items
-* **Search 'n Pick**: 75 ways to view, add, remove blueprints plus a fun global teleportation feature
-* **Crusade**: 38
-* **Armies**: 22
-* **Events/Decrees**: 9
-* **Etudes**: 6225 x 3 (start, unstart, complete)
-* **Quest Resolution**: 4
-
-**Please backup early and backup often.**
-
 ### Install & Setup (Wrath)
 
-1. Install the Unity Mod Manager﻿﻿.
-1. Install the mod using the Unity Mod Manager﻿ or extract the archive to your game's mod folder (e.g. '
-   \Steam\steamapps\common\Pathfinder Second Adventure\Mods').
-1. Start the game and load a save or start a new save (the mod's functions can't accessed from the main menu).
-1. Open the Unity Mod Manager﻿ by pressing CTRL + F10.
-1. Adjust the settings in the mod's menu
-1. Important this mod is designed to be run at 1920x1080 or higher.
-1. Please set your resolution to at least 1920x1080
-1. Go to Settings tab on Unity Mod Manager to set your screen width to at least 1920 wide
+1. Install Unity Mod Manager﻿﻿.
+2. Install the mod using the Unity Mod Manager﻿ ***or*** Modfinder ***or*** manually extract the archive to your game's mod folder (e.g. '\Steam\steamapps\common\Pathfinder Second Adventure\Mods').
+3. Start the game and load a save or start a new save (the mod's functions can't accessed from the main menu).
+4. Open the Unity Mod Manager﻿ by pressing CTRL + F10.
+5. Adjust the settings in the mod's menu
 
-### Install & Setup (Rogue)
-
-1. Download the ToyBox mod file and unzip
-1. If the folder is not already named 0ToyBox0 please rename it to that
-1. Launch the game at least once.
-1. **Please note that the game comes with its own built in Unity Mod Manager so you do not need to install another one**
-1. Navigate to %userprofile%\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
-1. An example path is C:\Users\PC\AppData\LocalLow\Owlcat Games\Warhammer 40000 Rogue Trader\UnityModManager\
-1. Copy 0ToyBox0 into the UnityModManagerFolder
-1. Launch Rogue Trader and you may need to hit ctrl+F10 to see the mod manager window
-1. Load a save or start a new game to get the most out of of the mod
-
-* Warning: This is an experimental preview of ToyBox for Rogue Trader Prelease. Save early and often.
-* Note: Not all features are functional at this time. The ToyBox team is working hard to get as much working as fast as
-  possible
-
-### Usage
+### Features
 
 * **Bag of Tricks**: this is a collection of quality of life, quick cheats, settings, multipliers, etc from the awesome
   Kingmaker mod of the same name plus a bag or two of new tricks ^_^
@@ -73,14 +37,56 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
 
-### ToyBox Rogue - Ver 1.5.8 (Coming Soon)
-**ToyBox Rogue - Ver 1.5.8 -** ***Sh0dan*** **Preview Version 1.5.7a** built for 0.2.1ah
-* (***ADDB***) Fixed weird behaviour when changing stats using the Textfield.
-### ToyBox Wrath - Ver 1.5.8 (Coming Soon)
-**ToyBox Wrath - Ver 1.5.8 - Preview Version 1.5.7a** built for 2.1.5r
+### ToyBox Wrath - Ver 1.5.18 (built for 2.3.1e)
+* (***ADDB***) Fix the Magus: Allow Spell Combat for dual wielding.
+* (***ADDB***) Maybe added setting to forcefully disable all tutorials.
+* (***ADDB***) Fix MysticalMayhem breaking Search 'n Pick. Is this mod even working correctly currently?
+* (***Delth***) Add toggle to remove read-onlyness from etudes. 
+
+### ToyBox Wrath - Ver 1.5.15 (built for 2.3.1e)
+* (***ADDB***) Simply recompile for new version.
+
+### ToyBox Wrath - Ver 1.5.14 (built for 2.3.0bb)
+* (***ADDB***) Fixed Ignore Alignment When Choosing A Class not working for some classes (e.g. Bloodseeker).
+* (***ADDB***) Fixed Outdated Repository Link.
+* (***ADDB***) Fixed Ignore Alignment When Choosing A Class somehow breaking alignment window (Owlcat Logger is null? Why?).
+* (***ADDB***) Port to .NET Framework v4.8.1 (should make no difference to users; should improve compatability with other mods if necessary) ***This will increase minimum UMM version to a pretty recent version (at the same time it will prevent possible bugs because of UMM version being too recent)***.
+
+### ToyBox Wrath - Ver 1.5.13 (built for 2.3.0bb)
+* (***ADDB***) ***Important for users of Jealousy Begone!*** In BagOfTricks => Dialog, added an option to pick your romance for the end of DLC6.
+* (***ADDB***) It is now possible to use the Spellbook Editor to change the Level of Spells (This allows fusing with Cantrip spells, i.e. raise Cantrip level to 1 and then fuse).
+* (***ADDB***) It is now possible to show special spells (Metamagic, Fused Spells) in Spellbooks.
+* (***ADDB***) Ignore Dialog Mythic Restrictions should now show more available Mythic Answers?.
+* (***ADDB***) Ignore Dialog Mythic Restrictions should now show ***even more*** available Mythic Answers. How has this feature even worked before?.
+* (***ADDB***) Added an option to disable Voice Over via Party => Stats.
+* (***ADDB***) Improve Party GUI tabs sometimes not clickeable (especially in Nearby configuration).
+* (***ADDB***) DLC Version compatability.
+* (***ADDB***) Backported alternate glyphs from RT ToyBox.
+* (***ADDB***) Removed Log Spam.
+* (***ADDB***) Added AssetGUID to Search Key.
+* (***ADDB***) Support adding new Blueprints even after ToyBox finished loading.
+* (***ADDB***) Saves Tab can now handle null Player Name without crashing (Admittedly that's a non issue for most people).
+* (***ADDB***) Updated localization keys in case someone actually wants to localize the mod.
+
+### ToyBox Wrath - Ver 1.5.10a (built for 2.2.4p)
+* (***evandixon***) Fix unusable map screen on console view (e.g. PC Controller User & Steam Deck).
+* (***ADDB***) Probably fixed Skill Point cap.
+* (***ADDB***) Equipment no Weight now works for single Units too (and not just for the whole party).
+* (***ADDB***) Fixed issue where game is stuck when camping and auto-succeeding skill checks with ToyBox.
+
+### ToyBox Wrath - Ver 1.5.9 (built for 2.2.3c)
+* (***ADDB***) Fixed Search 'n Pick - missing key update if collation happens too fast.
+* (***ADDB***) Recompiled against new binaries.
+* (***ADDB***) Temporarily change repository link to my Fork until Narria's one is active again.
+
+### ToyBox Wrath - Ver 1.5.8 (built for 2.2.0as)
 * (***ADDB***) Ride everything now really allows riding everything. Looks ridiculous but still.
 * (***ADDB***) Fixed weird behaviour when changing stats using the Textfield.
-* * (***ifarmpandas***) Added ActivatableAbilities to "Abilities" button in party editor. 
+* (***ADDB***) Prevent mod from being unable to load when localization files are missing.
+* (***ADDB***) Improved detection and added auto-deletion of concurrently installed outdated ToyBox version.
+* (***ifarmpandas***) Added ActivatableAbilities to "Abilities" button in party editor. 
+* (***ADDB***) Recompile for new version.
+* (***ADDB***) Fixed some whoopsies (missing Localization files in Release; Wrong Repository Branch in Info file etc.).
 ### ToyBox Rogue - Ver 1.5.7 (built for 0.2.1ah)
 * (***ADDB***) Added all localization keys to allow full localization.
 ### ToyBox Wrath - Ver 1.5.7 (built for 2.1.5r)

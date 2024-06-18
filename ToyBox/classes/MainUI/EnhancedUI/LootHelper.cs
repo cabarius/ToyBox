@@ -22,20 +22,14 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
-#if Wrath
 using Kingmaker.UI.MVVM._PCView.Loot;
 using Kingmaker.UI.MVVM._VM.Loot;
-#endif
 
 namespace ToyBox {
     public static class LootHelper {
         public static string NameAndOwner(this ItemEntity u, bool showRating, bool darkmode = false) =>
             (showRating ? $"{u.Rating()} ".orange().bold() : "")
-#if Wrath
             + (u.Owner != null ? $"({u.Owner.CharacterName}) ".orange() : "")
-#elif RT
-            + (u.Owner != null ? $"({u.Owner.Name}) ".orange() : "")
-#endif                
             + (darkmode ? u.Name.StripHTML().DarkModeRarity(u.Rarity()) : u.Name);
         public static string NameAndOwner(this ItemEntity u, bool darkmode = false) => u.NameAndOwner(Main.Settings.showRatingForEnchantmentInventoryItems, darkmode);
         public static bool IsLootable(this ItemEntity item, RarityType filter = RarityType.None) {
@@ -47,11 +41,7 @@ namespace ToyBox {
         public static string GetName(this LootWrapper present) {
             if (present.InteractionLoot != null) {
                 //                var name = present.InteractionLoot.Owner.View.name;
-#if Wrath
                 var name = present.InteractionLoot.Source.name;
-#elif RT
-                var name = present.InteractionLoot.Source.ToString();
-#endif
                 if (name == null || name.Length == 0) name = "Ground";
                 return name;
             }
@@ -61,14 +51,8 @@ namespace ToyBox {
 
         public static List<ItemEntity> GetInteraction(this LootWrapper present) {
             if (present.InteractionLoot != null) return present.InteractionLoot.Loot.Items
-#if RT
-                                                               .ToList()
-#endif
                                                                ;
             if (present.Unit != null) return present.Unit.Inventory.Items
-#if RT
-                                                    .ToList()
-#endif                                                    
                                                     ;
             return null;
         }
@@ -78,7 +62,6 @@ namespace ToyBox {
             if (present.Unit != null) return present.Unit.Inventory.Items.Search(searchText).ToList();
             return null;
         }
-#if Wrath
         public static IEnumerable<LootWrapper> GetMassLootFromCurrentArea() {
             List<LootWrapper> lootWrapperList = new();
             var units = Shodan.AllUnits
@@ -109,35 +92,6 @@ namespace ToyBox {
             lootWrapperList.AddRange(collection);
             return (IEnumerable<LootWrapper>)lootWrapperList;
         }
-#elif RT
-        // TODO: implement ToyBox improvements
-        public static IEnumerable<LootWrapper> GetMassLootFromCurrentArea()
-        {
-            var lootFromCurrentArea = new List<LootWrapper>();
-            foreach (var baseUnitEntity in Shodan.AllUnits.Where(u => u.IsRevealed && u.IsDeadAndHasLoot))
-                lootFromCurrentArea.Add(new LootWrapper
-                {
-                    Unit = baseUnitEntity
-                });
-            var interactionLootParts = Game.Instance.State.MapObjects.Select(i => i.GetOptional<InteractionLootPart>())
-                                           .Concat(Game.Instance.State.AllUnits.Select(i => i.GetOptional<InteractionLootPart>())).NotNull();
-            var source = TempList.Get<InteractionLootPart>();
-            foreach (var interactionLootPart in interactionLootParts)
-                if (interactionLootPart.Owner.IsRevealed && interactionLootPart.Loot.HasLoot &&
-                    (interactionLootPart.LootViewed ||
-                     (interactionLootPart.View is DroppedLoot && !(bool)(EntityPart)interactionLootPart.Owner
-                                                                                                       .GetOptional<DroppedLoot.EntityPartBreathOfMoney>()) ||
-                     (bool)(UnityEngine.Object)interactionLootPart.View.GetComponent<SkinnedMeshRenderer>()))
-                    source.Add(interactionLootPart);
-            var collection = source.Distinct(new LootDuplicateCheck()).Select(i => new LootWrapper
-            {
-                InteractionLoot = i
-            });
-            lootFromCurrentArea.AddRange(collection);
-            return lootFromCurrentArea;
-        }
-#endif
-#if Wrath
         public static void ShowAllChestsOnMap(bool hidden = false) {
             var interactionLootParts = Game.Instance.State.MapObjects.All
                 .Where<EntityDataBase>(e => e.IsInGame)
@@ -162,7 +116,6 @@ namespace ToyBox {
                 revealer.RunAction();
             }
         }
-#endif
         public static void OpenMassLoot() {
             var loot = MassLootHelper.GetMassLootFromCurrentArea();
             if (loot == null) return;
@@ -173,11 +126,7 @@ namespace ToyBox {
             if (count == 0) return;
             // Access to LootContextVM
             var contextVM = RootUIContext.Instance
-#if Wrath
                                          .InGameVM?
-#elif RT
-                                         .SurfaceVM?
-#endif
                                          .StaticPartVM?.LootContextVM;
             if (contextVM == null) return;
             // Add new loot...
@@ -191,34 +140,18 @@ namespace ToyBox {
         public static void OpenPlayerChest() {
             // Access to LootContextVM
             var contextVM = RootUIContext.Instance
-#if Wrath
                                          .InGameVM?
-#elif RT
-                                         .SurfaceVM?
-#endif                                         
                                          .StaticPartVM?.LootContextVM;
             if (contextVM == null) return;
             // Add new loot...
-            var objects = new EntityViewBase[] { }; 
-            var lootVM = new LootVM(LootContextVM.LootWindowMode.PlayerChest, objects , () => contextVM.DisposeAndRemove(contextVM.LootVM));
+            var objects = new EntityViewBase[] { };
+            var lootVM = new LootVM(LootContextVM.LootWindowMode.PlayerChest, objects, () => contextVM.DisposeAndRemove(contextVM.LootVM));
             var sharedStash = Game.Instance.Player.SharedStash;
-#if Wrath
-            var lootObjectVM = new LootObjectVM("Player Chest".localize(), 
+            var lootObjectVM = new LootObjectVM("Player Chest".localize(),
                                                 "",
-                                                sharedStash, 
-                                                LootContextVM.LootWindowMode.PlayerChest, 
-                                                1);
-#elif RT
-            var lootObjectVM = new LootObjectVM(LootObjectType.Normal,
-                                                "Player Chest".localize(), 
-                                                "",
-                                                null,
-                                                null,
                                                 sharedStash,
-                                                null,
-                                                LootContextVM.LootWindowMode.PlayerChest
-                                                );
-#endif
+                                                LootContextVM.LootWindowMode.PlayerChest,
+                                                1);
             lootVM.ContextLoot.Add(lootObjectVM);
             lootVM.AddDisposable(lootObjectVM);
             // Open window add lootVM int contextVM

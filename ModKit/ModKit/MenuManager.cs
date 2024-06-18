@@ -31,7 +31,7 @@ namespace ModKit {
         // parameter causes the property name of the caller to be substituted as an argument.  
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-    #region Fields
+        #region Fields
 
         private int _tabIndex;
 
@@ -48,9 +48,9 @@ namespace ModKit {
         private readonly List<IMenuBottomPage> _bottomPages = new();
         private static Exception caughtException = null;
 
-    #endregion
+        #endregion
 
-    #region Toggle
+        #region Toggle
 
         public void Enable(UnityModManager.ModEntry modEntry, Assembly _assembly) {
             foreach (var type in _assembly.GetTypes()
@@ -81,7 +81,7 @@ namespace ModKit {
             _bottomPages.Clear();
         }
 
-    #endregion
+        #endregion
 
         private void OnGUI(UnityModManager.ModEntry modEntry) {
             var hasPriorPage = false;
@@ -124,8 +124,7 @@ namespace ModKit {
                         page.OnGUI(modEntry);
                         hasPriorPage = true;
                     }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Console.Write($"{e}");
                 caughtException = e;
             }

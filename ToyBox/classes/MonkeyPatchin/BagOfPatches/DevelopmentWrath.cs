@@ -124,8 +124,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                 SimpleBlueprint retrievedBlueprint;
                 try {
                     retrievedBlueprint = ResourcesLibrary.TryGetBlueprint(BlueprintGuid.Parse(text));
-                }
-                catch {
+                } catch {
                     retrievedBlueprint = null;
                 }
                 if (retrievedBlueprint == null) Mod.Warn($"Failed to load blueprint by guid '{text}' but continued with null blueprint.");
@@ -141,7 +140,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                 if (__instance.Blueprint == null) Mod.Warn($"Fact type '{__instance}' failed to load. UniqueID: {__instance.UniqueId}");
             }
         }
-        #if false
+#if false
         [HarmonyPatch(typeof(JsonUpgradeSystem))]
         public static class JsonUpgradeSystemPatch {
             [HarmonyPatch(nameof(JsonUpgradeSystem.GetUpgraders), typeof(SaveInfo))]

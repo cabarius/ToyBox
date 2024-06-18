@@ -5,10 +5,8 @@ using TMPro;
 using ToyBox.classes.MainUI.Inventory;
 using UnityEngine;
 using UnityEngine.UI;
-#if Wrath
 using Kingmaker.UI.MVVM._VM.ServiceWindows.Inventory;
 using Kingmaker.UI.ServiceWindow;
-#endif
 
 namespace ToyBox {
     public class OnAreaLoad : IAreaHandler {
@@ -25,9 +23,7 @@ namespace ToyBox {
             if (Settings.toggleEnhancedSpellbook) {
                 LoadSpellbookSearchBar();
             }
-#if Wrath
             BagOfPatches.CameraPatches.CameraRigPatch.OnAreaLoad();
-#endif
 #if false
             if (Settings.EnableInventorySearchBar)
             {

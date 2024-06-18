@@ -17,8 +17,6 @@ using Newtonsoft.Json;
 using UnityEngine;
 using Attribute = System.Attribute;
 using LocalizationManager = Kingmaker.Localization.LocalizationManager;
-#if Wrath
-#endif
 
 namespace ToyBox {
 
@@ -52,8 +50,7 @@ namespace ToyBox {
 
                 using StreamReader reader = new(path); var text = reader.ReadToEnd();
                 obj = JsonConvert.DeserializeObject<T>(text);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Mod.Error($"{filename} could not be read: {e}");
             }
             return obj;
@@ -74,7 +71,7 @@ namespace ToyBox {
                 }
                 foreach (var guid in guids) {
                     var bp = ResourcesLibrary.TryGetBlueprint<BlueprintItem>(guid);
-                    if (bp != null) 
+                    if (bp != null)
                         items.Add(bp);
                 }
             }
@@ -97,12 +94,10 @@ namespace ToyBox {
                     //Mod.Debug($"'{key}' => '{value}'");
                 }
                 return result;
-            }
-            catch (DirectoryNotFoundException) {
+            } catch (DirectoryNotFoundException) {
                 Mod.Error("Unable to load localization directory.");
                 return new();
-            }
-            catch (FileNotFoundException) {
+            } catch (FileNotFoundException) {
                 Mod.Error("Unable to load localization file.");
                 return new();
             }
@@ -110,8 +105,7 @@ namespace ToyBox {
         public static string ToKM(this float v, string? units = "") {
             if (v < 1000) {
                 return $"{v:0}{units}";
-            }
-            else if (v < 1000000) {
+            } else if (v < 1000000) {
                 v = Mathf.Floor(v / 1000);
                 return $"{v:0.#}k{units}";
             }
@@ -158,7 +152,7 @@ namespace ToyBox {
         public static string CollectionToString(this IEnumerable<object> col) => $"{{{string.Join(", ", col.Select(i => i.ToString()))}}}";
         // Object to Dictionary
         public static IDictionary<string, object> ToDictionary(this object source) => source.ToDictionary<object>();
-        
+
         public static IDictionary<string, T> ToDictionary<T>(this object source) {
             if (source == null)
                 ThrowExceptionWhenSourceArgumentIsNull();
@@ -191,14 +185,14 @@ namespace ToyBox {
         }
         public static Dictionary<string, string> ToStringDictionary(this object obj) {
             var propDict = obj.GetType()
-                            .GetProperties(BindingFlags.Instance 
+                            .GetProperties(BindingFlags.Instance
                                            | BindingFlags.NonPublic
                                            | BindingFlags.Public)
                             .Where(field => field.GetValue(obj) is string)
                             .ToDictionary(prop => prop.Name, prop => prop.StringValue(obj)
                             );
             var fieldDict = obj.GetType()
-                            .GetFields(BindingFlags.Instance 
+                            .GetFields(BindingFlags.Instance
                                        | BindingFlags.NonPublic
                                        | BindingFlags.Public)
                             .Where(field => field.GetValue(obj) is string)
@@ -209,7 +203,6 @@ namespace ToyBox {
         public static Dictionary<string, string> GetCustomAttributes<T>(this T model) where T : class {
             Dictionary<string, string> result = new Dictionary<string, string>();
 
-#if Wrath
             PropertyInfo[] props = typeof(T).GetProperties(BindingFlags.NonPublic);
             foreach (var prop in props) {
                 var text = prop.GetCustomAttributes(true).OfType<InfoBoxAttribute>().Select(info => info.Text);
@@ -224,40 +217,6 @@ namespace ToyBox {
                     result[field.Name] = String.Join(", ", text);
                 }
             }
-
-#else
-            PropertyInfo[] props = typeof(T).GetProperties(BindingFlags.NonPublic);
-            foreach (PropertyInfo prop in props) {
-                var attributes = prop.GetCustomAttributes(true);
-                if (attributes.Count() > 0) {
-                    foreach (var attribute in attributes) {
-                        var strings = attribute.ToStringDictionary();
-                        foreach (var pair in strings) {
-                            try {
-                                result.Add($"{prop.Name}.{pair.Key}", pair.Value);
-                            }
-                            catch { }
-                        }
-
-                    }
-                }
-            }
-            FieldInfo[] fields = typeof(T).GetFields(BindingFlags.NonPublic);
-            foreach (FieldInfo field in fields) {
-                var attributes = field.GetCustomAttributes(true);
-                if (attributes.Count() > 0) {
-                    foreach (var attribute in attributes) {
-                        var strings = attribute.ToStringDictionary();
-                        foreach (var pair in strings) {
-                            try {
-                                result.Add($"{field.Name}.{pair.Key}", pair.Value);
-                            }
-                            catch { }
-                        }
-                    }
-                }
-            }
-#endif
             return result;
         }
         public static T GetAttributeFrom<T>(this object instance, string propertyName) where T : Attribute {
@@ -389,11 +348,7 @@ namespace ToyBox {
     }
 
     public static class LocalizationUtils {
-#if Wrath
         public static void AddLocalizedString(this string value) => LocalizationManager.CurrentPack.PutString(value, value);
-#elif RT
-        public static void AddLocalizedString(this string value) => Kingmaker.Localization.LocalizationManager.Instance.CurrentPack.PutString(value, value);
-#endif
         public static LocalizedString LocalizedStringInGame(this string key) => new LocalizedString() { Key = key };
 
     }

@@ -1,0 +1,39 @@
+name: Build Mod on PR
+
+on:
+  pull_request_target:
+      types: [labeled]
+
+jobs:
+
+  build:
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'safe to test') }}
+    runs-on: windows-latest
+
+    steps:
+    - name: Build
+      id: build-action
+      uses: xADDBx/BuildOwlcatMod@v2
+      with:
+        GAME_NAME: Wrath
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_NAME: ${{ github.repository_owner }}
+        PACKAGE_OWNER: xADDBx
+        BRANCH_REF: ${{ github.event.pull_request.head.sha }}
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.zipFile }}
+        path: ${{ env.outDir }}
+
+    - name: Remove Test Label
+      if: always()
+      shell: pwsh
+      run: |
+        $headers = @{
+          Accept = 'application/vnd.github.v3+json'
+          Authorization = "token ${{ secrets.GITHUB_TOKEN }}"
+        }
+        $url = "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels/safe%20to%20test"
+        Invoke-RestMethod -Uri $url -Method Delete -Headers $headers

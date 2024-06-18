@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static ModKit.UI;
-#if Wrath
 namespace ToyBox.classes.MainUI {
     public static class BraaainzEditor {
         public static Settings Settings => Main.Settings;
@@ -65,8 +64,7 @@ namespace ToyBox.classes.MainUI {
                         ch.Brain.RestoreAvailableActions();
                         ActionBrowser.ResetSearch();
                     }
-                }
-                else
+                } else
                     Label("Blueprints".orange().bold() + " loading: " + BlueprintLoader.Shared.progress.ToString("P2").cyan().bold());
             }
 
@@ -144,4 +142,3 @@ namespace ToyBox.classes.MainUI {
         }
     }
 }
-#endif

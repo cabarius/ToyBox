@@ -189,11 +189,11 @@ namespace ToyBox.BagOfPatches {
                 try {
                     if (!caster.IsPlayersEnemy && isGoodBuff(blueprint)) {
                         if (duration != null) {
+                            Mod.Debug($"Adjust duration for: {blueprint}");
                             duration = GetNewBuffDuration((TimeSpan)duration);
                         }
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Mod.Error(e);
                 }
 
@@ -208,17 +208,16 @@ namespace ToyBox.BagOfPatches {
         })]
         public static class BuffCollection_AddBuff2_patch {
             public static void Prefix(BlueprintBuff blueprint, MechanicsContext parentContext, ref TimeSpan? duration) {
-                float adjusted = 0;
                 try {
                     if (!parentContext.MaybeCaster.IsPlayersEnemy && isGoodBuff(blueprint)) {
                         if (duration != null) {
                             var oldDuration = duration;
+                            Mod.Debug($"Adjust duration for: {blueprint}");
                             duration = GetNewBuffDuration((TimeSpan)duration);
                             //Mod.Warn($"BuffCollection_AddBuff2_patch - buff: {blueprint.name} duration: {oldDuration} => {duration} - ticks: {duration.Value.Ticks} * {settings.buffDurationMultiplierValue}");
                         }
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     //Mod.Error($"BuffCollection_AddBuff2_patch - duration: {duration} - ticks: {duration.Value.Ticks} * {settings.buffDurationMultiplierValue} => {adjusted}");
                     Mod.Error(e);
                 }
@@ -229,14 +228,14 @@ namespace ToyBox.BagOfPatches {
 
         private static TimeSpan GetNewBuffDuration(TimeSpan originalDuration) {
             // deal with large value edge cases, assume that any value over half of Max Ticks divided by our multiplier should be left alone
-            if (originalDuration == TimeSpan.MaxValue 
+            if (originalDuration == TimeSpan.MaxValue
                 || (double)originalDuration.Ticks > (((double)TimeSpan.MaxValue.Ticks) / (2.0f * (double)settings.buffDurationMultiplierValue))
                 )
                 return originalDuration;
             // Ok we have a duration we can actually modify without overflow
             var ticks = originalDuration.Ticks;
             var adjusted = (long)(ticks * settings.buffDurationMultiplierValue);
-            Mod.Log($"originalDur: {originalDuration} ticks: {ticks} adjusted:{adjusted}");
+            Mod.Debug($"originalDur: {originalDuration} ticks: {ticks} adjusted:{adjusted}");
             adjusted = Math.Max(0, adjusted);
             return TimeSpan.FromTicks(Convert.ToInt64(adjusted));
         }
@@ -254,8 +253,7 @@ namespace ToyBox.BagOfPatches {
                             duration = new Rounds((int)(duration.Value.Value * settings.buffDurationMultiplierValue));
                         }
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Mod.Error(e);
                 }
             }

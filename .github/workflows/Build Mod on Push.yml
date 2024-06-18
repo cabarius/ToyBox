@@ -1,0 +1,26 @@
+name: Build Mod on Push
+
+on:
+  push:
+
+jobs:
+
+  build:
+    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+    runs-on: windows-latest
+
+    steps:
+    - name: Build
+      id: build-action
+      uses: xADDBx/BuildOwlcatMod@v2
+      with:
+        GAME_NAME: Wrath
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_NAME: ${{ github.repository_owner }}
+        PACKAGE_OWNER: xADDBx
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.zipFile }}
+        path: ${{ env.outDir }}

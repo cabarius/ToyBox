@@ -6,9 +6,7 @@ using Kingmaker.PubSubSystem;
 using Kingmaker.UI.Common;
 using Kingmaker.UnitLogic.Abilities;
 using ModKit;
-#if Wrath
 using ToyBox.Inventory;
-#endif
 
 namespace ToyBox {
     public enum InventoryType {
@@ -20,10 +18,7 @@ namespace ToyBox {
 
     public static class EnhancedInventory {
         public static Settings Settings => Main.Settings;
-        private static Harmony m_harmony;
-#if Wrath
         private static OnAreaLoad m_area_load_handler;
-#endif
 
         public static readonly Dictionary<ItemSortCategories, (int index, string title)> SorterCategoryMap = new Dictionary<ItemSortCategories, (int index, string title)> {
             [ItemSortCategories.NotSorted] = ((int)ItemsFilter.SorterType.NotSorted, null),
@@ -48,9 +43,7 @@ namespace ToyBox {
             [FilterCategories.Weapon] = ((int)ItemsFilter.FilterType.Weapon, null),
             [FilterCategories.Armor] = ((int)ItemsFilter.FilterType.Armor, null),
             [FilterCategories.Accessories] = ((int)ItemsFilter.FilterType.Accessories, null),
-#if Wrath
             [FilterCategories.Ingredients] = ((int)ItemsFilter.FilterType.Ingredients, null),
-#endif
             [FilterCategories.Usable] = ((int)ItemsFilter.FilterType.Usable, null),
             [FilterCategories.Notable] = ((int)ItemsFilter.FilterType.Notable, null),
             [FilterCategories.NonUsable] = ((int)ItemsFilter.FilterType.NonUsable, null),
@@ -72,16 +65,12 @@ namespace ToyBox {
         public static readonly RemappableInt FilterMapper = new RemappableInt();
         public static readonly RemappableInt SorterMapper = new RemappableInt();
         public static void OnLoad() {
-#if Wrath
             m_area_load_handler = new OnAreaLoad();
             EventBus.Subscribe(m_area_load_handler);
-#endif
             RefreshRemappers();
         }
         public static void OnUnload() {
-#if Wrath
             EventBus.Unsubscribe(m_area_load_handler);
-#endif
         }
         public static void RefreshRemappers() {
             FilterMapper.Clear();
@@ -100,10 +89,8 @@ namespace ToyBox {
                 }
             }
             // TODO: bring this back once we implement this for RT
-#if Wrath
             ItemsFilterPCViewPatch.ReloadFilterViews();
             ItemsFilterSearchPCViewPatch.ReloadFilterViews();
-#endif
         }
     }
 
@@ -165,7 +152,7 @@ namespace ToyBox {
             Notable |
             NonUsable |
             Scroll |
-            Wand | 
+            Wand |
             Potion |
             Recipe |
             Unlearned |
@@ -174,7 +161,7 @@ namespace ToyBox {
             UnreadDocuments |
             UsableWithoutUMD |
             CurrentEquipped |
-            NonZeroPW | 
+            NonZeroPW |
             UnlearnedScrolls,
     }
 
@@ -203,8 +190,7 @@ namespace ToyBox {
             WeightValueUp |
             RarityDown
     }
-    public enum ExpandedFilterType
-    {
+    public enum ExpandedFilterType {
         QuickslotUtilities = 14,
         UnlearnedRecipes = 15,
         UnreadDocuments = 16,
@@ -214,16 +200,14 @@ namespace ToyBox {
         UnlearnedScrolls = 20,
     }
 
-    public enum ExpandedSorterType
-    {
+    public enum ExpandedSorterType {
         WeightValueUp = 11,
         WeightValueDown = 12,
         RarityUp = 13,
         RarityDown = 14
     }
 
-    public enum SpellbookFilter
-    {
+    public enum SpellbookFilter {
         NoFilter,
         AOE,
         Touch,
@@ -233,8 +217,7 @@ namespace ToyBox {
         SupportsMetamagic
     }
 
-    public static class EnumHelper
-    {
+    public static class EnumHelper {
         public static IEnumerable<InventorySearchCriteria> ValidInventorySearchCriteria
             = Enum.GetValues(typeof(InventorySearchCriteria)).Cast<InventorySearchCriteria>().Where(i => i != InventorySearchCriteria.Default);
 
@@ -249,7 +232,7 @@ namespace ToyBox {
         public static bool IsRarityCategory(this ItemSortCategories category) => category == ItemSortCategories.RarityUp || category == ItemSortCategories.RarityDown;
         public static bool IsValid(this ItemSortCategories category) => category != ItemSortCategories.Default && (Main.Settings.UsingLootRarity || !category.IsRarityCategory());
 
-        public static IEnumerable<ItemSortCategories> ValidSorterCategories 
+        public static IEnumerable<ItemSortCategories> ValidSorterCategories
             = Enum.GetValues(typeof(ItemSortCategories)).Cast<ItemSortCategories>().Where(category => category.IsValid());
     }
 }

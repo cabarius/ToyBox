@@ -99,8 +99,7 @@ namespace ModKit.Utility {
                     if (type.IsValueType) {
                         if (!delParams[0].ParameterType.IsByRef || delParams[0].ParameterType.GetElementType() != type)
                             throw new InvalidOperationException();
-                    }
-                    else if (delParams[0].ParameterType.IsByRef || delParams[0].ParameterType != type)
+                    } else if (delParams[0].ParameterType.IsByRef || delParams[0].ParameterType != type)
                         throw new InvalidOperationException();
                 }
 
@@ -118,8 +117,7 @@ namespace ModKit.Utility {
                     if (methods.Count() > 1)
                         throw new AmbiguousMatchException();
                     Info = methods.FirstOrDefault()?.MakeGenericMethod(delGenericArgs);
-                }
-                else {
+                } else {
                     var delParamTypes = hasThis ?
                         delParams.Select(p => p.ParameterType).Skip(1) :
                         delParams.Select(p => p.ParameterType);
@@ -148,8 +146,7 @@ namespace ModKit.Utility {
                         if (@params[i].ParameterType != delParams[i].ParameterType) {
                             return false;
                         }
-                    }
-                    else {
+                    } else {
                         if (delGenericArgs[@params[i].ParameterType.GenericParameterPosition] != delParams[i].ParameterType) {
                             return false;
                         }
@@ -207,8 +204,7 @@ namespace ModKit.Utility {
                     for (var i = 1; i <= parameters.Length; i++)
                         il.Emit(OpCodes.Ldarg, i);
                     il.Emit(OpCodes.Call, Info);
-                }
-                else {
+                } else {
                     il.Emit(OpCodes.Ldarg_0);
                     for (var i = 1; i <= parameters.Length; i++)
                         il.Emit(OpCodes.Ldarg, i);

@@ -16,15 +16,13 @@ using ModKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.UI.WebControls;
 using ToyBox.BagOfPatches;
 using ToyBox.classes.MainUI;
 using UnityEngine;
 using UnityModManagerNet;
 using static ModKit.UI;
-#if Wrath
 using Kingmaker.Kingdom;
-#endif
+using static ToyBox.BagOfPatches.Romance;
 namespace ToyBox {
     public static class BagOfTricks {
         public static Settings Settings => Main.Settings;
@@ -57,6 +55,7 @@ namespace ToyBox {
 
         //For buffs exceptions
         private static bool showBuffDurationExceptions = false;
+        private static bool showDLC6RomanceOverrideMenu = false;
 
         public static void OnLoad() {
             // Combat
@@ -66,11 +65,7 @@ namespace ToyBox {
             KeyBindings.RegisterAction(FullBuffPlease, () => CheatsCombat.FullBuffPlease(""));
             KeyBindings.RegisterAction(GoddesBuffs, () => CheatsCombat.Iddqd(""));
             KeyBindings.RegisterAction(RemoveBuffs, () => Actions.RemoveAllBuffs());
-#if Wrath
             KeyBindings.RegisterAction(RemoveDeathsDoor, () => CheatsCombat.DetachDebuff());
-#elif RT
-            //KeyBindings.RegisterAction(RemoveDeathsDoor, () => CheatsCombat.DetachAllBuffs());
-#endif
             KeyBindings.RegisterAction(KillAllEnemies, () => Actions.KillAll());
             //KeyBindings.RegisterAction(SummonZoo, () => CheatsCombat.SpawnInspectedEnemiesUnderCursor(""));
             KeyBindings.RegisterAction(LobotomizeAllEnemies, () => Actions.LobotomizeAllEnemies());
@@ -104,22 +99,6 @@ namespace ToyBox {
 #if BUILD_CRUI
             ActionButton("Demo crUI", () => ModKit.crUI.Demo());
 #endif
-#if RT
-            using (HorizontalScope()) {
-                Toggle("Apply Bug Fixes".localize(), ref Settings.toggleBugFixes, 400.width());
-                using (VerticalScope()) {
-                    HelpLabel("ToyBox can patch some critical bugs in Rogue Trader Beta, including the following:".localize());
-                    using (HorizontalScope()) {
-                        25.space();
-                        using (VerticalScope()) {
-                            Label("- " + "Failure to load saves that reference custom portraits".localize().cyan() + "  -  " +
-                                "If you have a save that uses custom portraits and don't toggle this your game will crash when starting".localize().magenta());
-                        }
-                    }
-                }
-            }
-            Div(0, 25);
-#endif
             if (Main.IsInGame) {
                 using (HorizontalScope()) {
                     Space(25);
@@ -127,12 +106,8 @@ namespace ToyBox {
                     IntTextField(ref Settings.increment, null, Width(150));
                 }
                 var increment = Settings.increment;
-#if Wrath
                 var mainChar = Game.Instance.Player.MainCharacter.Value;
                 var kingdom = KingdomState.Instance;
-#elif RT
-                var mainChar = Game.Instance.Player.MainCharacter.Entity;
-#endif
                 HStack("Resources".localize(),
                        1,
                        () => {
@@ -153,7 +128,6 @@ namespace ToyBox {
                            Label(exp.ToString().orange().bold(), Width(200));
                            ActionButton("Gain ".localize() + $"{increment}", () => { Game.Instance.Player.GainPartyExperience(increment); }, AutoWidth());
                        },
-#if Wrath
                     () => {
                         var corruption = Game.Instance.Player.Corruption;
                         Label("Corruption".localize().cyan(), Width(150));
@@ -162,7 +136,6 @@ namespace ToyBox {
                         25.space();
                         Toggle("Disable Corruption".localize(), ref Settings.toggleDisableCorruption);
                     },
-#endif
                        () => { }
                     );
                 Div(0, 25);
@@ -233,14 +206,12 @@ namespace ToyBox {
                        Space(-75);
                        Label("This resets all the skill check rolls for all interactable objects in the area".localize().green());
                    },
-#if Wrath
             () => {
                 NonBindableActionButton("Set Perception to 40".localize(), () => {
                     CheatsCommon.StatPerception();
                     Actions.RunPerceptionTriggers();
                 });
             },
-#endif
                    () => BindableActionButton(ChangWeather, true),
                    () => NonBindableActionButton("Give All Items".localize(), () => CheatsUnlock.CreateAllItems("")),
                    () => NonBindableActionButton("Identify All".localize(), () => Actions.IdentifyAll()),
@@ -257,7 +228,6 @@ namespace ToyBox {
                        Toggle("Dialog Alignment".localize(), ref Settings.previewAlignmentRestrictedDialog);
                        25.space();
                        Toggle("Random Encounters".localize(), ref Settings.previewRandomEncounters);
-#if Wrath               // TODO: looks like colonization is the new Kingdom/Crusade mechanic
                        25.space();
                        Toggle("Events".localize(), ref Settings.previewEventResults);
                        25.space();
@@ -265,13 +235,11 @@ namespace ToyBox {
                        25.space();
                        Toggle("Relic Info".localize(), ref Settings.previewRelicResults);
                        25.space();
-#endif
                        BindableActionButton(PreviewDialogResults, true);
                    });
             Div(0, 25);
             HStack("Dialog".localize(),
                    1,
-#if Wrath
                    () => {
                        Toggle(("♥♥ ".red() + "Love is Free".bold() + " ♥♥".red()).localize(), ref Settings.toggleAllowAnyGenderRomance, 300.width());
                        25.space();
@@ -283,6 +251,18 @@ namespace ToyBox {
                        Label(("Allow ".green() + "multiple".color(RGBA.purple) + " romances at the same time".green()).localize());
                    },
                    () => {
+                       if (Settings.toggleMultipleRomance) {
+                           25.space();
+                           DisclosureToggle("Show End of DLC6 romance picker. You should use this if you have multiple romances just before the end of DLC6.".localize(), ref showDLC6RomanceOverrideMenu);
+                           if (showDLC6RomanceOverrideMenu) {
+                               using (VerticalScope()) {
+                                   Label("");
+                                   EnumerablePicker("Which cutscene should play at the end of DLC6?", ref Settings.pickedDLC6Override, (DLC6RomanceOverride[])Enum.GetValues(typeof(DLC6RomanceOverride)), 3);
+                               }
+                           }
+                       }
+                   },
+                   () => {
                        Toggle("Friendship is Magic".localize().bold(), ref Settings.toggleFriendshipIsMagic, 300.width());
                        25.space();
                        Label(("Experimental".orange() + " your friends forgive even your most vile choices.").localize().green());
@@ -292,7 +272,6 @@ namespace ToyBox {
                        200.space();
                        Label(("Warning: ".color(RGBA.red) + " Only use when Friendship is Magic doesn't work, and then turn off immediately after. Can otherwise break your save").localize().orange());
                    },
-#endif
                    () => {
                        Toggle("Previously Chosen Dialog Is Smaller ".localize(), ref Settings.toggleMakePreviousAnswersMoreClear, 300.width());
                        200.space();
@@ -331,13 +310,9 @@ namespace ToyBox {
                        Label(("Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit".green() + "\nWarning:".yellow().bold() + " this will introduce randomness to NPC responses to you in general and may lead to surprising or even wild outcomes".orange()).localize());
                    },
 #endif
-#if Wrath
                    () => Toggle("Disable Dialog Restrictions (Alignment)".localize(), ref Settings.toggleDialogRestrictions),
                    () => Toggle("Disable Dialog Restrictions (Mythic Path)".localize(), ref Settings.toggleDialogRestrictionsMythic),
                    () => Toggle("Ignore Event Solution Restrictions".localize(), ref Settings.toggleIgnoreEventSolutionRestrictions),
-#elif RT
-                   () => Toggle("Disable Dialog Restrictions (SoulMark)".localize(), ref Settings.toggleDialogRestrictions),
-#endif
 #if DEBUG
                    () => Toggle("Disable Dialog Restrictions (Everything, Experimental)".localize(), ref Settings.toggleDialogRestrictionsEverything),
 #endif
@@ -351,7 +326,6 @@ namespace ToyBox {
                        Label("This is intended for you to be able to enjoy the game while using mods that enhance your quality of life.  Please be mindful of the player community and avoid using this mod to trivialize earning prestige achievements like Sadistic Gamer. The author is in discussion with Owlcat about reducing the scope of achievement blocking to just these. Let's show them that we as players can mod and cheat responsibly.".localize().orange());
                    },
                    // () => { if (Toggle("Expanded Party View", ref settings.toggleExpandedPartyView)) PartyVM_Patches.Repatch(),
-#if Wrath
                    () => {
                        Toggle("Enhanced Map View".localize(), ref Settings.toggleZoomableLocalMaps, 500.width());
                        HelpLabel("Makes mouse zoom works for the local map (cities, dungeons, etc). Game restart required if you turn it off".localize());
@@ -364,7 +338,6 @@ namespace ToyBox {
                        Toggle("Enhanced Load/Save".localize(), ref Settings.toggleEnhancedLoadSave, 500.width());
                        HelpLabel("Adds a search field to Load/Save screen (in game only)".localize());
                    },
-#endif
                    () => Toggle("Object Highlight Toggle Mode".localize(), ref Settings.highlightObjectsToggle),
                    () => {
                        Toggle("Mark Interesting NPCs".localize(), ref Settings.toggleShowInterestingNPCsOnLocalMap, 500.width());
@@ -375,14 +348,7 @@ namespace ToyBox {
                        Toggle("Auto load Last Save on launch".localize(), ref Settings.toggleAutomaticallyLoadLastSave, 500.width());
                        HelpLabel("Hold down shift during launch to bypass".localize());
                    },
-#if RT
-                   () => {
-                       Toggle("Don't wait for keypress when loading saves".localize(), ref Settings.toggleSkipAnyKeyToContinueWhenLoadingSaves, 500.width());
-                       HelpLabel("When loading a game this will go right into the game without having to 'Press any key to continue'".localize());
-                   },
-#endif
                    () => Toggle("Make game continue to play music on lost focus".localize(), ref Settings.toggleContinueAudioOnLostFocus),
-#if Wrath
                    () => Toggle(("Game Over Fix For " + "LEEEROOOOOOOYYY JEEEENKINS!!!".color(RGBA.maroon) + " omg he just ran in!").localize(), ref Settings.toggleGameOverFixLeeerrroooooyJenkins),
                    () => {
                        503.space();
@@ -394,8 +360,6 @@ namespace ToyBox {
                            Main.SetNeedsResetGameUI();
                        }
                    },
-#endif
-#if Wrath
                    () => {
                        Toggle("Icky Stuff Begone!!!".localize(), ref Settings.toggleReplaceModelMenu, (Settings.toggleReplaceModelMenu ? 248 : 499).width());
                        if (Settings.toggleReplaceModelMenu) {
@@ -409,8 +373,13 @@ namespace ToyBox {
                        }
                        Label("Some players find spiders and other swarms icky. This replaces them with something more pleasant".localize().green());
                    },
-#endif
                    () => Toggle("Make tutorials not appear if disabled in settings".localize(), ref Settings.toggleForceTutorialsToHonorSettings),
+                   () => {
+                       if (Settings.toggleForceTutorialsToHonorSettings) {
+                           Space(25);
+                           Toggle("Disable tutorials forcefully".localize(), ref Settings.toggleForceDisableTutorials);
+                       }
+                   },
                    () => Toggle("Refill consumables in belt slots if in inventory".localize(), ref Settings.togglAutoEquipConsumables),
                    () => {
                        var modifier = KeyBindings.GetBinding("InventoryUseModifier");
@@ -428,7 +397,6 @@ namespace ToyBox {
                            ModifierPicker("ClickToTransferModifier", "", 0);
                        }
                    },
-#if Wrath
                    () => Toggle("Respec Refund Scrolls".localize(), ref Settings.toggleRespecRefundScrolls),
                    () => {
                        Toggle("Make Puzzle Symbols More Clear".localize(), ref Settings.togglePuzzleRelief);
@@ -440,7 +408,6 @@ namespace ToyBox {
                     50.space();
                     Label("Make sure you have auto-fill turned off in settings or else this will just reset to default".localize().green());
                 },
-#endif
                    () => ActionButton("Fix Incorrect Main Character".localize(),
                                       () => {
                                           var probablyPlayer = Game.Instance.Player?.Party?
@@ -454,7 +421,6 @@ namespace ToyBox {
                                           }
                                       },
                                       AutoWidth()),
-#if Wrath
                    () => {
                        Toggle("Enable Loading with Blueprint Errors".localize().color(RGBA.maroon), ref Settings.enableLoadWithMissingBlueprints);
                        25.space();
@@ -465,7 +431,6 @@ namespace ToyBox {
                            Label("To permanently remove these modded blueprint dependencies, load the damaged saved game, change areas, and then save the game. You can then respec any characters that were impacted.".localize().orange());
                        }
                    },
-#endif
                    () => {
                        using (VerticalScope()) {
                            Div(0, 25, 1280);
@@ -490,7 +455,6 @@ namespace ToyBox {
                            Div(0, 25, 1280);
                        }
                    },
-#if Wrath
                    () => Slider("Turn Based Combat Delay".localize(), ref Settings.turnBasedCombatStartDelay, 0f, 4f, 4f, 1, "", Width(450)),
                    () => {
                        using (VerticalScope()) {
@@ -540,31 +504,17 @@ namespace ToyBox {
                            }
                        }
                    },
-#endif
                    () => { }
                 );
 
-#if RT
-            Div(0, 25);
-            HStack("RT Specific".localize(),
-                   1,
-                   () => {
-                       using (VerticalScope()) {
-                           RogueCheats.OnGUI();
-                       }
-                   }
-                );
-#endif            
             Div(0, 25);
             EnhancedCamera.OnGUI();
-#if Wrath
             Div(0, 25);
             HStack("Alignment".localize(), 1,
                    () => { Toggle("Fix Alignment Shifts".localize(), ref Settings.toggleAlignmentFix); Space(119); Label("Makes alignment shifts towards pure good/evil/lawful/chaotic only shift on those axes".localize().green()); },
                    () => { Toggle("Prevent Alignment Changes".localize(), ref Settings.togglePreventAlignmentChanges); Space(25); Label("See Party Editor for more fine grained alignment locking per character".localize().green()); },
                    () => { }
                 );
-#endif
             Div(0, 25);
             HStack("Cheats".localize(), 1,
                    () => {
@@ -583,56 +533,36 @@ namespace ToyBox {
                    },
                    () => Toggle("Infinite Abilities".localize(), ref Settings.toggleInfiniteAbilities),
                    () => Toggle("Infinite Spell Casts".localize(), ref Settings.toggleInfiniteSpellCasts),
-#if Wrath
                 () => Toggle("No Material Components".localize(), ref Settings.toggleMaterialComponent),
                 () => Toggle("Disable Party Negative Levels".localize(), ref Settings.togglePartyNegativeLevelImmunity),
                 () => Toggle("Disable Party Ability Damage".localize(), ref Settings.togglePartyAbilityDamageImmunity),
                 () => Toggle("Disable Attacks of Opportunity".localize(), ref Settings.toggleAttacksofOpportunity),
-#endif
                    () => Toggle("Unlimited Actions During Turn".localize(), ref Settings.toggleUnlimitedActionsPerTurn),
                    () => Toggle("Infinite Charges On Items".localize(), ref Settings.toggleInfiniteItems),
-#if Wrath
                 () => Toggle("Instant Cooldown".localize(), ref Settings.toggleInstantCooldown),
                 () => Toggle("Instant Global Crusade Spells Cooldown".localize(), ref Settings.toggleInstantCrusadeSpellsCooldown),
                 () => Toggle("Spontaneous Caster Scroll Copy".localize(), ref Settings.toggleSpontaneousCopyScrolls),
-#endif
                    () => Toggle("ignore Equipment Restrictions".localize(), ref Settings.toggleEquipmentRestrictions),
-#if Wrath
                 () => Toggle("Disable Armor Max Dexterity".localize(), ref Settings.toggleIgnoreMaxDexterity),
                 () => Toggle("Disable Armor Speed Reduction".localize(), ref Settings.toggleIgnoreSpeedReduction),
                 () => Toggle("Disable Armor & Shield Arcane Spell Failure".localize(), ref Settings.toggleIgnoreSpellFailure),
                 () => Toggle("Disable Armor & Shield Checks Penalty".localize(), ref Settings.toggleIgnoreArmorChecksPenalty),
-#endif
                    () => Toggle("No Friendly Fire On AOEs".localize(), ref Settings.toggleNoFriendlyFireForAOE),
-#if Wrath
                 () => Toggle("Free Meta-Magic".localize(), ref Settings.toggleMetamagicIsFree),
-#endif
                    () => Toggle("No Fog Of War".localize(), ref Settings.toggleNoFogOfWar),
                    () => Toggle("Restore Spells & Skills After Combat".localize(), ref Settings.toggleRestoreSpellsAbilitiesAfterCombat),
                    //() => UI.Toggle("Recharge Items After Combat", ref settings.toggleRechargeItemsAfterCombat),
                    //() => UI.Toggle("Access Remote Characters", ref settings.toggleAccessRemoteCharacters,0),
                    //() => UI.Toggle("Show Pet Portraits", ref settings.toggleShowAllPartyPortraits,0),
                    () => Toggle("Instant Rest After Combat".localize(), ref Settings.toggleInstantRestAfterCombat),
-#if Wrath
                 () => Toggle("Instant change party members".localize(), ref Settings.toggleInstantChangeParty),
                 () => ToggleCallback("Equipment No Weight".localize(), ref Settings.toggleEquipmentNoWeight, BagOfPatches.Tweaks.NoWeight_Patch1.Refresh),
-#endif
                 () => Toggle("Allow Equipment Change During Combat".localize(), ref Settings.toggleEquipItemsDuringCombat),
                 () => Toggle("Allow Item Use From Inventory During Combat".localize(), ref Settings.toggleUseItemsDuringCombat),
-#if Wrath
                 () => Toggle("Ignore Alignment Requirements for Abilities".localize(), ref Settings.toggleIgnoreAbilityAlignmentRestriction),
-#endif
                 () => Toggle("Ignore all Requirements for Abilities".localize(), ref Settings.toggleIgnoreAbilityAnyRestriction),
-#if RT
-                () => Toggle("Ignore Ability Requirement - AOE Overlap".localize(), ref Settings.toggleIgnoreAbilityAoeOverlap),
-                () => Toggle("Ignore Ability Requirement - Line of Sight".localize(), ref Settings.toggleIgnoreAbilityLineOfSight),
-                () => Toggle("Ignore Ability Requirement - Max Range".localize(), ref Settings.toggleIgnoreAbilityTargetTooFar),
-                () => Toggle("Ignore Ability Requirement - Min Range".localize(), ref Settings.toggleIgnoreAbilityTargetTooClose),
-#endif
-#if Wrath
                 () => Toggle("Ignore Pet Sizes For Mounting".localize(), ref Settings.toggleMakePetsRidable),
                 () => Toggle("Ride Any Unit As Your Mount".localize(), ref Settings.toggleRideAnything),
-#endif
                 () => { }
                 );
             Div(153, 25);
@@ -646,7 +576,6 @@ namespace ToyBox {
                 () => { UI.Slider("Collision Radius Multiplier", ref settings.collisionRadiusMultiplier, 0f, 2f, 1f, 1, "", UI.AutoWidth()); },
 #endif
                 );
-#if Wrath
             HStack("Class Specific".localize(), 1,
                         () => Slider("Kineticist: Burn Reduction".localize(), ref Settings.kineticistBurnReduction, 0, 30, 0, "", AutoWidth()),
                         () => Slider("Arcanist: Spell Slot Multiplier".localize(), ref Settings.arcanistSpellslotMultiplier, 0.5f, 10f,
@@ -667,7 +596,6 @@ namespace ToyBox {
                         () => Toggle("Magus: Always Allow Spell Combat".localize(), ref Settings.toggleAlwaysAllowSpellCombat),
                         () => { }
                         );
-#endif
             Div(0, 25);
             HStack("Experience Multipliers".localize(), 1,
                 () => LogSlider("All Experience".localize(), ref Settings.experienceMultiplier, 0f, 100f, 1, 1, "", AutoWidth()),
@@ -715,24 +643,17 @@ namespace ToyBox {
                     List<UnitEntityData> units = Game.Instance?.Player?.m_PartyAndPets;
                     if (units != null) {
                         foreach (var unit in units) {
-#if Wrath
                             FogOfWarController.VisionRadiusMultiplier = Settings.fowMultiplier;
-#endif
                             // TODO: do we need this for RT?
                             FogOfWarRevealerSettings revealer = unit.View?.FogOfWarRevealer;
                             if (revealer != null) {
                                 if (Settings.fowMultiplier == 1) {
                                     revealer.DefaultRadius = true;
-#if Wrath
                                     revealer.UseDefaultFowBorder = true;
-#endif
                                     revealer.Radius = 1.0f;
-                                }
-                                else {
+                                } else {
                                     revealer.DefaultRadius = false;
-#if Wrath
                                     revealer.UseDefaultFowBorder = false;
-#endif
                                     // TODO: is this right?
                                     revealer.Radius = Settings.fowMultiplier;
                                 }

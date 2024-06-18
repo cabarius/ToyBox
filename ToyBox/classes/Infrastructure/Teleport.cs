@@ -20,15 +20,9 @@ using Kingmaker.Blueprints.Area;
 using Kingmaker.Designers;
 using System.Linq;
 using Kingmaker.Cheats;
-#if Wrath
 using Kingmaker.Globalmap.State;
 using Kingmaker.UI.MVVM._PCView.ServiceWindows.LocalMap;
 using Kingmaker.UI.MVVM._VM.ServiceWindows.LocalMap.Utils;
-#elif RT
-using Kingmaker.Code.UI.MVVM.View.ServiceWindows.LocalMap.PC;
-using Kingmaker.Code.UI.MVVM.VM.ServiceWindows.LocalMap.Utils;
-using Kingmaker.PubSubSystem.Core;
-#endif
 
 namespace ToyBox {
     public static partial class Teleport {
@@ -36,7 +30,7 @@ namespace ToyBox {
         //private static readonly HoverHandler _hover = new();
 
         public static void TeleportSelected() {
-            foreach (var unit in  Shodan.SelectedUnits) {
+            foreach (var unit in Shodan.SelectedUnits) {
                 TeleportUnit(unit, Utils.PointerPosition());
             }
         }
@@ -77,11 +71,11 @@ namespace ToyBox {
             var areaEnterPoints = BlueprintExtensions.BlueprintsOfType<BlueprintAreaEnterPoint>();
             var blueprint = areaEnterPoints.FirstOrDefault(bp => bp is BlueprintAreaEnterPoint ep && ep.Area == area);
             if (blueprint is BlueprintAreaEnterPoint enterPoint) {
-                ;Shodan.EnterToArea(enterPoint);
+                ; Shodan.EnterToArea(enterPoint);
             }
         }
 
-      internal class HoverHandler : IUnitDirectHoverUIHandler, IDisposable {
+        internal class HoverHandler : IUnitDirectHoverUIHandler, IDisposable {
             public UnitEntityData Unit { get; private set; }
             private UnitEntityData _currentUnit;
 

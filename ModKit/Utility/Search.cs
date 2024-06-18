@@ -141,8 +141,7 @@ namespace ModKit {
                     if (term.Contains(':')) {
                         var pair = term.Split(':');
                         RestrictedSearchTexts[pair[0]] = pair[1];
-                    }
-                    else
+                    } else
                         unrestricted.Add(term);
                 }
                 SearchText = string.Join(" ", unrestricted);
@@ -165,8 +164,7 @@ namespace ModKit {
                         if (!foundRestricted && SearchText?.Length > 0)
                             searchable.Matches[key] = FuzzyMatch(searchable, key, text);
                     }
-                }
-                else
+                } else
                     searchable.Matches = null;
                 return searchable;
             }

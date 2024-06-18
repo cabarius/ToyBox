@@ -4,9 +4,7 @@ using Owlcat.Runtime.UI.Controls.Button;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-#if Wrath
 using Kingmaker.UI.MVVM._PCView.CharGen.Phases.FeatureSelector;
-#endif
 namespace ToyBox {
     public class SearchBar {
         public TMP_Dropdown Dropdown;
@@ -19,7 +17,7 @@ namespace ToyBox {
 
         public SearchBar(Transform parent, string placeholder, bool withDropdown = true, string name = "EnhancedInventory_SearchBar") {
             var prefab_transform = UIHelpers.SearchViewPrototype;
-                //Game.Instance.UI.MainCanvas.transform.Find("ChargenPCView/ContentWrapper/DetailedViewZone/ChargenFeaturesDetailedPCView/FeatureSelectorPlace/FeatureSelectorView/FeatureSearchView");
+            //Game.Instance.UI.MainCanvas.transform.Find("ChargenPCView/ContentWrapper/DetailedViewZone/ChargenFeaturesDetailedPCView/FeatureSelectorPlace/FeatureSelectorView/FeatureSearchView");
 
             if (prefab_transform == null) {
                 var err = "Error: Unable to locate search bar prefab, it's likely a patch has changed the UI setup, or you are in an unexpected situation. Please report this bug!";
@@ -35,8 +33,7 @@ namespace ToyBox {
                 Dropdown = GameObject.transform.Find("FieldPlace/SearchField/SearchBackImage/Dropdown").GetComponent<TMP_Dropdown>();
                 DropdownButton = GameObject.transform.Find("FieldPlace/SearchField/SearchBackImage/Dropdown/GenerateButtonPlace").GetComponent<OwlcatButton>();
                 DropdownIconObject = GameObject.transform.Find("FieldPlace/SearchField/SearchBackImage/Dropdown/GenerateButtonPlace/GenerateButton/Icon").gameObject;
-            }
-            else
+            } else
                 Object.Destroy(GameObject.transform.Find("FieldPlace/SearchField/SearchBackImage/Dropdown").gameObject);
             PlaceholderText = GameObject.transform.Find("FieldPlace/SearchField/SearchBackImage/Placeholder/Label").GetComponent<TextMeshProUGUI>();
             InputField = GameObject.transform.Find("FieldPlace/SearchField/SearchBackImage/InputField").GetComponent<TMP_InputField>();
@@ -48,9 +45,7 @@ namespace ToyBox {
                 Dropdown.onValueChanged.AddListener(delegate { OnDropdownSelected(); });
                 DropdownButton.OnLeftClick.AddListener(delegate { OnDropdownButton(); });
             }
-#if Wrath
             Object.Destroy(GameObject.GetComponent<CharGenFeatureSearchPCView>()); // controller from where we stole the search bar
-#endif
             InputField.transform.Find("Text Area/Placeholder").GetComponent<TextMeshProUGUI>().SetText(placeholder);
 
             if (withDropdown) {

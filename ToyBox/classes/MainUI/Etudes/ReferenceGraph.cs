@@ -2,17 +2,14 @@
 using System.Linq;
 
 namespace ToyBox {
-    public class ReferenceGraph
-    {
-        public enum ValidationStateType
-        {
+    public class ReferenceGraph {
+        public enum ValidationStateType {
             Normal,
             Warning,
             Error
         }
 
-        public class Entry
-        {
+        public class Entry {
             public string ObjectGuid;
             public string ObjectName;
             public string ObjectType;
@@ -28,14 +25,12 @@ namespace ToyBox {
             public ValidationStateType ValidationState;
         }
 
-        public class SceneEntity
-        {
+        public class SceneEntity {
             public string GUID;
             public List<Ref> Refs = new List<Ref>();
         }
 
-        public class Ref
-        {
+        public class Ref {
             public string AssetPath;
             public string AssetType;
             public string ReferencingObjectName;
@@ -53,8 +48,7 @@ namespace ToyBox {
 #endif
         }
 
-        public class EntityRef
-        {
+        public class EntityRef {
             public string AssetPath;
             public string AssetName;
             public string UsagesType;
@@ -62,11 +56,5 @@ namespace ToyBox {
 
         public readonly List<Entry> Entries = new List<Entry>();
         public readonly List<SceneEntity> SceneEntitys = new List<SceneEntity>();
-        private List<string> m_ReferencingBlueprintPaths;
-        private List<string> m_ReferencingScenesPaths;
-        private Dictionary<string, Entry> m_EntriesByGuid;
-        private Dictionary<string, SceneEntity> m_SceneObjectRefs;
-        private readonly Dictionary<string, string> m_TypeNamesByGuid = new Dictionary<string, string>();
-
     }
 }

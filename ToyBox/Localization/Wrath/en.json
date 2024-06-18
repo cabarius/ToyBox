@@ -1,6 +1,6 @@
 {
   "LanguageCode": "en",
-  "Version": "1.5.6",
+  "Version": "1.5.12",
   "Contributors": "The ToyBox Team",
   "HomePage": "https://github.com/cabarius/ToyBox/",
   "Strings": {
@@ -211,6 +211,7 @@
     "Charisma": "Charisma",
     "Chars Able To Exceed Level 20": "Chars Able To Exceed Level 20",
     "Cheats": "Cheats",
+    "Check for Glyph Support": "Check for Glyph Support",
     "CheckBluff": "CheckBluff",
     "CheckDiplomacy": "CheckDiplomacy",
     "CheckIntimidate": "CheckIntimidate",
@@ -309,6 +310,7 @@
     "Disable Dialog Restrictions (Mythic Path)": "Disable Dialog Restrictions (Mythic Path)",
     "Disable Party Ability Damage": "Disable Party Ability Damage",
     "Disable Party Negative Levels": "Disable Party Negative Levels",
+    "Disable Voice Over and Barks for this character": "Disable Voice Over and Barks for this character",
     "Disallow Companions Leaving Party": "Disallow Companions Leaving Party",
     "Display guids in most tooltips, use shift + left click on items/abilities to copy guid to clipboard": "Display guids in most tooltips, use shift + left click on items/abilities to copy guid to clipboard",
     "Dist": "Dist",
@@ -331,7 +333,7 @@
     "Enable Loading with Blueprint Errors": "Enable Loading with Blueprint Errors",
     "Enable Mouse3 Dragging To Aim The Camera": "Enable Mouse3 Dragging To Aim The Camera",
     "Enable Rotate on all maps and cutscenes": "Enable Rotate on all maps and cutscenes",
-	"Enable Search as you type for Browsers (needs restart)": "Enable Search as you type for Browsers (needs restart)"
+    "Enable Search as you type for Browsers (needs restart)": "Enable Search as you type for Browsers (needs restart)",
     "Enable Teleport Keys": "Enable Teleport Keys",
     "Enable Zoom on all maps and cutscenes": "Enable Zoom on all maps and cutscenes",
     "Enabled Search Filters": "Enabled Search Filters",
@@ -794,6 +796,7 @@
     "Show Conditions": "Show Conditions",
     "Show Custom Portrait Picker": "Show Custom Portrait Picker",
     "Show Display & Internal Names": "Show Display & Internal Names",
+    "Show End of DLC6 romance picker. You should use this if you have multiple romances just before the end of DLC6.": "Show End of DLC6 romance picker. You should use this if you have multiple romances just before the end of DLC6.",
     "Show Everything When Leaving Map": "Show Everything When Leaving Map",
     "Show Friendly": "Show Friendly",
     "Show GameID": "Show GameID",
@@ -804,6 +807,7 @@
     "Show Rarity Tags": "Show Rarity Tags",
     "Show reasons you can not equip an item in tooltips": "Show reasons you can not equip an item in tooltips",
     "Show Recruitment Pools": "Show Recruitment Pools",
+    "Show Special Spells": "Show Special Spells",
     "Show the empty grey metamagic circles above spells": "Show the empty grey metamagic circles above spells",
     "Show Tree": "Show Tree",
     "Show Unavailable Responses": "Show Unavailable Responses",

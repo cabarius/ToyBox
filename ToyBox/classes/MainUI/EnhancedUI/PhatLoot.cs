@@ -9,9 +9,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 using static ModKit.UI;
-#if Wrath
 using ToyBox.Multiclass;
-#endif
 
 namespace ToyBox {
     public class PhatLoot {
@@ -28,12 +26,10 @@ namespace ToyBox {
 
         public static void OnLoad() {
             KeyBindings.RegisterAction(MassLootBox, LootHelper.OpenMassLoot);
-#if Wrath
             KeyBindings.RegisterAction(OpenPlayerChest, LootHelper.OpenPlayerChest);
             KeyBindings.RegisterAction(RevealGroundLoot, () => LootHelper.ShowAllChestsOnMap());
             KeyBindings.RegisterAction(RevealHiddenGroundLoot, () => LootHelper.ShowAllChestsOnMap(true));
             KeyBindings.RegisterAction(RevealInevitableLoot, LootHelper.ShowAllInevitablePortalLoot);
-#endif
         }
 
         public static void OnGUI() {
@@ -60,7 +56,6 @@ namespace ToyBox {
                     Space(95 - 150);
                     Label("Lets you open up the area's mass loot screen to grab goodies whenever you want. Normally shown only when you exit the area".localize().green());
                 },
-#if Wrath
                 () => {
                     BindableActionButton(OpenPlayerChest, true, Width(400));
                     Space(95 - 150);
@@ -81,7 +76,6 @@ namespace ToyBox {
                     Space(95 - 150);
                     Label("Shows unlocked Inevitable Excess DLC rewards on the map".localize().green());
                 },
-#endif
 #if DEBUG
                 () => Toggle("Show reasons you can not equip an item in tooltips".localize(), ref Settings.toggleShowCantEquipReasons),
 #endif
@@ -147,7 +141,6 @@ namespace ToyBox {
                     // The following options let you configure loot filtering and auto sell levels:".green());
                     () => { }
                     );
-#if Wrath
             Div(0, 25);
             HStack("Bulk Sell".localize(), 1,
                    () => {
@@ -159,7 +152,6 @@ namespace ToyBox {
                            BulkSell.OnGUI();
                        }
                    });
-#endif
             Div(0, 25);
             if (Game.Instance.CurrentlyLoadedArea == null) return;
             var isEmpty = true;
@@ -203,7 +195,6 @@ namespace ToyBox {
                             var count = presents
                                         .Where(p =>
                                                    p.Unit == null
-#if Wrath
                                                    || (Settings.toggleLootChecklistFilterFriendlies
                                                        && !p.Unit.IsPlayersEnemy
                                                        || p.Unit.IsPlayersEnemy
@@ -211,7 +202,6 @@ namespace ToyBox {
                                                    || (!Settings.toggleLootChecklistFilterFriendlies
                                                        && p.Unit.IsPlayersEnemy
                                                        )
-#endif
                                                    ).Count(p => p.GetLewtz(searchText).Lootable(rarity).Count() > 0);
                             Label($"{group.Key.localize().cyan()}: {count}");
                             Div(indent);
@@ -220,7 +210,6 @@ namespace ToyBox {
                                 var unit = present.Unit;
                                 if (phatLewtz.Any()
                                     && (unit == null
-#if Wrath
                                         || (Settings.toggleLootChecklistFilterFriendlies
                                             && !unit.IsPlayersEnemy
                                             || unit.IsPlayersEnemy
@@ -228,7 +217,6 @@ namespace ToyBox {
                                         || (!Settings.toggleLootChecklistFilterFriendlies
                                             && unit.IsPlayersEnemy
                                             )
-#endif
                                         )
                                     ) {
                                     isEmpty = false;
@@ -237,7 +225,6 @@ namespace ToyBox {
                                         Space(indent);
                                         Label($"{present.GetName()}".orange().bold(), Width(325));
                                         if (present.InteractionLoot != null) {
-#if Wrath
                                             if (present.InteractionLoot?.Owner?.PerceptionCheckDC > 0)
                                                 Label(" Perception DC: ".localize() + $"{present.InteractionLoot?.Owner?.PerceptionCheckDC}".green().bold(), Width(125));
                                             else
@@ -247,7 +234,6 @@ namespace ToyBox {
                                                 Label(" Trickery DC: ".localize() + $"{trickDc}".green().bold(), Width(125));
                                             else
                                                 Label(" Trickery DC: NA".localize().orange().bold(), Width(125));
-#endif
                                         }
                                         Space(25);
                                         using (VerticalScope()) {

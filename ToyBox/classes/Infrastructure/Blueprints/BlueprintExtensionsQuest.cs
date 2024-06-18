@@ -4,11 +4,9 @@ using Kingmaker.AreaLogic.Etudes;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Area;
 using Kingmaker.Blueprints.Classes;
-#if Wrath
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Craft;
-#endif
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.Items;
 using Kingmaker.Blueprints.Items.Ecnchantments;
@@ -52,7 +50,7 @@ namespace ToyBox {
                 this.elements = elements;
             }
         }
-        public static bool IsActive(this IntrestingnessEntry entry) => 
+        public static bool IsActive(this IntrestingnessEntry entry) =>
             (entry.checker?.IsActive() ?? false)
             || (entry?.elements.Any(element => element.IsActive()) ?? false)
             || (entry?.elements?.Count > 0 && entry.source is ActionsHolder) // Kludge until we get more clever about analyzing dialog state.  This lets Lathimas show up as active
@@ -77,10 +75,6 @@ namespace ToyBox {
                                                                    || element is ItemsEnough
                                                                    || element is Conditional
                                                                    ;
-#if RT
-        public static int InterestingnessCoefficent(this MechanicEntity entity)
-            => entity is UnitEntityData unit ? unit.InterestingnessCoefficent() : 0;
-#endif        
         public static int InterestingnessCoefficent(this UnitEntityData unit) => unit.GetUnitInteractionConditions().Count(entry => entry.IsActive());
         public static List<BlueprintDialog> GetDialog(this UnitEntityData unit) {
             var dialogs = unit.Parts.m_Parts
@@ -100,7 +94,7 @@ namespace ToyBox {
                                .Select(w => w.Source);
             var result = new HashSet<IntrestingnessEntry>();
             var elements = new HashSet<IntrestingnessEntry>();
-            
+
             // dialog
             var dialogInteractions = spawnInterations.OfType<SpawnerInteractionDialog>().ToList();
             // dialog interation conditions
@@ -123,7 +117,7 @@ namespace ToyBox {
                                                           .Where(cueRef => cueRef.Get() != null)
                                                           .Select(cueRef => new IntrestingnessEntry(unit, cueRef.Get(), cueRef.Get().Conditions)));
             result.UnionWith(dialogCueConditions.ToHashSet());
-            
+
             // actions
             var actionInteractions = spawnInterations.OfType<SpawnerInteractionActions>();
             // action interaction conditions
@@ -136,7 +130,7 @@ namespace ToyBox {
                                    .Where(ai => ai.Actions?.Get() != null)
                                    .SelectMany(ai => ai.Actions.Get().Actions.Actions
                                                    .Where(a => a is Conditional)
-                                                   .Select(a =>  new IntrestingnessEntry(unit, ai.Actions.Get(), (a as Conditional).ConditionsChecker)));
+                                                   .Select(a => new IntrestingnessEntry(unit, ai.Actions.Get(), (a as Conditional).ConditionsChecker)));
             result.Union(actionConditions.ToHashSet());
             // action elements
             var actionElements = actionInteractions
@@ -166,9 +160,7 @@ namespace ToyBox {
                 var inerestingUnits = unitsPool.Where(u => u.InterestingnessCoefficent() > 0);
                 foreach (var unit in inerestingUnits) {
                     Mod.Debug($"Revealing {unit.CharacterName}");
-#if Wrath
                     unit.SetIsRevealedSilent(true);
-#endif
                 }
             }
         }

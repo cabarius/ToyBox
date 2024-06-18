@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace ToyBox { 
+namespace ToyBox {
     public class EtudesTreeModel {
         public List<BlueprintEtude> etudes;
         public NamedTypeFilter<BlueprintEtude> etudeFilter = new("Etudes", null, bp => bp.CollationNames(bp.Parent?.GetBlueprint().NameSafe() ?? ""));
@@ -53,8 +53,7 @@ namespace ToyBox {
         public void UpdateEtude(BlueprintEtude blueprintEtude) {
             if (loadedEtudes.ContainsKey(blueprintEtude.AssetGuid)) {
                 UpdateEtudeData(blueprintEtude);
-            }
-            else {
+            } else {
                 AddEtudeToLoaded(blueprintEtude);
             }
         }
@@ -138,19 +137,11 @@ namespace ToyBox {
         }
 
         private EtudeInfo PrepareNewEtudeData(BlueprintEtude blueprintEtude) {
-#if RT
-            if (blueprintEtude.Parent == null)
-                EtudesEditor.rootEtudeId = blueprintEtude.AssetGuid;
-#endif
             var etudeInfo = new EtudeInfo {
                 Name = blueprintEtude.name,
                 Blueprint = blueprintEtude,
                 ParentId = blueprintEtude.Parent?.Get()?.AssetGuid ?? BlueprintGuid.Empty,
-#if Wrath
                 AllowActionStart = blueprintEtude.AllowActionStart,
-#elif RT
-                AllowActionStart = blueprintEtude.CanPlay(),
-#endif
                 CompleteParent = blueprintEtude.CompletesParent,
                 Comment = blueprintEtude.Comment,
                 Priority = blueprintEtude.Priority

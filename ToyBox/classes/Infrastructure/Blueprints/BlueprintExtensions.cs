@@ -18,11 +18,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-#if Wrath
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
 using Kingmaker.Craft;
-#endif
 namespace ToyBox {
 
     public static partial class BlueprintExtensions {
@@ -63,38 +61,32 @@ namespace ToyBox {
                 bool isEmpty = true;
                 try {
                     isEmpty = string.IsNullOrEmpty(uiDataProvider.Name);
-                }
-                catch (NullReferenceException) {
+                } catch (NullReferenceException) {
                     Mod.Debug($"Error while getting name for {uiDataProvider}");
                 }
                 if (isEmpty) {
                     name = blueprint.name;
-                }
-                else {
+                } else {
                     if (blueprint is BlueprintSpellbook spellbook)
                         return $"{spellbook.Name} - {spellbook.name}";
                     name = formatter(uiDataProvider.Name);
                     if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                         name = formatter(blueprint.name);
-                    }
-                    else if (Settings.showDisplayAndInternalNames) {
+                    } else if (Settings.showDisplayAndInternalNames) {
                         name += $" : {blueprint.name.color(RGBA.darkgrey)}";
                     }
                 }
                 return name;
-            }
-            else if (blueprint is BlueprintItemEnchantment enchantment) {
+            } else if (blueprint is BlueprintItemEnchantment enchantment) {
                 string name;
                 var isEmpty = string.IsNullOrEmpty(enchantment.Name);
                 if (isEmpty) {
                     name = formatter(blueprint.name);
-                }
-                else {
+                } else {
                     name = formatter(enchantment.Name);
                     if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                         name = formatter(blueprint.name);
-                    }
-                    else if (Settings.showDisplayAndInternalNames) {
+                    } else if (Settings.showDisplayAndInternalNames) {
                         name += $" : {blueprint.name.color(RGBA.darkgrey)}";
                     }
                 }
@@ -109,46 +101,39 @@ namespace ToyBox {
                     bool isEmpty = true;
                     try {
                         isEmpty = string.IsNullOrEmpty(uiDataProvider.Name);
-                    }
-                    catch (NullReferenceException) {
+                    } catch (NullReferenceException) {
                         Mod.Debug($"Error while getting name for {uiDataProvider}");
                     }
                     if (isEmpty) {
                         name = blueprint.name;
-                    }
-                    else {
+                    } else {
                         if (uiDataProvider is BlueprintSpellbook spellbook)
-                            return $"{spellbook.Name} {spellbook.name}";
+                            return $"{spellbook.Name} {spellbook.name} {spellbook.AssetGuid}";
                         name = uiDataProvider.Name;
                         if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                             name = blueprint.name;
-                        }
-                        else if (Settings.showDisplayAndInternalNames || forceDisplayInternalName) {
+                        } else if (Settings.showDisplayAndInternalNames || forceDisplayInternalName) {
                             name += $" : {blueprint.name}";
                         }
                     }
-                    return name.StripHTML();
-                }
-                else if (blueprint is BlueprintItemEnchantment enchantment) {
+                    return name.StripHTML() + $" {blueprint.AssetGuid}";
+                } else if (blueprint is BlueprintItemEnchantment enchantment) {
                     string name;
                     var isEmpty = string.IsNullOrEmpty(enchantment.Name);
                     if (isEmpty) {
                         name = blueprint.name;
-                    }
-                    else {
+                    } else {
                         name = enchantment.Name;
                         if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                             name = blueprint.name;
-                        }
-                        else if (Settings.showDisplayAndInternalNames) {
+                        } else if (Settings.showDisplayAndInternalNames) {
                             name += $" : {blueprint.name}";
                         }
                     }
-                    return name.StripHTML();
+                    return name.StripHTML() + $" {blueprint.AssetGuid}";
                 }
-                return blueprint.name.StripHTML(); // can we get rid of this?
-            }
-            catch (Exception ex) {
+                return blueprint.name.StripHTML() + $" {blueprint.AssetGuid}";
+            } catch (Exception ex) {
                 Mod.Debug(ex.ToString());
                 Mod.Debug($"-------{blueprint}-----{blueprint.AssetGuid}");
                 return "";
@@ -161,46 +146,39 @@ namespace ToyBox {
                     bool isEmpty = true;
                     try {
                         isEmpty = string.IsNullOrEmpty(uiDataProvider.Name);
-                    }
-                    catch (NullReferenceException) {
+                    } catch (NullReferenceException) {
                         Mod.Debug($"Error while getting name for {uiDataProvider}");
                     }
                     if (isEmpty) {
                         name = blueprint.name;
-                    }
-                    else {
+                    } else {
                         if (blueprint is BlueprintSpellbook spellbook)
                             return $"{spellbook.Name} - {spellbook.name}";
                         name = uiDataProvider.Name;
                         if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                             name = blueprint.name;
-                        }
-                        else if (Settings.showDisplayAndInternalNames) {
+                        } else if (Settings.showDisplayAndInternalNames) {
                             name += blueprint.name;
                         }
                     }
                     return name;
-                }
-                else if (blueprint is BlueprintItemEnchantment enchantment) {
+                } else if (blueprint is BlueprintItemEnchantment enchantment) {
                     string name;
                     var isEmpty = string.IsNullOrEmpty(enchantment.Name);
                     if (isEmpty) {
                         name = blueprint.name;
-                    }
-                    else {
+                    } else {
                         name = enchantment.Name;
                         if (name == "<null>" || name.StartsWith("[unknown key: ")) {
                             name = blueprint.name;
-                        }
-                        else if (Settings.showDisplayAndInternalNames) {
+                        } else if (Settings.showDisplayAndInternalNames) {
                             name += blueprint.name;
                         }
                     }
                     return name;
                 }
                 return blueprint.name;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Mod.Debug(ex.ToString());
                 Mod.Debug($"-------{blueprint}-----{blueprint.AssetGuid}");
                 return "";
@@ -216,8 +194,7 @@ namespace ToyBox {
                     if (value.HasValue && value.GetValueOrDefault()) {
                         modifiers.Add(property); //.Substring(2));
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Mod.Warn($"${bp.name}.{property} thew an exception: {e.Message}");
                     BadList.Add(bp.AssetGuid);
                     break;
@@ -265,7 +242,6 @@ namespace ToyBox {
             AddOrUpdateCachedNames(bp, names);
             return names;
         }
-#if Wrath
         public static List<string> CollationNames(this BlueprintIngredient bp, params string[] extras) {
             var names = DefaultCollationNames(bp, extras);
             if (bp.Destructible) names.Add("Destructible");
@@ -273,7 +249,6 @@ namespace ToyBox {
             AddOrUpdateCachedNames(bp, names);
             return names;
         }
-#endif
         public static List<string> CollationNames(this BlueprintArea bp, params string[] extras) {
             var names = DefaultCollationNames(bp, extras);
             var typeName = bp.GetType().Name.Replace("Blueprint", "");
@@ -300,10 +275,8 @@ namespace ToyBox {
         public static string[] CaptionNames(this SimpleBlueprint bp) => bp.m_AllElements?.OfType<Condition>()?.Select(e => e.GetCaption() ?? "")?.ToArray() ?? new string[] { };
         public static List<String> CaptionCollationNames(this SimpleBlueprint bp) => bp.CollationNames(bp.CaptionNames());
         // Custom Attributes that Owlcat uses 
-#if Wrath
         public static IEnumerable<InfoBoxAttribute> GetInfoBoxes(this SimpleBlueprint bp) => bp.GetAttributes<InfoBoxAttribute>();
         public static string GetInfoBoxDescription(this SimpleBlueprint bp) => string.Join("\n", bp.GetInfoBoxes().Select(attr => attr.Text));
-#endif
 
         private static readonly Dictionary<Type, IEnumerable<SimpleBlueprint>> blueprintsByType = new();
         public static IEnumerable<SimpleBlueprint> BlueprintsOfType(Type type) {
@@ -330,7 +303,6 @@ namespace ToyBox {
         }
 
         public static IEnumerable<T> GetBlueprints<T>() where T : SimpleBlueprint => BlueprintsOfType<T>();
-#if Wrath        
         public static int GetSelectableFeaturesCount(this BlueprintFeatureSelection selection, UnitDescriptor unit) {
             var count = 0;
             var component = selection.GetComponent<NoSelectionIfAlreadyHasFeature>();
@@ -408,6 +380,5 @@ namespace ToyBox {
             var fact = ch.Descriptor()?.Unit?.Facts?.Get<Feature>(i => i.Blueprint == bp && i.Param == item.Param);
             ch?.Progression?.Features?.RemoveFact(fact);
         }
-#endif
     }
 }

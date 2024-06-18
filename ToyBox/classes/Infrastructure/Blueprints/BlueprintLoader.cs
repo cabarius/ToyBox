@@ -1,6 +1,8 @@
 ﻿// Copyright < 2021 > Narria(github user Cabarius) - License: MIT
+using HarmonyLib;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Facts;
+using Kingmaker.Blueprints.JsonSystem;
 using Kingmaker.BundlesLoading;
 using ModKit;
 using System;
@@ -16,6 +18,7 @@ namespace ToyBox {
         private LoadBlueprintsCallback callback;
         private List<SimpleBlueprint> _blueprintsInProcess;
         private List<SimpleBlueprint> blueprints;
+        private HashSet<SimpleBlueprint> bpsToAdd = new();
         //private List<SimpleBlueprint> blueprints;
         public float progress = 0;
         private static BlueprintLoader _shared;
@@ -67,8 +70,7 @@ namespace ToyBox {
                 SimpleBlueprint bp;
                 try {
                     bp = bpCache.Load(entry.Key);
-                }
-                catch {
+                } catch {
                     Mod.Warn($"cannot load GUID: {entry.Key}");
                     continue;
                 }
@@ -109,16 +111,20 @@ namespace ToyBox {
 
         public List<SimpleBlueprint> GetBlueprints() {
             if (blueprints == null) {
-                if (Shared.IsLoading) { return null; }
-                else {
+                if (Shared.IsLoading) { return null; } else {
                     Mod.Debug($"calling BlueprintLoader.Load");
                     Shared.Load((bps) => {
-                        _blueprintsInProcess = bps.ToList();
+                        _blueprintsInProcess = bps.Concat(bpsToAdd).ToList();
+                        bpsToAdd.Clear();
                         blueprints = _blueprintsInProcess;
                         Mod.Debug($"success got {bps.Count()} bluerints");
                     });
                     return null;
                 }
+            }
+            if (bpsToAdd.Count > 0) {
+                blueprints.AddRange(bpsToAdd);
+                bpsToAdd.Clear();
             }
             return blueprints;
         }
@@ -130,42 +136,25 @@ namespace ToyBox {
             var bps = GetBlueprints<BPType>();
             return bps?.Where(bp => guids.Contains(bp.AssetGuid));
         }
-#if Wrath        
         public IEnumerable<BPType> GetBlueprintsByGuids<BPType>(IEnumerable<string> guids) where BPType : BlueprintFact => GetBlueprintsByGuids<BPType>(guids.Select(g => BlueprintGuid.Parse(g)));
-#endif        
+        [HarmonyPatch(typeof(BlueprintsCache))]
+        internal static class BlueprintLoaderPatches {
+            [HarmonyPatch(nameof(BlueprintsCache.AddCachedBlueprint))]
+            [HarmonyPostfix]
+            internal static void AddCachedBlueprint(BlueprintGuid guid, SimpleBlueprint bp) {
+                if (Shared.IsLoading || Shared.blueprints != null) {
+                    Shared.bpsToAdd.Add(bp);
+                }
+            }
+            [HarmonyPatch(nameof(BlueprintsCache.RemoveCachedBlueprint))]
+            [HarmonyPostfix]
+            internal static void RemoveCachedBlueprint(BlueprintGuid guid) {
+                Shared.bpsToAdd.RemoveWhere(bp => bp.AssetGuid == guid);
+            }
+        }
     }
 
     public static class BlueprintLoader<BPType> {
         public static IEnumerable<BPType> blueprints = null;
-    }
-
-    public static class BlueprintLoaderOld {
-        public delegate void LoadBlueprintsCallback(IEnumerable<SimpleBlueprint> blueprints);
-
-        private static AssetBundleRequest LoadRequest;
-        public static float progress = 0;
-        public static void Load(LoadBlueprintsCallback callback) {
-#if false
-            var bundle = (AssetBundle)AccessTools.Field(typeof(ResourcesLibrary), "s_BlueprintsBundle").GetValue(null);
-            Main.Log($"got bundle {bundle}");
-            LoadRequest = bundle.LoadAllAssetsAsync<BlueprintScriptableObject>();
-#endif
-            var bundle = BundlesLoadService.Instance.RequestBundle(AssetBundleNames.BlueprintAssets);
-            BundlesLoadService.Instance.LoadDependencies(AssetBundleNames.BlueprintAssets);
-            LoadRequest = bundle.LoadAllAssetsAsync<object>();
-            Mod.Trace($"created request {LoadRequest}");
-            LoadRequest.completed += (asyncOperation) => {
-                Mod.Trace($"completed request and calling completion - {LoadRequest.allAssets.Length} Assets ");
-                callback(LoadRequest.allAssets.Cast<SimpleBlueprint>());
-                LoadRequest = null;
-            };
-        }
-        public static bool LoadInProgress() {
-            if (LoadRequest != null) {
-                progress = LoadRequest.progress;
-                return true;
-            }
-            return false;
-        }
     }
 }

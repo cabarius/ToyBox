@@ -29,12 +29,8 @@ namespace ToyBox {
 
         // TODO: is this still the right root etude?
         internal static BlueprintGuid rootEtudeId =
-#if Wrath
             BlueprintGuid.Parse("f0e6f6b732c40284ab3c103cad2455cc");
 
-#elif RT
-                "4f66e8b792ecfad46ae1d9ecfd7ecbc2";
-#endif
         public static string searchText = "";
         public static string searchTextInput = "";
         private static bool _showOnlyFlagLikes;
@@ -83,6 +79,8 @@ namespace ToyBox {
                 if (Toggle("Flags Only".localize(), ref _showOnlyFlagLikes)) ApplyFilter();
                 25.space();
                 Toggle("Show GUIDs".localize(), ref Main.Settings.showAssetIDs);
+                25.space();
+                Toggle("Allow to start read-only etudes".localize(), ref Main.Settings.allEtudesReadable);
                 25.space();
                 Toggle("Show Comments (some in Russian)".localize(), ref Main.Settings.showEtudeComments);
                 //UI.Label($"Etude Hierarchy : {(loadedEtudes.Count == 0 ? "" : loadedEtudes[parent].Name)}", UI.AutoWidth());
@@ -182,8 +180,7 @@ namespace ToyBox {
             foreach (var item in toValues) {
                 var mutator = actionLookup[item.Key];
                 if (mutator != null)
-                    try { mutator.action(item.Value, null); }
-                    catch (Exception e) { Mod.Error(e); }
+                    try { mutator.action(item.Value, null); } catch (Exception e) { Mod.Error(e); }
             }
             if (toValues.Count > 0) {
                 UpdateEtudeStates();
@@ -310,12 +307,10 @@ namespace ToyBox {
                                             if (element is GameAction gameAction) {
                                                 try {
                                                     ActionButton(gameAction.GetCaption().yellow(), gameAction.RunAction);
-                                                }
-                                                catch (Exception e) {
+                                                } catch (Exception e) {
                                                     Mod.Warn($"{gameAction.GetCaption()} failed to run {e.ToString().yellow()}");
                                                 }
-                                            }
-                                            else
+                                            } else
                                                 Label(element.GetCaption().yellow() ?? "?");
                                             Space(25);
                                             ReflectionTreeView.DetailToggle("Inspect".localize(), element, element, 100);
@@ -532,8 +527,7 @@ namespace ToyBox {
 
             if (etude.IsPlaying) {
                 etudeIdReferences.State = EtudeInfo.EtudeState.Active;
-            }
-            else {
+            } else {
                 etudeIdReferences.State = EtudeInfo.EtudeState.Started;
             }
         }

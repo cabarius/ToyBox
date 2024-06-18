@@ -2,10 +2,13 @@
 using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Designers.EventConditionActionSystem.Conditions;
+using Kingmaker.DialogSystem;
+using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.ElementsSystem;
 using Kingmaker.UI.MVVM._PCView.ActionBar;
 using Kingmaker.UI.MVVM._VM.Tooltip.Templates;
 using Kingmaker.UI.UnitSettings;
+using Kingmaker.Utility;
 using ModKit;
 using System;
 using System.Collections.Generic;
@@ -19,7 +22,18 @@ namespace ToyBox.BagOfPatches {
     internal static class Romance {
         public static Settings settings = Main.Settings;
         public static Player player = Game.Instance.Player;
-
+        public enum DLC6RomanceOverride {
+            NoOverride = 0,
+            Galfrey = 1,
+            Daeran = 2,
+            Sosiel = 3,
+            Camellia = 4,
+            Lann = 5,
+            Wenduag = 6,
+            Arueshalae = 7,
+            Ulbrig = 8,
+            Single = 9
+        }
         // Any Gender Any Romance Overrides
         // These modify the PcFemale/PcMale conditions for specific Owner blueprints 
         internal static readonly Dictionary<string, bool> PcFemaleOverrides = new() {
@@ -122,8 +136,51 @@ namespace ToyBox.BagOfPatches {
             // Crusade Events
             { "d9fd5839ef1a44fe81473fc2bac2078b", true },   // CrusadeEvent05
         };
+        internal static readonly HashSet<string> EtudeMythicIsPlaying = new() {
+            // PlayerIsLich                   , // PlayerIsAeon
+            "11fc5662e0ce8074ea145a022282b879", "3a040afde22f4b742a2f607354ab17e7",
+            // PlayerIsAzata                  , // PlayerIsAngel
+            "d3b47e973d65c6c46af1cce815d1f6ce", "3a82aba4de71b89458ac82949ed957c4",
+            // PlayerIsDevil                  , // PlayerIsDemon
+            "3a82aba4de71b89458ac82949ed957c4", "9a3739370f84b0b4196d0e4d326ea3a8",
+            // PlayerIsLegend                 , // PlayerIsDragon
+            "c6165efcd5571c442ae38d7c0601f2df", "9b193d30c89a20b409fd3dda9bd109bf",
+            // PlayerIsLocust                 , // PlayerIsTrickster
+            "439e63fed37f52048887d98f99255e40", "9f486a9c0c9abfc4a952bb22e88a7e96"
+        };
 
-        
+        internal static readonly Dictionary<string, DLC6RomanceOverride> EtudesToCheckForDLCOverride = new() {
+            { "b152c93f814c4b7a9c372750d9490af9", DLC6RomanceOverride.Galfrey },
+            { "0158f3bd24a543d78a7be8a18b6d17cb", DLC6RomanceOverride.Daeran },
+            { "76a1b56ae4e84f79818cfceb0f6bdb07", DLC6RomanceOverride.Sosiel },
+            { "e192647a55614292a9057d84f11895d7", DLC6RomanceOverride.Camellia },
+            { "97cd066a25ba4002898873eb986b2aee", DLC6RomanceOverride.Lann },
+            { "0814b104c5874f789a291348a399b7e1", DLC6RomanceOverride.Wenduag },
+            { "74e7f47a591f471a85f14c6dab557625", DLC6RomanceOverride.Arueshalae },
+            { "1ae5f88c078848d1928d9655170e6c84", DLC6RomanceOverride.Ulbrig },
+            { "23982979ce2e4f40ba160b86d44a4e03", DLC6RomanceOverride.Single }
+        };
+
+        internal static readonly Dictionary<(string, string), DLC6RomanceOverride> EtudesToCheckForDLCOverrideStage = new() {
+            { ("e03e8b92fcba4f0294f20fd42e41c11d", "393fca1d-d04f-4a39-be6c-8758bb48d8d8"), DLC6RomanceOverride.Galfrey },
+            { ("e03e8b92fcba4f0294f20fd42e41c11d", "a1f6b8c8-1f37-4a5a-81b1-c7908d5bf7b7"), DLC6RomanceOverride.Daeran },
+            { ("e03e8b92fcba4f0294f20fd42e41c11d", "5497c710-d26d-4897-b255-0c522bea8dfa"), DLC6RomanceOverride.Daeran },
+            { ("e03e8b92fcba4f0294f20fd42e41c11d", "f0760227-bd25-49d3-ae21-31ad7f417c88"), DLC6RomanceOverride.Daeran },
+            { ("e03e8b92fcba4f0294f20fd42e41c11d", "c20470f1-a994-46ba-a496-7c9f10090a89"), DLC6RomanceOverride.Wenduag },
+            { ("e03e8b92fcba4f0294f20fd42e41c11d", "ae24ba8c-c175-400b-b60a-b697e34818bd"), DLC6RomanceOverride.Wenduag },
+            { ("e03e8b92fcba4f0294f20fd42e41c11d", "b7180f39-82bb-4c9f-baff-b3f13ed8d7f9"), DLC6RomanceOverride.Arueshalae },
+            { ("e03e8b92fcba4f0294f20fd42e41c11d", "02b04d8e-afaa-4897-a95d-61af64e78738"), DLC6RomanceOverride.Arueshalae },
+            { ("e03e8b92fcba4f0294f20fd42e41c11d", "b1bdc21a-3244-4664-a35d-fad6de9c509b"), DLC6RomanceOverride.Sosiel },
+            { ("e03e8b92fcba4f0294f20fd42e41c11d", "1b5dc2eb-185e-481d-8a6b-5233d204b8ed"), DLC6RomanceOverride.Sosiel },
+            { ("e03e8b92fcba4f0294f20fd42e41c11d", "4e4825d1-c018-4d92-bc61-94502db16347"), DLC6RomanceOverride.Sosiel },
+            { ("e03e8b92fcba4f0294f20fd42e41c11d", "3d1fc3d3-4529-4e3e-9c44-5c96828bd327"), DLC6RomanceOverride.Camellia },
+            { ("e03e8b92fcba4f0294f20fd42e41c11d", "c8ed32ae-ed2d-40c2-8b8e-4e36bdd20034"), DLC6RomanceOverride.Camellia },
+            { ("e03e8b92fcba4f0294f20fd42e41c11d", "7b357398-2f8b-4249-bdec-8c2c948f7a70"), DLC6RomanceOverride.Lann },
+            { ("e03e8b92fcba4f0294f20fd42e41c11d", "66b54e28-2964-4965-a275-b22fe7fa78cc"), DLC6RomanceOverride.Lann },
+            { ("e03e8b92fcba4f0294f20fd42e41c11d", "55162c4c-c45c-47b3-be08-8f36622a8b2c"), DLC6RomanceOverride.Ulbrig },
+            { ("e03e8b92fcba4f0294f20fd42e41c11d", "190482fc-55d7-4650-a650-64340d72901d"), DLC6RomanceOverride.Ulbrig }
+        };
+
         [HarmonyPatch(typeof(PcFemale), nameof(PcFemale.CheckCondition))]
         public static class PcFemale_CheckCondition_Patch {
             public static void Postfix(PcFemale __instance, ref bool __result) {
@@ -147,7 +204,7 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(ItemsEnough __instance, ref bool __result) {
                 if (!settings.toggleAllowAnyGenderRomance || __instance?.Owner is null) return;
                 Mod.Debug($"checking {__instance} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
-             //   if (PcMaleOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
+                //   if (PcMaleOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
             }
         }
 
@@ -164,6 +221,21 @@ namespace ToyBox.BagOfPatches {
                     if (ConditionCheckOverrides.TryGetValue(key, out var value)) {
                         Mod.Debug($"overiding {(__instance.Owner.name, __instance.name)} to {value}");
                         __result = value;
+                    }
+                }
+                if (EtudesToCheckForDLCOverride.TryGetValue(key.Item1, out var Override)) {
+                    if (settings.pickedDLC6Override > 0) {
+                        if ((int)Override != settings.pickedDLC6Override) {
+                            __result = false;
+                            Mod.Debug($"(DLC6 End Romance overiding {(__instance.Owner.name, __instance.name)} to {__result}");
+                        }
+                    }
+                } else if (EtudesToCheckForDLCOverrideStage.TryGetValue(key, out Override)) {
+                    if (settings.pickedDLC6Override > 0) {
+                        if ((int)Override != settings.pickedDLC6Override) {
+                            __result = false;
+                            Mod.Debug($"(DLC6 End Romance overiding {(__instance.Owner.name, __instance.name)} to {__result}");
+                        }
                     }
                 }
             }
@@ -184,9 +256,55 @@ namespace ToyBox.BagOfPatches {
                 if (settings.toggleFriendshipIsMagic) {
                     if (EtudeStatusOverridesFriendshipIsMagic.TryGetValue(key, out var valueFriendshipIsMagic)) { Mod.Debug($"overiding {(__instance.Owner.name)} to {valueFriendshipIsMagic}"); __result = valueFriendshipIsMagic; }
                 }
-                if (settings.toggleDialogRestrictionsMythic) {
+                if (settings.toggleDialogRestrictionsMythic || settings.toggleDialogRestrictionsEverything) {
                     if (EtudeStatusOverridesAnyMythic.TryGetValue(key, out var valueDialogRestrictionsMythic)) { Mod.Debug($"overiding {(__instance.Owner.name)} to {valueDialogRestrictionsMythic}"); __result = valueDialogRestrictionsMythic; }
+                    bool ownerIsAnswer = __instance.Owner is BlueprintAnswer bpAnswer && (bpAnswer.ShowConditions.Conditions?.Contains(__instance) ?? false);
+                    bool ownerIsCueSelectionWithNoValidCue = CueSelection_Select_Patch.ignoreNextMythicRestrictions;
+                    if (ownerIsAnswer || ownerIsCueSelectionWithNoValidCue) {
+                        if (EtudeMythicIsPlaying.Contains(__instance.Etude.AssetGuid.ToString())) {
+                            Mod.Debug($"For {__instance.Owner.name} overiding {__instance.Etude.name} to {!__instance.Not}");
+                            __result = !__instance.Not;
+                        }
+                    }
                 }
+            }
+        }
+
+        [HarmonyPatch(typeof(CueSelection), nameof(CueSelection.Select))]
+        public static class CueSelection_Select_Patch {
+            internal static bool ignoreNextMythicRestrictions = false;
+            [HarmonyPrefix]
+            public static void Select_Pre(CueSelection __instance) {
+                try {
+                    if (settings.toggleDialogRestrictionsMythic || settings.toggleDialogRestrictionsEverything) {
+                        var cc = Game.Instance.DialogController.CurrentCue;
+                        if (cc == null) return;
+                        var answers = ResolveBlueprintAnswerBaseReference(cc.Answers);
+                        foreach (var answer in answers) {
+                            if (answer.NextCue == __instance) {
+                                if (__instance.Cues.Dereference().Count(nc => nc.CanShow()) == 0) {
+                                    ignoreNextMythicRestrictions = true;
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    Mod.Error(ex.ToString());
+                }
+            }
+            [HarmonyPostfix]
+            public static void Select_Post() {
+                ignoreNextMythicRestrictions = false;
+            }
+            public static List<BlueprintAnswer> ResolveBlueprintAnswerBaseReference(List<BlueprintAnswerBaseReference> lbabr) {
+                if (lbabr == null) return [];
+                List<BlueprintAnswer> ret = [];
+                lbabr.ForEach(babr => {
+                    var answerBase = babr.Get();
+                    if (answerBase is BlueprintAnswer answer) ret.Add(answer);
+                    else if (answerBase is BlueprintAnswersList answerList) ret.AddRange(ResolveBlueprintAnswerBaseReference(answerList.Answers));
+                });
+                return ret;
             }
         }
 

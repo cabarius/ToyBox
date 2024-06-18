@@ -23,12 +23,8 @@ using static ModKit.UI;
 using static ToyBox.BlueprintExtensions;
 using ToyBox.BagOfPatches;
 using Kingmaker.UnitLogic.ActivatableAbilities;
-#if Wrath
 using Kingmaker.Blueprints.Classes.Selection;
 using Kingmaker.Blueprints.Classes.Spells;
-#elif RT 
-using Kingmaker.UnitLogic.Mechanics.Facts;
-#endif
 
 namespace ToyBox {
     public class FactsEditor {
@@ -57,10 +53,8 @@ namespace ToyBox {
         private static readonly Dictionary<UnitEntityData, Browser<BlueprintFeature, Feature>> FeatureBrowserDict = new();
         private static readonly Dictionary<UnitEntityData, Browser<BlueprintBuff, Buff>> BuffBrowserDict = new();
         private static readonly Dictionary<UnitEntityData, Browser<BlueprintUnitFact, UnitFact>> AbilityBrowserDict = new();
-#if Wrath
         private static readonly Browser<BlueprintFeature, FeatureSelectionEntry> FeatureSelectionBrowser = new(Mod.ModKitSettings.searchAsYouType) { IsDetailBrowser = true };
         private static readonly Browser<IFeatureSelectionItem, IFeatureSelectionItem> ParameterizedFeatureBrowser = new(Mod.ModKitSettings.searchAsYouType) { IsDetailBrowser = true };
-#endif
         public static void BlueprintRowGUI<Item, Definition>(Browser<Definition, Item> browser,
                                                              Item feature,
                                                              Definition blueprint,
@@ -72,21 +66,24 @@ namespace ToyBox {
             remainingWidth -= 50;
             var titleWidth = (remainingWidth / (IsWide ? 3.5f : 4.0f)) - 100;
             remainingWidth -= titleWidth;
-
-            var text = GetTitle(blueprint).MarkedSubstring(browser.SearchText);
+            string text;
+            if (feature is AbilityData maybeSpell2 && maybeSpell2.Blueprint.IsSpell && maybeSpell2.MagicHackData != null) {
+                text = maybeSpell2.MagicHackData.Name;
+                if (text.IsNullOrEmpty()) text = maybeSpell2.MagicHackData.GetDefaultName();
+            } else {
+                text = GetTitle(blueprint);
+            }
+            text = text.MarkedSubstring(browser.SearchText);
             var titleKey = $"{blueprint.AssetGuid}";
             if (feature != null) {
                 text = text.Cyan().Bold();
             }
             if (blueprint is BlueprintFeatureSelection featureSelection
-#if Wrath
                 || blueprint is BlueprintParametrizedFeature parametrizedFeature
-#endif
                 ) {
                 if (Browser.DetailToggle(text, blueprint, feature != null ? feature : blueprint, (int)titleWidth))
                     browser.ReloadData();
-            }
-            else
+            } else
                 Label(text, Width((int)titleWidth));
 
             var lastRect = GUILayoutUtility.GetLastRect();
@@ -114,13 +111,60 @@ namespace ToyBox {
                     increase.BlueprintActionButton(ch, blueprint, () => todo.Add(() => increase!.action(blueprint, ch, repeatCount)), 60);
                     Space(17);
                     remainingWidth -= 190;
-                }
-                else {
+                } else if (feature is AbilityData maybeSpell && maybeSpell.Blueprint.IsSpell) {
+                    var sb = maybeSpell.Spellbook;
+                    var level = sb.GetSpellLevel(maybeSpell);
+                    if (level > 0) {
+                        UI.ActionButton("<", () => {
+                            todo.Add(() => {
+                                if (maybeSpell.MagicHackData == null && maybeSpell.MetamagicData == null) {
+                                    sb.RemoveSpell(maybeSpell.Blueprint);
+                                    sb.AddKnown(level - 1, maybeSpell.Blueprint);
+                                } else {
+                                    sb.RemoveCustomSpell(maybeSpell);
+                                    if (maybeSpell.MagicHackData != null) {
+                                        maybeSpell.MagicHackData.SpellLevel = level - 1;
+                                    } else {
+                                        maybeSpell.SpellLevelInSpellbook = level - 1;
+                                    }
+                                    sb.AddCustomSpell(maybeSpell);
+                                }
+                                browser.ResetSearch();
+                            });
+                        }, Width(60));
+                    } else {
+                        Space(60);
+                    }
+                    Space(10f);
+                    Label($"{level}".orange().bold(), Width(30));
+                    if (level < 10) {
+                        UI.ActionButton(">", () => {
+                            todo.Add(() => {
+                                if (maybeSpell.MagicHackData == null && maybeSpell.MetamagicData == null) {
+                                    sb.RemoveSpell(maybeSpell.Blueprint);
+                                    sb.AddKnown(level + 1, maybeSpell.Blueprint);
+                                } else {
+                                    sb.RemoveCustomSpell(maybeSpell);
+                                    if (maybeSpell.MagicHackData != null) {
+                                        maybeSpell.MagicHackData.SpellLevel = level + 1;
+                                    } else {
+                                        maybeSpell.SpellLevelInSpellbook = level + 1;
+                                    }
+                                    sb.AddCustomSpell(maybeSpell);
+                                }
+                                browser.ResetSearch();
+                            });
+                        }, Width(60));
+                    } else {
+                        Space(60);
+                    }
+                    Space(17);
+                    remainingWidth -= 190;
+                } else {
                     Space(190);
                     remainingWidth -= 190;
                 }
-            }
-            else {
+            } else {
                 Space(190);
                 remainingWidth -= 190;
             }
@@ -140,8 +184,7 @@ namespace ToyBox {
                     if (Settings.showAssetIDs)
                         ClipboardLabel(blueprint.AssetGuid.ToString(), AutoWidth());
                     Label(blueprint.Description.StripHTML().MarkedSubstring(browser.SearchText).green(), Width(remainingWidth - 100));
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Mod.Warn($"Error in blueprint: {blueprint.AssetGuid}");
                     Mod.Warn($"         name: {blueprint.name}");
                     Mod.Error(e);
@@ -149,14 +192,9 @@ namespace ToyBox {
             }
         }
         public static void BlueprintDetailGUI<Item, Definition, k, v>(Definition blueprint, Item feature, UnitEntityData ch, Browser<k, v> browser)
-#if Wrath
             where Item : UnitFact
-#elif RT
-            where Item : MechanicEntityFact
-#endif
             where Definition : BlueprintUnitFact {
             // TODO: RT
-#if Wrath
             if (ch == null) {
                 FeatureSelectionBrowser.ShowAll = true;
                 ParameterizedFeatureBrowser.ShowAll = true;
@@ -200,8 +238,7 @@ namespace ToyBox {
                                 20.space();
                                 Label($"{selectionEntry.data.Source.Blueprint.GetDisplayName()}",
                                       250.width());
-                            }
-                            else
+                            } else
                                 354.space();
                             if (ch != null) {
                                 if (characterHasEntry)
@@ -302,14 +339,9 @@ namespace ToyBox {
                     });
                     break;
             }
-#endif
         }
         public static List<Action> OnGUI<Item, Definition>(UnitEntityData ch, Browser<Definition, Item> browser, List<Item> fact, string name)
-#if Wrath
             where Item : UnitFact
-#elif RT
-            where Item : MechanicEntityFact
-#endif
             where Definition : BlueprintUnitFact {
             bool updateTree = false;
             List<Action> todo = new();
@@ -319,8 +351,7 @@ namespace ToyBox {
                     Toggle("Show Tree".localize(), ref _showTree, Width(250));
                 }
                 treeEditor.OnGUI(ch, updateTree);
-            }
-            else {
+            } else {
                 browser.OnGUI(
                     fact,
                     () => {
@@ -344,10 +375,8 @@ namespace ToyBox {
                             reloadData |= Toggle("Search Descriptions".localize(), ref Settings.searchDescriptions);
                             if (reloadData) {
                                 browser.ResetSearch();
-#if Wrath
                                 FeatureSelectionBrowser.ResetSearch();
                                 ParameterizedFeatureBrowser.ResetSearch();
-#endif
                             }
                         }
                     },

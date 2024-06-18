@@ -77,8 +77,7 @@ namespace ModKit {
                 selected = sel;
                 try {
                     action(selected);
-                }
-                catch (NullReferenceException) {
+                } catch (NullReferenceException) {
                     //Needed for CharacterPicker.OnCharacterPickerGUI for whatever reason
                 }
             }
@@ -218,8 +217,7 @@ namespace ModKit {
             string[] titles;
             if (shouldLocalize) {
                 titles = items.Select((item, i) => i == sel ? item.name.localize().orange().bold() : item.name.localize()).ToArray();
-            }
-            else {
+            } else {
                 titles = items.Select((item, i) => i == sel ? item.name.orange().bold() : item.name).ToArray();
             }
             if (title?.Length > 0) { Label(title); }
@@ -281,8 +279,7 @@ namespace ModKit {
                     selectedItemIndex -= 1;
                 selected = selectedItemIndex >= 0 ? items[selectedItemIndex] : null;
                 //if (changed) Mod.Log($"sel index: {selectedItemIndex} sel: {selected}");
-            }
-            else {
+            } else {
                 Label("No Items".localize().grey(), options);
             }
             return changed;
@@ -370,8 +367,7 @@ namespace ModKit {
                     using (HorizontalScope()) {
                         if (pageSize < 1) {
                             pageSize = 1;
-                        }
-                        else if (pageSize > 1000) {
+                        } else if (pageSize > 1000) {
                             pageSize = 1000;
                         }
                         if (currentPage > totalPages || currentPage < 1) currentPage = 1;
@@ -382,8 +378,7 @@ namespace ModKit {
                             if (maybeNewPage >= 1) {
                                 if (maybeNewPage == 1) {
                                     maybeNewPage = totalPages;
-                                }
-                                else {
+                                } else {
                                     maybeNewPage -= 1;
                                 }
                             }
@@ -391,8 +386,7 @@ namespace ModKit {
                         ActionButton("+", () => {
                             if (maybeNewPage >= totalPages) {
                                 maybeNewPage = 1;
-                            }
-                            else {
+                            } else {
                                 maybeNewPage += 1;
                             }
                         }, AutoWidth());
@@ -402,8 +396,7 @@ namespace ModKit {
                     var limit = Math.Min(pageSize, Math.Max(itemCount, itemCount - pageSize));
                     var empty = string.Empty;
                     return VPicker(title, ref selected, fittingItems.ToList().Skip(offset).Take(limit).ToList(), unselectedTitle, titler, ref searchText, options);
-                }
-                else {
+                } else {
                     return VPicker(title, ref selected, items, unselectedTitle, titler, ref searchText, options);
                 }
             }

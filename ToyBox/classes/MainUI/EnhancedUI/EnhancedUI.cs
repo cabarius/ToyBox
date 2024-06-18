@@ -12,9 +12,7 @@ using System.Linq;
 using UnityEngine;
 using UnityModManagerNet;
 using static ModKit.UI;
-#if Wrath
 using ToyBox.Multiclass;
-#endif
 
 namespace ToyBox {
     public static class EnhancedUI {
@@ -36,13 +34,11 @@ namespace ToyBox {
                        Toggle("Click On Equip Slots To Filter Inventory".localize(), ref Settings.togglEquipSlotInventoryFiltering, 500.width());
                        HelpLabel($"If you tick this you can click on equipment slots to filter the inventory for items that fit in it.\nFor more {"Enhanced Inventory".orange()} and {"Spellbook".orange()} check out the {"Loot & Spellbook Tab".orange().bold()}".localize());
                    },
-#if Wrath                   
                    () => {
                        Toggle("Auto Follow While Holding Camera Follow Key".localize(), ref Settings.toggleAutoFollowHold, 400.width());
                        100.space();
                        HelpLabel("When enabled and you hold down the camera follow key (usually f) the camera will keep following the unit until you release it".localize());
                    },
-#endif
                    () => Toggle("Highlight Copyable Scrolls".localize(), ref Settings.toggleHighlightCopyableScrolls),
                    () => {
                        var modifier = KeyBindings.GetBinding("InventoryUseModifier");
@@ -80,13 +76,11 @@ namespace ToyBox {
                        25.space();
                        HelpLabel(("ToyBox Archeologists can tag confusing puzzle pieces with green numbers in the game world and for inventory tool tips it will show text like this: " + "[PuzzlePiece Green3x1]".yellow().bold() + "\nNOTE: ".orange().bold() + "Needs game restart to take efect".orange()).localize());
                    },
-#if Wrath
                    () => {
                        ActionButton("Clear Action Bar".localize(), () => Actions.ClearActionBar());
                        50.space();
                        Label("Make sure you have auto-fill turned off in settings or else this will just reset to default".localize().green());
                    },
-#endif
                    () => ActionButton("Fix Incorrect Main Character".localize(),
                                       () => {
                                           var probablyPlayer = Game.Instance.Player?.Party?
@@ -145,7 +139,6 @@ namespace ToyBox {
             EnhancedCamera.OnGUI();
             Div(0, 25);
             // TODO: Update EnumHelper.ValidFilterCategories for RT
-#if Wrath
             HStack("Enhanced Inventory".localize(),
                    1,
                    () => {
@@ -288,7 +281,6 @@ namespace ToyBox {
                        }
                    },
                    () => { });
-#endif
         }
     }
 

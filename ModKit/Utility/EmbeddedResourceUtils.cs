@@ -47,8 +47,7 @@ namespace ModKit {
 
                         haveExtension = true;
                     }
-                }
-                else {
+                } else {
                     escapeDot = false;
                 }
 

@@ -15,9 +15,7 @@ using Kingmaker.Blueprints.Items;
 using ModKit.DataViewer;
 using ModKit.Utility;
 using static ToyBox.BlueprintExtensions;
-#if Wrath
 using Kingmaker.Blueprints.Classes.Selection;
-#endif
 namespace ToyBox {
     public class BlueprintListUI {
         public delegate void NavigateTo(params string[] argv);
@@ -28,9 +26,7 @@ namespace ToyBox {
         public static int maxActions = 0;
         public static bool needsLayout = true;
         public static int[] ParamSelected = new int[1000];
-#if Wrath
         public static Dictionary<BlueprintParametrizedFeature, string[]> paramBPValueNames = new() { };
-#endif
         public static Dictionary<BlueprintFeatureSelection, string[]> selectionBPValuesNames = new() { };
 
         public static List<Action> OnGUI(UnitEntityData unit,
@@ -49,7 +45,7 @@ namespace ToyBox {
                 foreach (var blueprint in simpleBlueprints) {
                     var actions = blueprint.GetActions();
                     if (actions.Any(a => a.isRepeatable)) hasRepeatableAction = true;
-                    
+
                     // FIXME - perf bottleneck 
                     var actionCount = actions.Sum(action => action.canPerform(blueprint, unit) ? 1 : 0);
                     maxActions = Math.Max(actionCount, maxActions);
@@ -92,18 +88,15 @@ namespace ToyBox {
                         // FIXME - horrible perf bottleneck 
                         if (titles.Contains("Remove".localize()) || titles.Contains("Lock".localize())) {
                             title = displayName.cyan().bold();
-                        }
-                        else {
+                        } else {
                             title = titleFormatter(displayName);
                         }
                         title = $"{title} : {name.color(RGBA.darkgrey)}";
-                    }
-                    else {
+                    } else {
                         // FIXME - horrible perf bottleneck 
                         if (titles.Contains("Remove".localize()) || titles.Contains("Lock".localize())) {
                             title = name.cyan().bold();
-                        }
-                        else {
+                        } else {
                             title = titleFormatter(name);
                         }
                     }
@@ -131,8 +124,7 @@ namespace ToyBox {
 #if DEBUG
                             Label(flagBP.GetDescription().green());
 #endif
-                        }
-                        else {
+                        } else {
                             // FIXME - perf bottleneck 
                             var unlockIndex = titles.IndexOf("Unlock");
                             if (unlockIndex >= 0) {
@@ -143,8 +135,7 @@ namespace ToyBox {
                             }
                         }
                         remWidth -= 300;
-                    }
-                    else {
+                    } else {
                         for (var ii = 0; ii < maxActions; ii++) {
                             if (ii < actionCount) {
                                 var action = actions.ElementAt(ii);
@@ -162,8 +153,7 @@ namespace ToyBox {
                                 Space(10);
                                 remWidth -= 174.0f + extraSpace;
 
-                            }
-                            else {
+                            } else {
                                 Space(174);
                             }
                         }
@@ -212,17 +202,15 @@ namespace ToyBox {
                         using (HorizontalScope(Width(remWidth))) {
                             ReflectionTreeView.DetailToggle("", blueprint, blueprint, 0);
                             Space(-17);
-                            if (Settings.showAssetIDs) { 
+                            if (Settings.showAssetIDs) {
                                 ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), rarityButtonStyle);
                                 ClipboardLabel(blueprint.AssetGuid.ToString(), ExpandWidth(false));
-                            }
-                            else ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), rarityButtonStyle);
+                            } else ActionButton(typeString, () => navigateTo?.Invoke(navigateStrings.ToArray()), rarityButtonStyle);
                             Space(17);
                         }
                         if (description.Length > 0) Label(description.green(), Width(remWidth));
                     }
                 }
-#if Wrath
                 if (blueprint is BlueprintParametrizedFeature paramBP) {
                     using (HorizontalScope()) {
                         Space(titleWidth);
@@ -253,7 +241,6 @@ namespace ToyBox {
                         }
                     }
                 }
-#endif
                 if (blueprint is BlueprintFeatureSelection selectionBP) {
                     using (HorizontalScope()) {
                         Space(titleWidth);
@@ -283,7 +270,6 @@ namespace ToyBox {
                                 );
                                 //UI.SelectionGrid(ref ParamSelected[currentCount], nameStrings, 6, UI.Width(remWidth + titleWidth)); // UI.Width(remWidth));
                             }
-#if Wrath
                             if (unit.Progression.Selections.TryGetValue(selectionBP, out var selectionData)) {
                                 foreach (var entry in selectionData.SelectionsByLevel) {
                                     foreach (var selection in entry.Value) {
@@ -303,7 +289,6 @@ namespace ToyBox {
                                     }
                                 }
                             }
-#endif
                             Space(15);
                         }
                     }

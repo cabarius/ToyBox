@@ -207,8 +207,7 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                             if (!ArmiesEditor.IsInMercenaryPool[unit.GetHashCode()] && !ArmiesEditor.IsInRecruitPool[unit.GetHashCode()]) {
                                 ArmiesEditor.IsInMercenaryPool[unit.GetHashCode()] = true;
                                 KingdomState.Instance.MercenariesManager.AddMercenary(unit, 1);
-                            }
-                            else {
+                            } else {
                                 IEnumerable<BlueprintUnit> recruitPool = from recruitable in KingdomState.Instance.RecruitsManager.Pool
                                                                          select recruitable.Unit;
                                 if (!recruitPool.Contains(unit) && !KingdomState.Instance.MercenariesManager.HasUnitInPool(unit)) {
