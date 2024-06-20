@@ -603,9 +603,14 @@ namespace ToyBox.BagOfPatches {
                 }
             }
             [HarmonyPatch(nameof(UnitPartMagus.IsSpellFromMagusSpellList)), HarmonyFinalizer]
-            public static Exception IsSpellFromMagusSpellList(ref bool __result, UnitPartMagus __instance) {
+            public static Exception IsSpellFromMagusSpellList(ref bool __result, UnitPartMagus __instance, AbilityData spell) {
                 if (Settings.toggleAlwaysAllowSpellCombat && __instance.Owner != null && __instance.Owner.IsPartyOrPet()) {
-                    __result = true;
+                    try {
+                        bool flag = (bool)__instance.WandWielder && spell.SourceItemUsableBlueprint != null && spell.SourceItemUsableBlueprint?.Type == UsableItemType.Wand;
+                        __result = spell.IsInSpellList(__instance.Spellbook?.Blueprint?.SpellList) || (__instance.Spellbook?.IsKnown(spell?.Blueprint) ?? false) || flag;
+                    } catch {
+                        __result = spell.Range == AbilityRange.Touch && spell.Spellbook != null;
+                    }
                 }
                 return null;
             }
