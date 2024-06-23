@@ -85,7 +85,7 @@ namespace ToyBox.BagOfPatches {
                     if (settings.toggleRemoteCompanionDialog && unitPartCompanion.State != CompanionState.None) {
                         if ((settings.toggleExCompanionDialog && unitPartCompanion.State == CompanionState.ExCompanion) || unitPartCompanion.State != CompanionState.ExCompanion) {
                             if (__instance.Owner is BlueprintCue cueBP) {
-                                Mod.Debug($"overiding {cueBP.name} Companion {__instance.companion.name} In Party to true");
+                                OwlLogging.Log($"overiding {cueBP.name} Companion {__instance.companion.name} In Party to true");
                                 __result = true;
                             }
                             if (__instance.Owner is BlueprintCue etudeBP) {
@@ -106,6 +106,7 @@ namespace ToyBox.BagOfPatches {
                     if (!settings.toggleRemoteCompanionDialog) return true;
                     if (___instance.Owner is BlueprintCue cueBP) {
                         var unitEntityData = Game.Instance.Player.AllCharacters.FirstOrDefault(unit => ___instance.IsCompanion(unit.Blueprint));
+                        OwlLogging.Log($"Evalutors checking {___instance} guid:{___instance.AssetGuid} owner:{___instance.Owner.name} guid: {___instance.Owner.AssetGuid}) value: {__result}; Overriding to {unitEntityData}");
                         __result = unitEntityData;
                         return false;
                     }
@@ -120,6 +121,7 @@ namespace ToyBox.BagOfPatches {
                 if (!settings.toggleRemoteCompanionDialog) return true;
                 if (__instance.Owner is BlueprintCue cueBP) {
                     var unitEntityData = Game.Instance.Player.AllCharacters.FirstOrDefault(unit => __instance.IsCompanion(unit.Blueprint));
+                    OwlLogging.Log($"Evalutors checking {__instance} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}; Overriding to {unitEntityData}");
                     __result = unitEntityData;
                     return false;
                 }

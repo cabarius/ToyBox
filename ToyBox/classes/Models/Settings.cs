@@ -15,10 +15,10 @@ using UnityModManagerNet;
 
 namespace ToyBox {
     public class PerSaveSettings : EntityPart {
-        public const string ID = "ToyBox.PerSaveSettings";
-        public delegate void Changed(PerSaveSettings perSave);
+        internal const string ID = "ToyBox.PerSaveSettings";
+        internal delegate void Changed(PerSaveSettings perSave);
         [JsonIgnore]
-        public static Changed observers;
+        internal static Changed observers;
 
         // schema for storing multiclass settings
         //      Dictionary<CharacterName, 
@@ -31,20 +31,15 @@ namespace ToyBox {
         //              { doOverride, OverrideValue }
         [JsonProperty]
         public Dictionary<string, Tuple<bool, bool>> doOverrideEnableAiForCompanions = new();
-
-        // Dictionary<Character Hashcode,
-        //              { doOverride, List<GUID> with outfits to use }
-        [JsonProperty]
-        public Dictionary<string, Tuple<bool, List<string>>> doOverrideOutfit = new();
-        [JsonProperty]
         // Dictioanry<Character Hashcode,
         //              Kingmaker.Enums.Size which will override default size
+        [JsonProperty]
         public Dictionary<string, Size> characterSizeModifier = new();
     }
 
     public class Settings : UnityModManager.ModSettings {
         private static PerSaveSettings cachedPerSave = null;
-        public const string PerSaveKey = "ToyBox";
+        internal const string PerSaveKey = "ToyBox";
         public static void ClearCachedPerSave() => cachedPerSave = null;
         public static void ReloadPerSaveSettings() {
             var player = Game.Instance?.Player;
@@ -92,7 +87,7 @@ namespace ToyBox {
                 Mod.Error(e);
             }
         }
-        public PerSaveSettings perSave {
+        internal PerSaveSettings perSave {
             get {
                 if (cachedPerSave != null) return cachedPerSave;
                 ReloadPerSaveSettings();
@@ -128,7 +123,7 @@ namespace ToyBox {
         public bool toggleInvertKeyboardXAxis = false;
         public bool toggleInvertYAxis = false;
         public float fovMultiplier = 1;
-        public float AdjustedFovMultiplier => Math.Max(fovMultiplier, toggleZoomableLocalMaps ? 1.25f : 0.4f);
+        internal float AdjustedFovMultiplier => Math.Max(fovMultiplier, toggleZoomableLocalMaps ? 1.25f : 0.4f);
 
         // Tweaks
         public bool toggleNoPsychicPhenomena = false;

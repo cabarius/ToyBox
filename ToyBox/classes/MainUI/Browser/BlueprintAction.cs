@@ -115,22 +115,37 @@ namespace ToyBox {
         public static void InitializeActions() {
             var flags = Game.Instance.Player.UnlockableFlags;
             BlueprintAction.Register<BlueprintItem>("Add".localize(),
-                                                    (bp, ch, n, index) => Game.Instance.Player.Inventory.Add(bp, n), isRepeatable: true);
+                                                    (bp, ch, n, index) => {
+                                                        Game.Instance.Player.Inventory.Add(bp, n);
+                                                        OwlLogging.Log($"Add Item {n} x {bp}");
+                                                    }, isRepeatable: true);
 
             BlueprintAction.Register<BlueprintItem>("Remove".localize(),
-                                                    (bp, ch, n, index) => Game.Instance.Player.Inventory.Remove(bp, n),
+                                                    (bp, ch, n, index) => {
+                                                        Game.Instance.Player.Inventory.Remove(bp, n);
+                                                        OwlLogging.Log($"Remove Item {n} x {bp}");
+                                                    },
                                                     (bp, ch, index) => Game.Instance.Player.Inventory.Contains(bp), true);
 
             BlueprintAction.Register<BlueprintUnit>("Spawn".localize(),
-                                                    (bp, ch, n, index) => Actions.SpawnUnit(bp, n), isRepeatable: true);
+                                                    (bp, ch, n, index) => {
+                                                        Actions.SpawnUnit(bp, n);
+                                                        OwlLogging.Log($"Spawn {n} x {bp}");
+                                                    }, isRepeatable: true);
 
             // Facts
             BlueprintAction.Register<BlueprintMechanicEntityFact>("Add".localize(),
-                                                       (bp, ch, n, index) => ch.AddFact(bp),
+                                                       (bp, ch, n, index) => { 
+                                                           ch.AddFact(bp);
+                                                           OwlLogging.Log($"Add MechanicEntityFact {bp} to {ch}");
+                                                       },
                                                        (bp, ch, index) => !ch.Facts.List.Select(f => f.Blueprint).Contains(bp));
 
             BlueprintAction.Register<BlueprintMechanicEntityFact>("Remove".localize(),
-                                                        (bp, ch, n, index) => ch.Facts.Remove(bp),
+                                                        (bp, ch, n, index) => {
+                                                            ch.Facts.Remove(bp);
+                                                            OwlLogging.Log($"Remove MechanicEntityFact {bp} from {ch}");
+                                                        },
                                                         (bp, ch, index) => ch.Facts.List.Select(f => f.Blueprint).Contains(bp));
 
             //BlueprintAction.Register<BlueprintArchetype>(
@@ -144,60 +159,98 @@ namespace ToyBox {
             //    );
 
             // Teleport
-            BlueprintAction.Register<BlueprintAreaEnterPoint>("Teleport".localize(), (enterPoint, ch, n, index) => Teleport.To(enterPoint));
-            BlueprintAction.Register<BlueprintArea>("Teleport".localize(), (area, ch, n, index) => Teleport.To(area));
+            BlueprintAction.Register<BlueprintAreaEnterPoint>("Teleport".localize(), (enterPoint, ch, n, index) => {
+                Teleport.To(enterPoint);
+                OwlLogging.Log($"Teleport to {enterPoint}");
+            });
+            BlueprintAction.Register<BlueprintArea>("Teleport".localize(), (area, ch, n, index) => {
+                Teleport.To(area);
+                OwlLogging.Log($"Teleport to {area}");
+            });
 
             // Quests
             BlueprintAction.Register<BlueprintQuest>("Start".localize(),
-                                                     (bp, ch, n, index) => Game.Instance.Player.QuestBook.GiveObjective(bp.Objectives.First()),
+                                                     (bp, ch, n, index) => {
+                                                         Game.Instance.Player.QuestBook.GiveObjective(bp.Objectives.First());
+                                                         OwlLogging.Log($"Start Quest {bp} by giving first objective {bp.Objectives.First()}");
+                                                     },
                                                      (bp, ch, index) => Game.Instance.Player.QuestBook.GetQuest(bp) == null);
 
             BlueprintAction.Register<BlueprintQuest>("Complete".localize(),
                                                      (bp, ch, n, index) => {
+                                                         OwlLogging.Log($"Complete Quest {bp} by completing all the following objectives");
                                                          foreach (var objective in bp.Objectives) {
                                                              Game.Instance.Player.QuestBook.CompleteObjective(objective);
+                                                             OwlLogging.Log($"Complete Quest Objective {objective}");
                                                          }
                                                      }, (bp, ch, index) => Game.Instance.Player.QuestBook.GetQuest(bp)?.State == QuestState.Started);
 
             // Quests Objectives
             BlueprintAction.Register<BlueprintQuestObjective>("Start".localize(),
-                                                              (bp, ch, n, index) => Game.Instance.Player.QuestBook.GiveObjective(bp),
+                                                              (bp, ch, n, index) => {
+                                                                  Game.Instance.Player.QuestBook.GiveObjective(bp);
+                                                                  OwlLogging.Log($"Start Quest Objective {bp}");
+                                                              },
                                                               (bp, ch, index) => Game.Instance.Player.QuestBook.GetQuest(bp.Quest) == null);
 
             BlueprintAction.Register<BlueprintQuestObjective>("Complete".localize(),
-                                                              (bp, ch, n, index) => Game.Instance.Player.QuestBook.CompleteObjective(bp),
+                                                              (bp, ch, n, index) => {
+                                                                  Game.Instance.Player.QuestBook.CompleteObjective(bp);
+                                                                  OwlLogging.Log($"Complete Quest Objective {bp}");
+                                                              },
                                                               (bp, ch, index) => Game.Instance.Player.QuestBook.GetQuest(bp.Quest)?.State == QuestState.Started);
 
             // Etudes
             BlueprintAction.Register<BlueprintEtude>("Start".localize(),
-                                                     (bp, ch, n, index) => Game.Instance.Player.EtudesSystem.StartEtude(bp),
+                                                     (bp, ch, n, index) => {
+                                                         Game.Instance.Player.EtudesSystem.StartEtude(bp);
+                                                         OwlLogging.Log($"Start Etude {bp}");
+                                                     },
                                                      (bp, ch, index) => Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp));
             BlueprintAction.Register<BlueprintEtude>("Complete".localize(),
-                                                     (bp, ch, n, index) => Game.Instance.Player.EtudesSystem.MarkEtudeCompleted(bp),
+                                                     (bp, ch, n, index) => {
+                                                         Game.Instance.Player.EtudesSystem.MarkEtudeCompleted(bp);
+                                                         OwlLogging.Log($"Complete Etude {bp}");
+                                                     },
                                                      (bp, ch, index) => !Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp) &&
                                                                         !Game.Instance.Player.EtudesSystem.EtudeIsCompleted(bp));
             BlueprintAction.Register<BlueprintEtude>("Unstart".localize(),
-                                         (bp, ch, n, index) =>
-                                             Game.Instance.Player.EtudesSystem.UnstartEtude(bp),
+                                         (bp, ch, n, index) => {
+                                             Game.Instance.Player.EtudesSystem.UnstartEtude(bp);
+                                             OwlLogging.Log($"Unstart Etude {bp}");
+                                         },
                                          (bp, ch, index) => !Game.Instance.Player.EtudesSystem.EtudeIsNotStarted(bp));
             // Flags
             BlueprintAction.Register<BlueprintUnlockableFlag>("Unlock".localize(),
-                (bp, ch, n, index) => flags.Unlock(bp),
+                (bp, ch, n, index) => {
+                    flags.Unlock(bp);
+                    OwlLogging.Log($"Unlock UnlockableFlag {bp}");
+                },
                 (bp, ch, index) => !flags.IsUnlocked(bp));
 
             BlueprintAction.Register<BlueprintUnlockableFlag>("Lock".localize(),
-                (bp, ch, n, index) => flags.Lock(bp),
+                (bp, ch, n, index) => { 
+                    flags.Lock(bp);
+                    OwlLogging.Log($"Lock UnlockableFlag {bp}"); 
+                },
                 (bp, ch, index) => flags.IsUnlocked(bp));
 
             BlueprintAction.Register<BlueprintUnlockableFlag>(">".localize(),
-                (bp, ch, n, index) => flags.SetFlagValue(bp, flags.GetFlagValue(bp) + n),
+                (bp, ch, n, index) => {
+                    flags.SetFlagValue(bp, flags.GetFlagValue(bp) + n);
+                    OwlLogging.Log($"Increase UnlockableFlag {bp} by {n}");
+                },
                 (bp, ch, index) => flags.IsUnlocked(bp));
 
             BlueprintAction.Register<BlueprintUnlockableFlag>("<".localize(),
-                (bp, ch, n, index) => flags.SetFlagValue(bp, flags.GetFlagValue(bp) - n),
+                (bp, ch, n, index) => {
+                    flags.SetFlagValue(bp, flags.GetFlagValue(bp) - n);
+                    OwlLogging.Log($"Decrease UnlockableFlag {bp} by {n}");
+                },
                 (bp, ch, index) => flags.IsUnlocked(bp));
             // Cutscenes
             BlueprintAction.Register<Cutscene>("Play".localize(), (bp, ch, n, index) => {
+                OwlLogging.Log($"Play cutscene {bp}");
                 Actions.ToggleModWindow();
                 var cutscenePlayerData = CutscenePlayerData.Queue.FirstOrDefault(c => c.PlayActionId == bp.name);
 

@@ -56,7 +56,10 @@ namespace ToyBox.classes.MonkeyPatchin.BagOfPatches {
                 } catch {
                     retrievedBlueprint = null;
                 }
-                if (retrievedBlueprint == null) Mod.Warn($"Failed to load blueprint by guid '{text}' but continued with null blueprint.");
+                if (retrievedBlueprint == null) {
+                    Mod.Warn($"Failed to load blueprint by guid '{text}' but continued with null blueprint.");
+                    OwlLogging.Log($"Failed to load blueprint by guid '{text}' but continued with null blueprint.");
+                }
                 __result = retrievedBlueprint;
 
                 return false;

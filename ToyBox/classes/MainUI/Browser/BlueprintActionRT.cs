@@ -43,21 +43,33 @@ namespace ToyBox {
         public static void InitializeActionsRT() {
             // Features
             BlueprintAction.Register<BlueprintFeature>("Add".localize(),
-                                                       (bp, ch, n, index) => ch.Progression.Features.Add(bp),
+                                                       (bp, ch, n, index) => {
+                                                           ch.Progression.Features.Add(bp);
+                                                           OwlLogging.Log($"Add Feature {bp} to {ch}");
+                                                       },
                                                        (bp, ch, index) => !ch.Progression.Features.Contains(bp));
 
             BlueprintAction.Register<BlueprintFeature>("Remove".localize(),
-                                                       (bp, ch, n, index) => ch.Progression.Features.Remove(bp),
+                                                       (bp, ch, n, index) => { 
+                                                           ch.Progression.Features.Remove(bp);
+                                                           OwlLogging.Log($"Remove Feature {bp} from {ch}");
+                                                       },
                                                        (bp, ch, index) => ch.Progression.Features.Contains(bp));
             BlueprintAction.Register<BlueprintFeature>("<".localize(),
-                               (bp, ch, n, index) => ch.Progression.Features.Get(bp)?.RemoveRank(),
+                               (bp, ch, n, index) => {
+                                   ch.Progression.Features.Get(bp)?.RemoveRank();
+                                   OwlLogging.Log($"Remove rank from Feature {bp} for {ch}");
+                               },
                                (bp, ch, index) => {
                                    var feature = ch.Progression.Features.Get(bp);
                                    return feature?.GetRank() > 1;
                                });
 
             BlueprintAction.Register<BlueprintFeature>(">".localize(),
-                                                       (bp, ch, n, index) => ch.Progression.Features.Get(bp)?.AddRank(),
+                                                       (bp, ch, n, index) => {
+                                                           ch.Progression.Features.Get(bp)?.AddRank();
+                                                           OwlLogging.Log($"Add rank to Feature {bp} for {ch}");
+                                                       },
                                                        (bp, ch, index) => {
                                                            var feature = ch.Progression.Features.Get(bp);
                                                            if (bp is BlueprintStatAdvancement) {
@@ -67,21 +79,33 @@ namespace ToyBox {
                                                        });
             // Buffs
             BlueprintAction.Register<BlueprintBuff>("Add".localize(),
-                                                    (bp, ch, n, index) => GameHelper.ApplyBuff(ch, bp),
+                                                    (bp, ch, n, index) => {
+                                                        GameHelper.ApplyBuff(ch, bp);
+                                                        OwlLogging.Log($"Add Buff {bp} to {ch}");
+                                                    },
                                                     (bp, ch, index) => !ch.Descriptor().Buffs.Contains(bp));
 
             BlueprintAction.Register<BlueprintBuff>("Remove".localize(),
-                                                    (bp, ch, n, index) => ch.Descriptor().Facts.Remove(bp),
+                                                    (bp, ch, n, index) => {
+                                                        ch.Descriptor().Facts.Remove(bp);
+                                                        OwlLogging.Log($"Remove Buff {bp} to {ch}");
+                                                    },
                                                     (bp, ch, index) => ch.Descriptor().Buffs.Contains(bp));
             BlueprintAction.Register<BlueprintBuff>("<".localize(),
-                                                    (bp, ch, n, index) => ch.Descriptor().Buffs.Get(bp)?.RemoveRank(),
+                                                    (bp, ch, n, index) => {
+                                                        ch.Descriptor().Buffs.Get(bp)?.RemoveRank();
+                                                        OwlLogging.Log($"Remove rank from Buff {bp} for {ch}");
+                                                    },
                                                     (bp, ch, index) => {
                                                         var buff = ch.Descriptor().Buffs.Get(bp);
                                                         return buff?.GetRank() > 1;
                                                     });
 
             BlueprintAction.Register<BlueprintBuff>(">".localize(),
-                                                    (bp, ch, n, index) => ch.Descriptor().Buffs.Get(bp)?.AddRank(),
+                                                    (bp, ch, n, index) => {
+                                                        ch.Descriptor().Buffs.Get(bp)?.AddRank();
+                                                        OwlLogging.Log($"Add rank to Buff {bp} for {ch}");
+                                                    },
                                                     (bp, ch, index) => {
                                                         var buff = ch.Descriptor().Buffs.Get(bp);
                                                         return buff != null && buff?.GetRank() < buff.Blueprint.Ranks - 1;
@@ -89,25 +113,40 @@ namespace ToyBox {
             // Kingdom Bufs
             // Abilities
             BlueprintAction.Register<BlueprintAbility>("Add".localize(),
-                                                       (bp, ch, n, index) => ch.Abilities.Add(bp),
+                                                       (bp, ch, n, index) => {
+                                                           ch.Abilities.Add(bp);
+                                                           OwlLogging.Log($"Add Ability {bp} to {ch}");
+                                                       },
                                                        (bp, ch, index) => !ch.Abilities.Contains(bp));
 
             BlueprintAction.Register<BlueprintAbility>("Remove".localize(),
-                                                       (bp, ch, n, index) => ch.Abilities.Remove(bp),
+                                                       (bp, ch, n, index) => {
+                                                           ch.Abilities.Remove(bp);
+                                                           OwlLogging.Log($"Remove Ability {bp} to {ch}");
+                                                       },
                                                        (bp, ch, index) => ch.Abilities.Contains(bp));
 
 
             // BlueprintActivatableAbility
             BlueprintAction.Register<BlueprintActivatableAbility>("Add".localize(),
-                                                                  (bp, ch, n, index) => ch.Descriptor().AddFact(bp),
+                                                                  (bp, ch, n, index) => {
+                                                                      ch.Descriptor().AddFact(bp);
+                                                                      OwlLogging.Log($"Add ActivatableAbility {bp} to {ch}");
+                                                                  },
                                                                   (bp, ch, index) => !ch.Descriptor().Facts.Contains(bp));
 
             BlueprintAction.Register<BlueprintActivatableAbility>("Remove".localize(),
-                                                                  (bp, ch, n, index) => ch.Descriptor().Facts.Remove(bp),
+                                                                  (bp, ch, n, index) => {
+                                                                      ch.Descriptor().Facts.Remove(bp);
+                                                                      OwlLogging.Log($"Remove ActivatableAbility {bp} to {ch}");
+                                                                  },
                                                                   (bp, ch, index) => ch.Descriptor().Facts.Contains(bp));
 
             // Teleport
-            BlueprintAction.Register<BlueprintStarSystemMap>("Teleport".localize(), (map, ch, n, index) => Teleport.To(map));
+            BlueprintAction.Register<BlueprintStarSystemMap>("Teleport".localize(), (map, ch, n, index) => {
+                Teleport.To(map);
+                OwlLogging.Log($"Teleport to {map}");
+            });
             BlueprintAction.Register<BlueprintSectorMapPoint>("Teleport".localize(),
                                                               (globalMapPoint, ch, n, index) => { }); //Teleport.To(globalMapPoint)
 #if false   // TODO: implement this
@@ -128,6 +167,7 @@ namespace ToyBox {
             BlueprintAction.Register<BlueprintPlanet>("Colonize".localize(), (bp, ch, n, index) => {
                 try {
                     CheatsColonization.ColonizePlanet(bp);
+                    OwlLogging.Log($"Colonize Planet {bp}");
                 } catch (Exception ex) {
                     throw new Exception("Error trying to colonize Planet. Are you in the correct Star System?\n".localize().orange().bold() + ex.Message + ex.StackTrace.ToString());
                 }
@@ -140,6 +180,7 @@ namespace ToyBox {
 
                 try {
                     CheatsColonization.ColonizePlanet(ColonyToPlanet[bp]);
+                    OwlLogging.Log($"Colonize Colony {bp}");
                 } catch (Exception ex) {
                     throw new Exception("Error trying to colonize Planet. Are you in the correct Star System?\n".localize().orange().bold() + ex.Message + ex.StackTrace.ToString());
                 }

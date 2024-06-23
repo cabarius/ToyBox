@@ -3,6 +3,7 @@ using Kingmaker;
 using Kingmaker.Blueprints;
 using Kingmaker.Designers.EventConditionActionSystem.Conditions;
 using Kingmaker.ElementsSystem;
+using Kingmaker.ElementsSystem.Interfaces;
 using ModKit;
 using System;
 using System.Collections.Generic;
@@ -135,7 +136,7 @@ namespace ToyBox.BagOfPatches {
         public static class PcFemale_CheckCondition_Patch {
             public static void Postfix(PcFemale __instance, ref bool __result) {
                 if (!settings.toggleAllowAnyGenderRomance || __instance?.Owner is null) return;
-                Mod.Debug($"checking {__instance} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
+                OwlLogging.Log($"checking {__instance} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
                 if (PcFemaleOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
             }
         }
@@ -143,23 +144,23 @@ namespace ToyBox.BagOfPatches {
         public static class PcMale_CheckCondition_Patch {
             public static void Postfix(PcMale __instance, ref bool __result) {
                 if (!settings.toggleAllowAnyGenderRomance || __instance?.Owner is null) return;
-                Mod.Debug($"checking {__instance} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
+                OwlLogging.Log($"checking {__instance} guid:{__instance.AssetGuid} owner:{__instance.Owner.name} guid: {__instance.Owner.AssetGuid}) value: {__result}");
                 if (PcMaleOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
             }
         }
 
-        [HarmonyPatch(typeof(Condition), nameof(Condition.Check))]
+        [HarmonyPatch(typeof(Condition), nameof(Condition.Check), [typeof(ConditionsChecker), typeof(IConditionDebugContext)])]
         public static class Condition_Check_Patch {
             public static void Postfix(Condition __instance, ref bool __result) {
                 if (__instance?.Owner is null) return;
 
                 var key = (__instance.Owner.AssetGuid.ToString(), __instance.AssetGuid);
                 if (settings.toggleAllowAnyGenderRomance) {
-                    if (ConditionCheckOverridesLoveIsFree.TryGetValue(key, out var valueLoveIsFree)) { Mod.Debug($"overiding {(__instance.Owner.name, __instance.name)} to {valueLoveIsFree}"); __result = valueLoveIsFree; }
+                    if (ConditionCheckOverridesLoveIsFree.TryGetValue(key, out var valueLoveIsFree)) { OwlLogging.Log($"overiding {(__instance.Owner.name, __instance.name)} to {valueLoveIsFree}"); __result = valueLoveIsFree; }
                 }
                 if (settings.toggleMultipleRomance) {
                     if (ConditionCheckOverrides.TryGetValue(key, out var value)) {
-                        Mod.Debug($"overiding {(__instance.Owner.name, __instance.name)} to {value}");
+                        OwlLogging.Log($"overiding {(__instance.Owner.name, __instance.name)} to {value}");
                         __result = value;
                     }
                 }
@@ -173,10 +174,10 @@ namespace ToyBox.BagOfPatches {
 
                 var key = (__instance.Owner.AssetGuid.ToString());
                 if (settings.toggleAllowAnyGenderRomance) {
-                    if (EtudeStatusOverridesLoveIsFree.TryGetValue(key, out var valueLoveIsFree)) { Mod.Debug($"overiding {(__instance.Owner.name)} to {valueLoveIsFree}"); __result = valueLoveIsFree; }
+                    if (EtudeStatusOverridesLoveIsFree.TryGetValue(key, out var valueLoveIsFree)) { OwlLogging.Log($"overiding {(__instance.Owner.name)} to {valueLoveIsFree}"); __result = valueLoveIsFree; }
                 }
                 if (settings.toggleMultipleRomance) {
-                    if (EtudeStatusOverrides.TryGetValue(key, out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
+                    if (EtudeStatusOverrides.TryGetValue(key, out var value)) { OwlLogging.Log($"overiding {__instance.Owner.name} to {value}"); __result = value; }
                 }
             }
         }
@@ -186,7 +187,7 @@ namespace ToyBox.BagOfPatches {
             public static void Postfix(FlagInRange __instance, ref bool __result) {
                 if (__instance?.Owner is null) return;
                 if (settings.toggleMultipleRomance) {
-                    if (FlagInRangeOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { Mod.Debug($"overiding {__instance.Owner.name} to {value}"); __result = value; }
+                    if (FlagInRangeOverrides.TryGetValue(__instance.Owner.AssetGuid.ToString(), out var value)) { OwlLogging.Log($"overiding {__instance.Owner.name} to {value}"); __result = value; }
                 }
             }
         }
@@ -194,6 +195,7 @@ namespace ToyBox.BagOfPatches {
         public static class RomanceLocked_CheckCondition_Patch {
             public static void Postfix(ref bool __result) {
                 if (settings.toggleMultipleRomance) {
+                    if (__result) OwlLogging.Log("Overriding RomanceLocked.CheckCondition result to false");
                     __result = false;
                 }
             }

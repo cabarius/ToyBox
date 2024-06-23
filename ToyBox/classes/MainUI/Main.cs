@@ -32,6 +32,7 @@ namespace ToyBox {
 #endif
     internal static class Main {
         internal static Harmony HarmonyInstance;
+        internal static UnityModManager.ModEntry modEntry;
         public static readonly LogChannel logger = LogChannelFactory.GetOrCreate("Respec");
         public static Settings Settings;
         public static NamedAction[] tabs = {
@@ -74,6 +75,7 @@ namespace ToyBox {
         public static List<GameObject> Objects;
         private static bool Load(UnityModManager.ModEntry modEntry) {
             try {
+                Main.modEntry = modEntry;
 #if DEBUG
                 modEntry.OnUnload = OnUnload;
                 _modId = modEntry.Info.Id;
@@ -249,6 +251,7 @@ namespace ToyBox {
             BlueprintExtensions.titleCache.Clear();
             BlueprintExtensions.sortKeyCache.Clear();
             BlueprintExtensions.searchKeyCache.Clear();
+            OwlLogging.OnHideGUI();
         }
         private static IEnumerator ResetGUI() {
             _needsResetGameUI = false;
