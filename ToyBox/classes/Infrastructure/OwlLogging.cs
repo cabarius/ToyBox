@@ -64,12 +64,12 @@ public static class OwlLogging {
                     if (!areEqual) {
                         if (TypeManager.AreObjectsEqual(defaultVal, pair.Value)) {
                             info.ChangedSettings.Remove(pair.Key.Name);
-                            string toLog = "Mod Settings removed: " + pair.Key.Name;
+                            string toLog = "Mod Setting set to default: " + pair.Key.Name;
                             Log(toLog);
                         } else {
                             if (isSimple) {
                                 if (isSimple) {
-                                    string toLog = "Mod Settings changed: " + pair.Key.Name;
+                                    string toLog = "Mod Setting changed: " + pair.Key.Name;
                                     toLog += $"; prev value: {val}; new value: {pair.Value}";
                                     Log(toLog);
                                 }
@@ -81,7 +81,7 @@ public static class OwlLogging {
                     }
                 } else {
                     if (!TypeManager.AreObjectsEqual(defaultVal, pair.Value)) {
-                        string toLog = "Mod Settings changed: " + pair.Key.Name;
+                        string toLog = "Mod Setting changed: " + pair.Key.Name;
                         if (TypeManager.IsSimpleType(pair.Key.FieldType)) {
                             toLog += $"; prev value: {defaultVal}; new value: {pair.Value}";
                         }
@@ -89,7 +89,7 @@ public static class OwlLogging {
                         if (TypeManager.IsSimpleType(pair.Key.FieldType)) {
                             info.ChangedSettings[pair.Key.Name] = pair.Value.ToString();
                         } else {
-                            info.ChangedSettings[pair.Key.Name] = "Non-Primitive Type";
+                            info.ChangedSettings[pair.Key.Name] = "!!Non-Primitive Type!!";
                         }
                     }
                 }
@@ -111,12 +111,12 @@ public static class OwlLogging {
                     if (!areEqual) {
                         if (TypeManager.AreObjectsEqual(defaultVal, pair.Value)) {
                             info.ChangedSettings.Remove(pair.Key.Name);
-                            string toLog = "Per-Save Settings removed: " + pair.Key.Name;
+                            string toLog = "Per-Save Setting removed: " + pair.Key.Name;
                             Log(toLog);
                         } else {
                             if (isSimple) {
                                 if (isSimple) {
-                                    string toLog = "Per-Save Settings changed: " + pair.Key.Name;
+                                    string toLog = "Per-Save Setting changed: " + pair.Key.Name;
                                     toLog += $"; prev value: {val}; new value: {pair.Value}";
                                     Log(toLog);
                                 }
@@ -128,7 +128,7 @@ public static class OwlLogging {
                     }
                 } else {
                     if (!TypeManager.AreObjectsEqual(defaultVal, pair.Value)) {
-                        string toLog = "Per-Save Settings changed: " + pair.Key.Name;
+                        string toLog = "Per-Save Setting changed: " + pair.Key.Name;
                         if (TypeManager.IsSimpleType(pair.Key.FieldType)) {
                             toLog += $"; prev value: {defaultVal}; new value: {pair.Value}";
                         }
