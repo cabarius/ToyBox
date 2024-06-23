@@ -1,4 +1,4 @@
-﻿// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
+// Copyright < 2021 > Narria (github user Cabarius) - License: MIT
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Facts;
@@ -152,10 +152,7 @@ namespace ToyBox {
             } else {
                 browser.OnGUI(
                     fact,
-                    () => {
-                        var types = fact.GroupBy(f => f.Blueprint.GetType()).Select(g => g.FirstOrDefault().Blueprint.GetType());
-                        return GetBlueprints<Definition>()?.Where(bp => types.Contains(bp.GetType()));
-                    },
+                    GetBlueprints<Definition>,
                     (feature) => (Definition)feature.Blueprint,
                     (blueprint) => $"{GetSearchKey(blueprint)}" + (Settings.searchDescriptions ? $"{blueprint.Description}" : ""),
                     blueprint => new[] { GetSortKey(blueprint) },
