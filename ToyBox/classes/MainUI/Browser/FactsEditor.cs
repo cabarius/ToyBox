@@ -354,10 +354,7 @@ namespace ToyBox {
             } else {
                 browser.OnGUI(
                     fact,
-                    () => {
-                        var types = fact.GroupBy(f => f.Blueprint.GetType()).Select(g => g.FirstOrDefault().Blueprint.GetType());
-                        return GetBlueprints<Definition>()?.Where(bp => types.Contains(bp.GetType()));
-                    },
+                    GetBlueprints<Definition>,
                     (feature) => (Definition)feature.Blueprint,
                     (blueprint) => $"{GetSearchKey(blueprint)}" + (Settings.searchDescriptions ? $"{blueprint.Description}" : ""),
                     blueprint => new[] { GetSortKey(blueprint) },
