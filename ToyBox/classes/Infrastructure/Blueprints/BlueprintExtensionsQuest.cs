@@ -141,15 +141,17 @@ namespace ToyBox {
             result.UnionWith(actionInteractionConditions.ToHashSet());
             // action conditions
             var actionConditions = actionInteractions
-                                   .Where(ai => ai.Actions?.Get() != null)
-                                   .SelectMany(ai => ai.Actions.Get().Actions.Actions
+                                   .SelectMany(ai => ai.ActionHolders)
+                                   .Where(ai => ai?.Get() != null)
+                                   .SelectMany(ai => ai.Get().Actions.Actions
                                                    .Where(a => a is Conditional)
-                                                   .Select(a => new IntrestingnessEntry(unit, ai.Actions.Get(), (a as Conditional).ConditionsChecker)));
+                                                   .Select(a => new IntrestingnessEntry(unit, ai.Get(), (a as Conditional).ConditionsChecker)));
             result.Union(actionConditions.ToHashSet());
             // action elements
             var actionElements = actionInteractions
-                .Where(ai => ai.Actions?.Get() != null)
-                .Select(ai => new IntrestingnessEntry(unit, ai.Actions.Get(), null, ai.Actions.Get().ElementsArray.Where(e => e.IsQuestRelated()).ToList()));
+                .SelectMany(ai => ai.ActionHolders)
+                .Where(ai => ai?.Get() != null)
+                .Select(ai => new IntrestingnessEntry(unit, ai.Get(), null, ai.Get().ElementsArray.Where(e => e.IsQuestRelated()).ToList()));
             elements.UnionWith(actionElements.ToHashSet());
             foreach (var entry in elements) {
                 //Mod.Debug($"checking {entry}");

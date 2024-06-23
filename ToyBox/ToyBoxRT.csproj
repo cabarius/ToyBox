@@ -7,7 +7,7 @@
 		<Description>ToyBox</Description>
 		<AppDesignerFolder>Properties</AppDesignerFolder>
 		<OutputType>Library</OutputType>
-		<Version>1.5.14</Version>
+		<Version>1.5.15</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<FileAlignment>512</FileAlignment>
 		<LangVersion>latest</LangVersion>
@@ -79,6 +79,11 @@
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
         <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" IncludeAssets="build; contentfiles" Version="0.4.2" PrivateAssets="all" />
         <PackageReference Include="PublishToWorkshop" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" Version="1.0.10" PrivateAssets="all" />
+    </ItemGroup>
+    <ItemGroup>
+      <Reference Include="System.IO.Compression">
+        <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.IO.Compression.dll</HintPath>
+      </Reference>
     </ItemGroup>
 	<Target Name="PublishToSteamWorkshop" AfterTargets="Publish">
 		<PublishToWorkshop PathToManifest="$(MSBuildThisFileDirectory)\ModDetails\OwlcatModificationManifest.json" ImageDir="$(MSBuildThisFileDirectory)\ModDetails\" BuildDir="$(MSBuildProjectDirectory)\$(OutputPath)" PathToDescription="$(MSBuildThisFileDirectory)\ModDetails\Workshop-description.txt" GameAppId="2186680" />

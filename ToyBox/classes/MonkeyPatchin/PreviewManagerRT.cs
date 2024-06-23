@@ -21,6 +21,7 @@ using Kingmaker.Settings;
 using Kingmaker.Settings.Entities;
 using Kingmaker.TextTools;
 using Kingmaker.UI.Common;
+using Kingmaker.UI.MVVM.View.Dialog.Dialog;
 using Kingmaker.UnitLogic.Alignments;
 using Kingmaker.UnitLogic.Mechanics.Conditions;
 using Kingmaker.Utility;
@@ -236,7 +237,7 @@ namespace ToyBox {
             return text;
         }
 
-        [HarmonyPatch(typeof(UIConstsExtensions), nameof(UIConstsExtensions.GetAnswerString))]
+        [HarmonyPatch(typeof(UIConstsExtensions), nameof(UIConstsExtensions.GetAnswerFormattedString))]
         private static class UIConsts_GetAnswerString_Patch {
             private static void Postfix(ref string __result, BlueprintAnswer answer, string bind, int index) {
                 try {
@@ -287,7 +288,7 @@ namespace ToyBox {
                 if (!Settings.previewDialogResults && !Settings.toggleShowAnswersForEachConditionalResponse && !Settings.toggleMakePreviousAnswersMoreClear) return true;
                 var type = Game.Instance.DialogController.Dialog.Type;
                 var str = string.Format("DialogChoice{0}", (object)__instance.ViewModel.Index);
-                var text = UIConstsExtensions.GetAnswerString(answer, str, __instance.ViewModel.Index);
+                var text = UIConstsExtensions.GetAnswerFormattedString(answer, str, __instance.ViewModel.Index);
                 var isAvail = answer.CanSelect();
                 if (answer.NextCue.Cues.Count == 1) {
                     var cue = answer.NextCue.Cues.Dereference<BlueprintCueBase>().FirstOrDefault();
@@ -300,14 +301,44 @@ namespace ToyBox {
                                           || conditionText.Length == 0
                                           );
                     Mod.Debug($"Fixing up available for ${answer.name} canShow: {cue.CanShow()} isAvail: {isAvail} - cue: {conditionText}");
-                    var color = isAvail ? "#005800><b>" : "#800000>";
+                    var color2 = isAvail ? "#005800><b>" : "#800000>";
                     if (conditionText.Length > 0)
-                        text += $"<size=75%><color={color}[{conditionText.MergeSpaces(true)}]</color></size>";
+                        text += $"<size=75%><color={color2}[{conditionText.MergeSpaces(true)}]</color></size>";
                 }
+
+
+                DialogVotesBlockView dialogVotesBlockView = __instance.m_DialogVotesBlock;
+                if (dialogVotesBlockView != null) {
+                    dialogVotesBlockView.ShowHideHover(false);
+                }
+                string text0 = string.Format("DialogChoice{0}", __instance.ViewModel.Index);
+                bool hasConditionsForTooltip = answer.HasConditionsForTooltip;
+                Color32 color = __instance.m_DialogColors.NormalAnswer;
+                string text5;
+                switch (type) {
+                    case DialogType.Common:
+                    case DialogType.StarSystemEvent:
+                        color = (answer.CanSelect() ? ((__instance.ViewModel.IsAlreadySelected() && !__instance.ViewModel.IsSystem) ? __instance.m_DialogColors.SelectedAnswer : __instance.m_DialogColors.NormalAnswer) : __instance.m_DialogColors.DisabledAnswer);
+                        if (hasConditionsForTooltip) {
+                            string text2 = (answer.CanSelect() ? "UI_Dialog_ConditionSuccess" : "UI_Dialog_ConditionFail");
+                            string text3 = string.Format(UIConfig.Instance.UIDialogConditionsLinkFormat, answer.AssetGuid, text2);
+                            string text4 = (answer.CanSelect() ? UIConstsExtensions.GetAnswerText(answer) : answer.DisplayText);
+                            text5 = string.Format(UIDialog.Instance.AnswerDialogueFormat, __instance.ViewModel.Index, text3 + text4);
+                            goto IL_174;
+                        }
+                        text5 = UIConstsExtensions.GetAnswerFormattedString(answer, text0, __instance.ViewModel.Index);
+                        goto IL_174;
+                    case DialogType.Epilog:
+                        text5 = answer.DisplayText;
+                        goto IL_174;
+                }
+                text5 = UIConstsExtensions.GetAnswerFormattedString(answer, text0, __instance.ViewModel.Index);
+            IL_174:
+
                 __instance.SetAnswerText(//type == DialogType.Interchapter
                                          //? answer.DisplayText
                                          //: 
-                                UIConstsExtensions.GetAnswerString(answer, str, __instance.ViewModel.Index));
+                                text5);
                 __instance.ViewModel.Enable.Value = answer.CanSelect() && isAvail;
 
                 // TODO: this is new in RT so figure out whether we should do more preview stuff here
@@ -354,10 +385,8 @@ namespace ToyBox {
                     __instance.AnswerText.alpha = 1.0f;
 #endif
                 __instance.m_AnswerText.color = (Color)color32;
-                __instance.AddDisposable(Game.Instance.Keyboard.Bind(str, new Action(__instance.Confirm)));
-                if (!__instance.ViewModel.IsSystem)
-                    return false;
-                __instance.AddDisposable(Game.Instance.Keyboard.Bind("NextOrEnd", new Action(__instance.Confirm)));
+                __instance.AddDisposable(Game.Instance.Keyboard.Bind(text5, new Action(__instance.Confirm)));
+                if (__instance.ViewModel.IsSystem) __instance.AddDisposable(Game.Instance.Keyboard.Bind("NextOrEnd", new Action(__instance.Confirm))); ;
                 return false;
             }
 #if false
