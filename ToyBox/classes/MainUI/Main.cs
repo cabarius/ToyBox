@@ -2,6 +2,7 @@
 // Special thanks to @SpaceHampster and @Velk17 from Pathfinder: Wrath of the Rightous Discord server for teaching me how to mod Unity games
 using HarmonyLib;
 using Kingmaker;
+using Kingmaker.GameInfo;
 using Kingmaker.GameModes;
 using Kingmaker.UI.Common;
 using Kingmaker.UI.Models.Log.CombatLog_ThreadSystem;
@@ -17,7 +18,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
+using System.Security.Policy;
 using ToyBox.classes.Infrastructure;
 using ToyBox.classes.MainUI;
 using UniRx;
@@ -31,6 +34,7 @@ namespace ToyBox {
     [EnableReloading]
 #endif
     internal static class Main {
+        internal const string LinkToIncompatibilitiesFile = "https://raw.githubusercontent.com/xADDBx/ToyBox-RogueTrader/main/ToyBox/ModDetails/Incompatibilities.json";
         internal static Harmony HarmonyInstance;
         internal static UnityModManager.ModEntry modEntry;
         public static readonly LogChannel logger = LogChannelFactory.GetOrCreate("Respec");
@@ -75,6 +79,10 @@ namespace ToyBox {
         public static List<GameObject> Objects;
         private static bool Load(UnityModManager.ModEntry modEntry) {
             try {
+                if (!IsGameVersionSupported(modEntry.Version, modEntry.Logger)) {
+                    modEntry.Logger.Log("Fatal! The current Game Version has known incompatabilities with your current ToyBox version! Please Update.");
+                    return false;
+                }
                 Main.modEntry = modEntry;
 #if DEBUG
                 modEntry.OnUnload = OnUnload;
@@ -283,9 +291,7 @@ namespace ToyBox {
                 }
             }
             if (_needsResetGameUI) {
-#if true
                 MainThreadDispatcher.StartCoroutine(ResetGUI());
-#endif
             }
             var currentMode = Game.Instance.CurrentMode;
             if (IsModGUIShown || Event.current == null || !Event.current.isKey) return;
@@ -304,6 +310,37 @@ namespace ToyBox {
                 if (KeyBindings.IsActive("TeleportParty"))
                     Teleport.TeleportParty();
             }
+        }
+        public static bool IsGameVersionSupported(Version modVersion, UnityModManager.ModEntry.ModLogger logger) {
+            try {
+                using var web = new WebClient();
+                var raw = web.DownloadString(LinkToIncompatibilitiesFile);
+                var definition = new[] { new[] { "", "" } };
+                var versions = JsonConvert.DeserializeAnonymousType(raw, definition);
+                var currentOrNewer = versions.FirstOrDefault(v => new Version(v[0]) >= modVersion);
+                if (currentOrNewer == null) return true;
+                return new Version(GetNumifiedVersion(currentOrNewer[1])) > new Version(GetNumifiedVersion(GameVersion.GetVersion()));
+            } catch (Exception ex) {
+                logger.Log(ex.ToString());
+            }
+            return true;
+        }
+        public static string GetNumifiedVersion(string version) {
+            var comps = version.Split('.');
+            var newComps = new List<string>();
+            foreach (var comp in comps) {
+                int num = 0;
+                foreach (var c in comp) {
+                    if (int.TryParse(c.ToString(), out var n)) {
+                        num = num * 10 + n;
+                    } else {
+                        int charNumber = char.ToUpper(c) - 'A' + 1;
+                        num = num * 100 + charNumber;
+                    }
+                }
+                newComps.Add(num.ToString());
+            }
+            return string.Join(".", newComps);
         }
     }
 }
