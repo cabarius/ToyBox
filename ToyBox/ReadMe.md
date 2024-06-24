@@ -36,7 +36,11 @@
   your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
-  
+
+### ToyBox Wrath - Ver 1.5.20 (built for 2.3.2c)
+* (***ADDB***) Maybe Party tab shows more features now? (Especially Parameterized stuff and such?).
+* (***CascadingDragon***) Fix Merging Manually Added Mythic Spell Books.
+
 ### ToyBox Wrath - Ver 1.5.19 (built for 2.3.2c)
 * (***ADDB***) Maybe Fixed Remote Companions Dialog causing companions to talk about other companions you might've never even joined you.
 * (***ADDB***) My Magus changes broke some abilities (like Charge) if the feature is enabled. This should be fixed now.
@@ -44,7 +48,7 @@
 ### ToyBox Wrath - Ver 1.5.18 (built for 2.3.1e)
 * (***ADDB***) Fix the Magus: Allow Spell Combat for dual wielding.
 * (***ADDB***) Maybe added setting to forcefully disable all tutorials.
-* (***ADDB***) Fix MysticalMayhem breaking Search 'n Pick. Is this mod even working correctly currently?
+* (***ADDB***) Fix MysticalMayhem breaking Search 'n Pick. Is this mod even working correctly currently?.
 * (***Delth***) Add toggle to remove read-onlyness from etudes. 
 
 ### ToyBox Wrath - Ver 1.5.15 (built for 2.3.1e)
