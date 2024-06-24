@@ -1,4 +1,4 @@
-﻿using Kingmaker.Blueprints;
+using Kingmaker.Blueprints;
 using Kingmaker.EntitySystem.Entities;
 using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Abilities;
@@ -45,7 +45,7 @@ namespace ToyBox {
                         25.space();
                         foreach (var cl in mergeableClasses) {
                             var sb = spellbook;
-                            ActionButton(cl.CharacterClass.LocalizedName.ToString(), () => sb.MergeMythicSpellbook(cl));
+                            ActionButton(cl.GetDisplayName(), () => sb.MergeMythicSpellbook(cl));
                             15.space();
                         }
                         25.space();
