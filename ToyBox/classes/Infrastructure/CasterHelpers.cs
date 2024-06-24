@@ -1,4 +1,4 @@
-﻿using Kingmaker.Blueprints;
+using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
 using Kingmaker.Blueprints.Root;
 using Kingmaker.EntitySystem.Entities;
@@ -246,25 +246,29 @@ namespace ToyBox.classes.Infrastructure {
         }
 #endif
 
-        public static IEnumerable<ClassData> MergableClasses(this UnitEntityData unit) {
+        public static IEnumerable<BlueprintSpellbook> MergableClasses(this UnitEntityData unit) {
             var spellbookCandidates = unit.Spellbooks
                                           .Where(sb => sb.IsStandaloneMythic && sb.Blueprint.CharacterClass != null)
                                           .Select(sb => sb.Blueprint).ToHashSet();
+            /* Dragon's comment on this. Why are we looking for the Mythic class here? It means you can't merge mythic spellbooks that are added via Toybox
+             * Or any other method that wouldn't add the Mythic class
+             * Looks like maybe for localized name, but... then it's not that functional
+             */
             //Mod.Log($"{unit.CharacterName} - spellbookCandidates: {string.Join(", ", spellbookCandidates.Select(sb => sb.DisplayName))}");
-            var classCandidates = unit.Progression.Classes
-                                      .Where(cl => cl.Spellbook != null && spellbookCandidates.Contains(cl.Spellbook));
+            //var classCandidates = unit.Progression.Classes
+            //                          .Where(cl => cl.Spellbook != null && spellbookCandidates.Contains(cl.Spellbook));
             //Mod.Log($"{unit.CharacterName} - classCandidates: {string.Join(", ", classCandidates.Select(cl => cl.CharacterClass.Name))}");
-            return classCandidates;
+            return spellbookCandidates;
         }
-        public static void MergeMythicSpellbook(this Spellbook targetSpellbook, ClassData fromClass) {
+        public static void MergeMythicSpellbook(this Spellbook targetSpellbook, BlueprintSpellbook fromClass) {
             var unit = targetSpellbook.Owner;
-            var oldMythicSpellbookBp = fromClass?.Spellbook;
+            var oldMythicSpellbookBp = fromClass;
             if (fromClass == null || oldMythicSpellbookBp == null || !oldMythicSpellbookBp.IsMythic) {
                 Mod.Warn("Can't merge because you don't have a mythic class / mythic spellbook!");
                 return;
             }
 
-            fromClass.Spellbook = targetSpellbook.Blueprint;
+            //fromClass.Spellbook = targetSpellbook.Blueprint;
             targetSpellbook.m_Type = SpellbookType.Mythic;
             targetSpellbook.AddSpecialList(oldMythicSpellbookBp.MythicSpellList);
             for (var i = targetSpellbook.MythicLevel; i < unit.Progression.MythicLevel; i++) {
