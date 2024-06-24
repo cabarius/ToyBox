@@ -80,11 +80,6 @@
         <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" IncludeAssets="build; contentfiles" Version="0.4.2" PrivateAssets="all" />
         <PackageReference Include="PublishToWorkshop" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" Version="1.0.10" PrivateAssets="all" />
     </ItemGroup>
-    <ItemGroup>
-      <Reference Include="System.IO.Compression">
-        <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.IO.Compression.dll</HintPath>
-      </Reference>
-    </ItemGroup>
 	<Target Name="PublishToSteamWorkshop" AfterTargets="Publish">
 		<PublishToWorkshop PathToManifest="$(MSBuildThisFileDirectory)\ModDetails\OwlcatModificationManifest.json" ImageDir="$(MSBuildThisFileDirectory)\ModDetails\" BuildDir="$(MSBuildProjectDirectory)\$(OutputPath)" PathToDescription="$(MSBuildThisFileDirectory)\ModDetails\Workshop-description.txt" GameAppId="2186680" />
 	</Target>
