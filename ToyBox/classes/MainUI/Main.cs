@@ -329,13 +329,23 @@ namespace ToyBox {
             var comps = version.Split('.');
             var newComps = new List<string>();
             foreach (var comp in comps) {
-                int num = 0;
+                uint num = 0;
                 foreach (var c in comp) {
-                    if (int.TryParse(c.ToString(), out var n)) {
-                        num = num * 10 + n;
-                    } else {
-                        int charNumber = char.ToUpper(c) - 'A' + 1;
-                        num = num * 100 + charNumber;
+                    uint newNum = num;
+                    try {
+                        checked {
+                            if (uint.TryParse(c.ToString(), out var n)) {
+                                newNum = newNum * 10u + n;
+                            } else {
+                                int signedCharNumber = char.ToUpper(c) - ' ';
+                                uint unsignedCharNumber = (uint)Math.Max(0, Math.Min(signedCharNumber, 99));
+                                newNum = newNum * 100u + unsignedCharNumber;
+                            }
+                            num = newNum;
+                        }
+                    } catch (OverflowException) {
+                        logger.Log($"Encountered uint overflow while parsing version component {comp}, continuing with {num}");
+                        break;
                     }
                 }
                 newComps.Add(num.ToString());
