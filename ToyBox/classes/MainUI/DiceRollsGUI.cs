@@ -18,7 +18,7 @@ namespace ToyBox {
                 () => EnumGrid("Never Roll 20".localize(), ref Settings.neverRoll20, AutoWidth()),
                 () => EnumGrid("Never Roll 1".localize(), ref Settings.neverRoll1, AutoWidth()),
                 () => EnumGrid("Initiative: Always Roll 20".localize(), ref Settings.roll20Initiative, AutoWidth()),
-                () => EnumGrid("Initiative: Always Roll 10".localize(), ref Settings.roll20Initiative, AutoWidth()),
+                () => EnumGrid("Initiative: Always Roll 10".localize(), ref Settings.roll10Initiative, AutoWidth()),
                 () => EnumGrid("Initiative: Always Roll 1".localize(), ref Settings.roll1Initiative, AutoWidth()),
                 () => EnumGrid("Non Combat: Take 20".localize(), ref Settings.alwaysRoll20OutOfCombat, AutoWidth()),
                 () => EnumGrid("Non Combat: Roll at least 10".localize(), ref Settings.rollAtLeast10OutOfCombat, AutoWidth()),
