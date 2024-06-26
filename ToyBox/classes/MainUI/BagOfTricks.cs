@@ -472,6 +472,11 @@ namespace ToyBox {
                     }
                 },
                 () => {
+                    LogSlider("Walk (no run) Range".localize(), ref Settings.walkRangeMultiplier, 0, 100, 1, 1, "", Width(600));
+                    Space(25);
+                    Label("Adjusts how far of your character you can click and still cause your character to walk instead of run".localize().green());
+                },
+                () => {
                     LogSlider("Movement Speed".localize(), ref Settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", Width(600));
                     Space(25);
                     Label("Adjusts the movement speed of your party in area maps".localize().green());

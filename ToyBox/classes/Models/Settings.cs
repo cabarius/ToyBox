@@ -189,6 +189,7 @@ namespace ToyBox {
         public bool useChallengesExpSlider = false;
         public bool useSpaceExpSlider = false;
         public float fowMultiplier = 1;
+        public float walkRangeMultiplier = 1;
         public float partyMovementSpeedMultiplier = 1;
         public float buffDurationMultiplierValue = 1;
         public float timeScaleMultiplier = 1;

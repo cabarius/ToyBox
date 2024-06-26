@@ -7,7 +7,7 @@
 		<Description>ToyBox</Description>
 		<AppDesignerFolder>Properties</AppDesignerFolder>
 		<OutputType>Library</OutputType>
-		<Version>1.5.15</Version>
+		<Version>1.5.16</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<FileAlignment>512</FileAlignment>
 		<LangVersion>latest</LangVersion>
