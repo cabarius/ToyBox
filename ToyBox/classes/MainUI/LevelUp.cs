@@ -18,6 +18,7 @@ namespace ToyBox {
                     Toggle("Respec from Level 0".localize(), ref Settings.toggleSetDefaultRespecLevelZero, 300.width());
                     Label("This allows rechosing the first arcehtype. Also makes Companion respec start from level 0.".green().localize());
                 },
+                () => Toggle("Ignore Archetypes Prerequisites".localize(), ref Settings.toggleIgnoreCareerPrerequisites),
                 () => Toggle("Ignore Talent Prerequisites".localize(), ref Settings.toggleFeaturesIgnorePrerequisites),
                 () => Toggle("Ignore Required Stat Values".localize(), ref Settings.toggleIgnorePrerequisiteStatValue),
                 () => Toggle("Ignore Required Class Levels".localize(), ref Settings.toggleIgnorePrerequisiteClassLevel),

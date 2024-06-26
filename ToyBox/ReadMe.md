@@ -43,6 +43,10 @@ Here is a summarized list of features. This list only includes a part of the fea
 - **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
   
+### ToyBox Rogue - Ver 1.5.17 built for Rogue Trader 1.2.0.25
+* (***ADDB***) Unlimited Stacking of Modifiers no longer applies to enemies.
+* (***ADDB***) Added Level Up => Ignore Archetypes Prerequisites. It's buggy. It allos picking e.g. Warrior => Master Tactician. This does not allow picking 2 archetypes from the same level or skipping one.
+
 ### ToyBox Rogue - Ver 1.5.16 built for Rogue Trader 1.2.0.25
 * (***ADDB***) Added Bag of Tricks => Other Multipliers => Walk (no run) Range; Adjusts how far of your character you can click and still cause your character to walk instead of run.
  

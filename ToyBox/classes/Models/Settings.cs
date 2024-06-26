@@ -173,6 +173,7 @@ namespace ToyBox {
         // level up
         public bool toggleIgnorePrerequisiteStatValue = false;
         public bool toggleIgnorePrerequisiteClassLevel = false;
+        public bool toggleIgnoreCareerPrerequisites = false;
         public bool toggleFeaturesIgnorePrerequisites = false;
         public bool toggleSetDefaultRespecLevelZero = false;
 

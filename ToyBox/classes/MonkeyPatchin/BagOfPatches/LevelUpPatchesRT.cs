@@ -1,5 +1,6 @@
 ﻿// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
 
+using Code.GameCore.ElementsSystem;
 using HarmonyLib;
 using JetBrains.Annotations;
 using Kingmaker;
@@ -14,6 +15,7 @@ using Kingmaker.UnitLogic.Levelup;
 using Kingmaker.UnitLogic.Progression.Paths;
 using Kingmaker.UnitLogic.Progression.Prerequisites;
 using ModKit;
+using Owlcat.Runtime.UI.MVVM;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -80,7 +82,7 @@ namespace ToyBox.BagOfPatches {
             public static void MeetsInternal(PrerequisiteLevel __instance, BaseUnitEntity unit, ref bool __result) {
                 if (!unit.IsPartyOrPet()) return; // don't give extra feats to NPCs
                 if (!__result && Settings.toggleIgnorePrerequisiteClassLevel) {
-                    Mod.Debug($"PrerequisiteLevel.MeetsInternal - {unit.CharacterName} - {__instance.GetCaptionInternal()} -{__result} -> {true} ");
+                    OwlLogging.Log($"PrerequisiteLevel.MeetsInternal - {unit.CharacterName} - {__instance.GetCaptionInternal()} -{__result} -> {true} ");
                     __result = true;
                 }
             }
@@ -92,7 +94,7 @@ namespace ToyBox.BagOfPatches {
                 if (!unit.IsPartyOrPet()) return; // don't give extra feats to NPCs
                 if (!__result && Settings.toggleFeaturesIgnorePrerequisites) {
                     if (!new StackTrace().ToString().Contains("Kingmaker.UI.MVVM.VM.CharGen")) {
-                        Mod.Log($"PrerequisiteFact.MeetsInternal - {unit.CharacterName} - {__instance.GetCaptionInternal()} -{__result} -> {true} (Not: {__instance.Not}");
+                        OwlLogging.Log($"PrerequisiteFact.MeetsInternal - {unit.CharacterName} - {__instance.GetCaptionInternal()} - {__result} -> {true} (Not: {__instance.Not}");
                         __result = true;
                     }
                 }
@@ -104,7 +106,17 @@ namespace ToyBox.BagOfPatches {
             public static void MeetsInternal(PrerequisiteStat __instance, BaseUnitEntity unit, ref bool __result) {
                 if (!unit.IsPartyOrPet()) return; // don't give extra feats to NPCs
                 if (!__result && Settings.toggleIgnorePrerequisiteStatValue) {
-                    Mod.Debug($"PrerequisiteStat.MeetsInternal - {unit.CharacterName} - {__instance.GetCaptionInternal()} -{__result} -> {true} ");
+                    OwlLogging.Log($"PrerequisiteStat.MeetsInternal - {unit.CharacterName} - {__instance.GetCaptionInternal()} -{__result} -> {true} ");
+                    __result = true;
+                }
+            }
+        }
+        [HarmonyPatch(typeof(Prerequisite), nameof(Prerequisite.Meet), [typeof(ElementsList), typeof(IBaseUnitEntity)])]
+        public static class Prerequisite_Meet_Patch {
+            [HarmonyPostfix]
+            public static void Meet(PrerequisiteStat __instance, IBaseUnitEntity unit, ref bool __result) {
+                if (Settings.toggleIgnoreCareerPrerequisites && __instance.Owner is BlueprintCareerPath) {
+                    OwlLogging.Log($"PrerequisiteFact.MeetsInternal - {unit.CharacterName} - {__instance.GetCaptionInternal()} - {__result} -> {true}");
                     __result = true;
                 }
             }
