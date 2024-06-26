@@ -81,6 +81,20 @@ namespace ToyBox.BagOfPatches {
 
         //     private static bool CanCopySpell([NotNull] BlueprintAbility spell, [NotNull] Spellbook spellbook) => spellbook.Blueprint.CanCopyScrolls && !spellbook.IsKnown(spell) && spellbook.Blueprint.SpellList.Contains(spell);
 
+
+        [HarmonyPatch(typeof(UnitEntityData))]
+        private static class UnitEntityData_Patch {
+            [HarmonyPatch(nameof(UnitEntityData.IsDirectlyControllable), MethodType.Getter)]
+            [HarmonyPostfix]
+            private static void IsDirectlyControllable(UnitEntityData __instance, ref bool __result) {
+                if (__instance == null) return;
+                if (Main.Settings.perSave.doOverrideEnableAiForCompanions.TryGetValue(__instance.UniqueId, out var maybeOverride)) {
+                    if (maybeOverride.Item1) {
+                        __result = !maybeOverride.Item2;
+                    }
+                }
+            }
+        }
         [HarmonyPatch(typeof(CopyScroll), nameof(CopyScroll.CanCopySpell))]
         [HarmonyPatch(new Type[] { typeof(BlueprintAbility), typeof(Spellbook) })]
         public static class CopyScroll_CanCopySpell_Patch {

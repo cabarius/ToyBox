@@ -341,6 +341,30 @@ namespace ToyBox {
                         }
                     }
                 }
+                using (HorizontalScope()) {
+                    Space(100);
+                    if (!Main.Settings.perSave.doOverrideEnableAiForCompanions.TryGetValue(ch.UniqueId, out var valuePair)) {
+                        valuePair = new(false, false);
+                    }
+                    var temp = valuePair.Item1;
+                    if (Toggle("Override AI Control Behaviour".localize(), ref temp)) {
+                        if (temp) {
+                            Main.Settings.perSave.doOverrideEnableAiForCompanions[ch.UniqueId] = new(temp, valuePair.Item2);
+                            Settings.SavePerSaveSettings();
+                        } else {
+                            Main.Settings.perSave.doOverrideEnableAiForCompanions.Remove(ch.UniqueId);
+                            Settings.SavePerSaveSettings();
+                        }
+                    }
+                    if (temp) {
+                        Space(50);
+                        var temp2 = valuePair.Item2;
+                        if (Toggle("Make Character AI Controlled".localize(), ref temp2)) {
+                            Main.Settings.perSave.doOverrideEnableAiForCompanions[ch.UniqueId] = new(temp, temp2);
+                            Settings.SavePerSaveSettings();
+                        }
+                    }
+                }
             }
             if (ch.Descriptor().Progression.GetCurrentMythicClass()?.CharacterClass.Name == "Swarm That Walks") {
                 UnitPartLocustSwarm SwarmPart = null;
