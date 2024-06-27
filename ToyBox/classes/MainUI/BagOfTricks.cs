@@ -472,9 +472,14 @@ namespace ToyBox {
                     }
                 },
                 () => {
-                    LogSlider("Walk (no run) Range".localize(), ref Settings.walkRangeMultiplier, 0, 100, 1, 1, "", Width(600));
+                    LogSlider("Max walk distance".localize(), ref Settings.walkRangeMultiplier, 0, 100, 1, 1, "", Width(600));
                     Space(25);
                     Label("Adjusts how far of your character you can click and still cause your character to walk instead of run".localize().green());
+                },
+                () => {
+                    LogSlider("Min sprint distance".localize(), ref Settings.sprintRangeMultiplier, 0, 100, 1, 1, "", Width(600));
+                    Space(25);
+                    Label("Adjusts how far of your character you have to click and still cause your character to spring. If this area overlaps with walk distance then this has priority.".localize().green());
                 },
                 () => {
                     LogSlider("Movement Speed".localize(), ref Settings.partyMovementSpeedMultiplier, 0f, 20, 1, 1, "", Width(600));
