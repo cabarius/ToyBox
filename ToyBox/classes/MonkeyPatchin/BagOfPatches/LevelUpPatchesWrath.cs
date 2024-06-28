@@ -491,7 +491,7 @@ namespace ToyBox.BagOfPatches {
         private static class BlueprintCharacterClass_Patch {
             [HarmonyPatch(nameof(BlueprintCharacterClass.MeetsPrerequisites)), HarmonyPostfix]
             public static void MeetsPrerequisites_Patch(ref bool __result, BlueprintCharacterClass __instance) {
-                if (settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass) {
+                if (settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass && !__instance.IsMythic) {
                     __result = true;
                 }
             }
