@@ -37,8 +37,12 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
   
+### ToyBox Wrath - Ver 1.5.23 (built for 2.3.2c)
+* (***CascadingDragon***) Fix Ignore Feature Prerequisites When Choosing Class (now it now longer allows taking feats you shouldn't be able too).
+
 ### ToyBox Wrath - Ver 1.5.22 (built for 2.3.2c)
 * (***ADDB***) Add feature under Party => Stats to turn on/off AI control of specific characters.
+* (***CascadingDragon***) Fix Roll 10 Initiative.
 
 ### ToyBox Wrath - Ver 1.5.21 (built for 2.3.2c)
 * (***ADDB***) Add incompatibility checker! From now on ToyBox will send a web request to check whether the current mod version has known incompatibilities with the current game version. This is done for cases where the mod still loads after updates, but causes issues in the background (i.e. enemies only having 1 HP). If it detects incompatibilities it will stop loading.
