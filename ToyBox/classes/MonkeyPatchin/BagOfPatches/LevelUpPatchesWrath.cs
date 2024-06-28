@@ -1,4 +1,4 @@
-﻿// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
+// borrowed shamelessly and enhanced from Bag of Tricks https://www.nexusmods.com/pathfinderkingmaker/mods/26, which is under the MIT License
 
 using HarmonyLib;
 using JetBrains.Annotations;
@@ -487,12 +487,31 @@ namespace ToyBox.BagOfPatches {
             }
         }
 
+        [HarmonyPatch(typeof(BlueprintCharacterClass))]
+        private static class BlueprintCharacterClass_Patch {
+            [HarmonyPatch(nameof(BlueprintCharacterClass.MeetsPrerequisites)), HarmonyPostfix]
+            public static void MeetsPrerequisites_Patch(ref bool __result, BlueprintCharacterClass __instance) {
+                if (settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass &&
+                    !__instance.PrestigeClass && !__instance.IsMythic) {
+                    __result = true;
+                }
+            }
+        }
 
-        [HarmonyPatch(typeof(PrerequisiteFeature))]
+        [HarmonyPatch(typeof(BlueprintArchetype))]
+        private static class BlueprintArchetype_Patch {
+            [HarmonyPatch(nameof(BlueprintArchetype.MeetsPrerequisites)), HarmonyPostfix]
+            public static void MeetsPrerequisites_Patch(ref bool __result, BlueprintArchetype __instance) {
+                if (settings.toggleIgnoreFeaturePrerequisitesWhenChoosingClass )
+                    __result = true;
+                }
+            }
+
+        /*[HarmonyPatch(typeof(PrerequisiteFeature))]
         public static class PrerequisiteFeature_CheckInternal_Patch {
             [HarmonyPostfix]
             [HarmonyPatch(nameof(PrerequisiteFeature.CheckInternal))]
-            public static void PostfixCheckInternal([NotNull] UnitDescriptor unit, ref bool __result) {
+            public static void PostfixCheckInternal(UnitDescriptor unit, ref bool __result, PrerequisiteFeature __instance) {
                 if (!unit.IsPartyOrPet()) {
                     return;
                 }
@@ -513,7 +532,7 @@ namespace ToyBox.BagOfPatches {
                     __result = true;
                 }
             }
-        }
+        }*/
 
         [HarmonyPatch(typeof(CharGenAlignmentPhaseVM), nameof(CharGenAlignmentPhaseVM.SelectionStateIsCompleted))]
         public static class CharGenAlignmentPhaseVM_SelectionStateIsCompleted_Patch {
