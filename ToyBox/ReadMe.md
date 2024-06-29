@@ -37,6 +37,9 @@
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
   
+### Toybox Wrath - Ver 1.5.24 (built for 2.3.2c)
+* (***CascadingDragon***) Add new feature, Toggle Feature Recommendations. This will turn off the thumbs up/down in the Feature Selections on Level Up (Toggle found in Level Up tab, under Ignore Feature Restrictions)
+
 ### ToyBox Wrath - Ver 1.5.23 (built for 2.3.2c)
 * (***CascadingDragon***) Fix Ignore Feature Prerequisites When Choosing Class (now it now longer allows taking feats you shouldn't be able too).
 
