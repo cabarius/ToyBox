@@ -81,6 +81,20 @@ namespace ToyBox.BagOfPatches {
 
         //     private static bool CanCopySpell([NotNull] BlueprintAbility spell, [NotNull] Spellbook spellbook) => spellbook.Blueprint.CanCopyScrolls && !spellbook.IsKnown(spell) && spellbook.Blueprint.SpellList.Contains(spell);
 
+
+        [HarmonyPatch(typeof(UnitEntityData))]
+        private static class UnitEntityData_Patch {
+            [HarmonyPatch(nameof(UnitEntityData.IsDirectlyControllable), MethodType.Getter)]
+            [HarmonyPostfix]
+            private static void IsDirectlyControllable(UnitEntityData __instance, ref bool __result) {
+                if (__instance == null) return;
+                if (Main.Settings.perSave.doOverrideEnableAiForCompanions.TryGetValue(__instance.UniqueId, out var maybeOverride)) {
+                    if (maybeOverride.Item1) {
+                        __result = !maybeOverride.Item2;
+                    }
+                }
+            }
+        }
         [HarmonyPatch(typeof(CopyScroll), nameof(CopyScroll.CanCopySpell))]
         [HarmonyPatch(new Type[] { typeof(BlueprintAbility), typeof(Spellbook) })]
         public static class CopyScroll_CanCopySpell_Patch {
@@ -603,9 +617,14 @@ namespace ToyBox.BagOfPatches {
                 }
             }
             [HarmonyPatch(nameof(UnitPartMagus.IsSpellFromMagusSpellList)), HarmonyFinalizer]
-            public static Exception IsSpellFromMagusSpellList(ref bool __result, UnitPartMagus __instance) {
+            public static Exception IsSpellFromMagusSpellList(ref bool __result, UnitPartMagus __instance, AbilityData spell) {
                 if (Settings.toggleAlwaysAllowSpellCombat && __instance.Owner != null && __instance.Owner.IsPartyOrPet()) {
-                    __result = true;
+                    try {
+                        bool flag = (bool)__instance.WandWielder && spell.SourceItemUsableBlueprint != null && spell.SourceItemUsableBlueprint?.Type == UsableItemType.Wand;
+                        __result = spell.IsInSpellList(__instance.Spellbook?.Blueprint?.SpellList) || (__instance.Spellbook?.IsKnown(spell?.Blueprint) ?? false) || flag;
+                    } catch {
+                        __result = spell.Range == AbilityRange.Touch && spell.Spellbook != null;
+                    }
                 }
                 return null;
             }

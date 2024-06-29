@@ -37,6 +37,10 @@ namespace ToyBox {
         // This is the override setting for the character Descriptor size modifier
         [JsonProperty]
         public Dictionary<string, Kingmaker.Enums.Size> characterSizeModifier = new();
+        // Dictionary<Character Hashcode,
+        //              { doOverride, OverrideValue }
+        [JsonProperty]
+        public Dictionary<string, Tuple<bool, bool>> doOverrideEnableAiForCompanions = new();
 
         // This is the override setting for the Army Recruitment Growth Modifier
         [JsonProperty]
@@ -318,6 +322,7 @@ namespace ToyBox {
         public bool toggleContinousLevelCap = false;
         public bool toggleExponentialLevelCap = false;
         public bool toggleFeatureMultiplierCompanions = false;
+        public bool toggleFeatureRecommendations = false;
 
         // Multipliers
         public int featsMultiplier = 1;

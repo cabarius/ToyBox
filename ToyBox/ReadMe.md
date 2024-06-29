@@ -36,11 +36,32 @@
   your save before using. Remember that "with great power comes great responsibility"
 * **Quest Resolution**: this allows you to view your active quests and advance them as needed to work around bugs or
   skip quests you don't want to do. Be warned this may break your game progression if used carelessly.
+  
+### Toybox Wrath - Ver 1.5.24 (built for 2.3.2c)
+* (***CascadingDragon***) Add new feature, Toggle Feature Recommendations. This will turn off the thumbs up/down in the Feature Selections on Level Up (Toggle found in Level Up tab, under Ignore Feature Restrictions)
+
+### ToyBox Wrath - Ver 1.5.23 (built for 2.3.2c)
+* (***CascadingDragon***) Fix Ignore Feature Prerequisites When Choosing Class (now it now longer allows taking feats you shouldn't be able too).
+
+### ToyBox Wrath - Ver 1.5.22 (built for 2.3.2c)
+* (***ADDB***) Add feature under Party => Stats to turn on/off AI control of specific characters.
+* (***CascadingDragon***) Fix Roll 10 Initiative.
+
+### ToyBox Wrath - Ver 1.5.21 (built for 2.3.2c)
+* (***ADDB***) Add incompatibility checker! From now on ToyBox will send a web request to check whether the current mod version has known incompatibilities with the current game version. This is done for cases where the mod still loads after updates, but causes issues in the background (i.e. enemies only having 1 HP). If it detects incompatibilities it will stop loading.
+
+### ToyBox Wrath - Ver 1.5.20 (built for 2.3.2c)
+* (***ADDB***) Maybe Party tab shows more features now? (Especially Parameterized stuff and such?).
+* (***CascadingDragon***) Fix Merging Manually Added Mythic Spell Books.
+
+### ToyBox Wrath - Ver 1.5.19 (built for 2.3.2c)
+* (***ADDB***) Maybe Fixed Remote Companions Dialog causing companions to talk about other companions you might've never even joined you.
+* (***ADDB***) My Magus changes broke some abilities (like Charge) if the feature is enabled. This should be fixed now.
 
 ### ToyBox Wrath - Ver 1.5.18 (built for 2.3.1e)
 * (***ADDB***) Fix the Magus: Allow Spell Combat for dual wielding.
 * (***ADDB***) Maybe added setting to forcefully disable all tutorials.
-* (***ADDB***) Fix MysticalMayhem breaking Search 'n Pick. Is this mod even working correctly currently?
+* (***ADDB***) Fix MysticalMayhem breaking Search 'n Pick. Is this mod even working correctly currently?.
 * (***Delth***) Add toggle to remove read-onlyness from etudes. 
 
 ### ToyBox Wrath - Ver 1.5.15 (built for 2.3.1e)

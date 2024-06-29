@@ -24,12 +24,14 @@ using LocalizationManager = ModKit.LocalizationManager;
 using Kingmaker.UI.Common;
 using Newtonsoft.Json;
 using ToyBox.Multiclass;
+using System.Net;
 
 namespace ToyBox {
 #if DEBUG
     [EnableReloading]
 #endif
     internal static class Main {
+        internal const string LinkToIncompatibilitiesFile = "https://raw.githubusercontent.com/xADDBx/ToyBox-Wrath/main/ToyBox/Incompatibilities.json";
         internal static Harmony HarmonyInstance;
         public static readonly LogChannel logger = LogChannelFactory.GetOrCreate("Respec");
         private static string _modId;
@@ -78,6 +80,10 @@ namespace ToyBox {
         public static List<GameObject> Objects;
         private static bool Load(UnityModManager.ModEntry modEntry) {
             try {
+                if (!IsGameVersionSupported(modEntry.Version, modEntry.Logger)) {
+                    modEntry.Logger.Log("Fatal! The current Game Version has known incompatabilities with your current ToyBox version! Please Update.");
+                    return false;
+                }
 #if DEBUG
                 modEntry.OnUnload = OnUnload;
 #endif
@@ -379,6 +385,47 @@ namespace ToyBox {
                 if (KeyBindings.IsActive("TeleportParty"))
                     Teleport.TeleportParty();
             }
+        }
+        public static bool IsGameVersionSupported(Version modVersion, UnityModManager.ModEntry.ModLogger logger) {
+            try {
+                using var web = new WebClient();
+                var raw = web.DownloadString(LinkToIncompatibilitiesFile);
+                var definition = new[] { new[] { "", "" } };
+                var versions = JsonConvert.DeserializeAnonymousType(raw, definition);
+                var currentOrNewer = versions.FirstOrDefault(v => new Version(v[0]) >= modVersion);
+                if (currentOrNewer == null) return true;
+                return new Version(GetNumifiedVersion(currentOrNewer[1])) > new Version(GetNumifiedVersion(GameVersion.GetVersion()));
+            } catch (Exception ex) {
+                logger.Log(ex.ToString());
+            }
+            return true;
+        }
+        public static string GetNumifiedVersion(string version) {
+            var comps = version.Split('.');
+            var newComps = new List<string>();
+            foreach (var comp in comps) {
+                uint num = 0;
+                foreach (var c in comp) {
+                    uint newNum = num;
+                    try {
+                        checked {
+                            if (uint.TryParse(c.ToString(), out var n)) {
+                                newNum = newNum * 10u + n;
+                            } else {
+                                int signedCharNumber = char.ToUpper(c) - ' ';
+                                uint unsignedCharNumber = (uint)Math.Max(0, Math.Min(signedCharNumber, 99));
+                                newNum = newNum * 100u + unsignedCharNumber;
+                            }
+                            num = newNum;
+                        }
+                    } catch (OverflowException) {
+                        logger.Log($"Encountered uint overflow while parsing version component {comp}, continuing with {num}");
+                        break;
+                    }
+                }
+                newComps.Add(num.ToString());
+            }
+            return string.Join(".", newComps);
         }
     }
 }
