@@ -1,6 +1,6 @@
 {
   "LanguageCode": "en",
-  "Version": "1.5.12",
+  "Version": "1.5.23",
   "Contributors": "The ToyBox Team",
   "HomePage": "https://github.com/cabarius/ToyBox/",
   "Strings": {
@@ -32,6 +32,7 @@
     "<color=#00ff00ff>Allow </color><color=#C060F0FF>any gender</color> <color=#00ff00ff>for any </color><color=#FF4040FF>R</color><color=orange>o</color><color=yellow>m</color><color=#00ff00ff>a</color><color=cyan>n</color><color=#8080FFFF>c</color><color=#C060F0FF>e</color>": "<color=#00ff00ff>Allow </color><color=#C060F0FF>any gender</color> <color=#00ff00ff>for any </color><color=#FF4040FF>R</color><color=orange>o</color><color=yellow>m</color><color=#00ff00ff>a</color><color=cyan>n</color><color=#8080FFFF>c</color><color=#C060F0FF>e</color>",
     "<color=#00ff00ff>Allow </color><color=#C060F0FF>multiple</color><color=#00ff00ff> romances at the same time</color>": "<color=#00ff00ff>Allow </color><color=#C060F0FF>multiple</color><color=#00ff00ff> romances at the same time</color>",
     "<color=#00ff00ff>creation of </color>new characters<b><color=yellow>\nNote:</color></b><color=orange> This value applies to </color><b><color=yellow>all saves</color></b><color=orange> and in the main menu</color>": "<color=#00ff00ff>creation of </color>new characters<b><color=yellow>\nNote:</color></b><color=orange> This value applies to </color><b><color=yellow>all saves</color></b><color=orange> and in the main menu</color>",
+    "<color=#00ff00ff>Makes the thumbs up/down in disappear in selections</color>": "<color=#00ff00ff>Makes the thumbs up/down in disappear in selections</color>",
     "<color=#00ff00ff>Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit</color><b><color=yellow>\nWarning:</color></b><color=orange> this will introduce randomness to NPC responses to you in general and may lead to surprising or even wild outcomes</color>": "<color=#00ff00ff>Some responses such as comments about your mythic powers will always choose the first one by default. This allows the game to mix things up a bit</color><b><color=yellow>\nWarning:</color></b><color=orange> this will introduce randomness to NPC responses to you in general and may lead to surprising or even wild outcomes</color>",
     "<color=#00ff00ff>Tells the game to reset the in game UI.</color><color=yellow> Warning</color><color=orange> Using this in dialog or the book will dismiss that dialog which may break progress so use with care</color>": "<color=#00ff00ff>Tells the game to reset the in game UI.</color><color=yellow> Warning</color><color=orange> Using this in dialog or the book will dismiss that dialog which may break progress so use with care</color>",
     "<color=#00ff00ff>The following modifiers all work on </color><color=yellow>chance = chance (1 + modifier) </color><color=#00ff00ff>so a value of </color><color=yellow>-1</color><color=#00ff00ff> means the chance is 0, </color><color=yellow>0</color><color=#00ff00ff> is chance cost and </color><color=yellow>2</color><color=#00ff00ff> increases it 3x</color>": "<color=#00ff00ff>The following modifiers all work on </color><color=yellow>chance = chance (1 + modifier) </color><color=#00ff00ff>so a value of </color><color=yellow>-1</color><color=#00ff00ff> means the chance is 0, </color><color=yellow>0</color><color=#00ff00ff> is chance cost and </color><color=yellow>2</color><color=#00ff00ff> increases it 3x</color>",
@@ -455,6 +456,7 @@
     "Ignore Class Restrictions": "Ignore Class Restrictions",
     "ignore Equipment Restrictions": "ignore Equipment Restrictions",
     "Ignore Event Solution Restrictions": "Ignore Event Solution Restrictions",
+    "Ignore Feature Recommendations": "Ignore Feature Recommendations",
     "Ignore Feature Restrictions": "Ignore Feature Restrictions",
     "Ignore Forbidden Archetypes": "Ignore Forbidden Archetypes",
     "Ignore Pet Sizes For Mounting": "Ignore Pet Sizes For Mounting",
