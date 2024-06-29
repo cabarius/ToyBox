@@ -18,7 +18,7 @@ jobs:
         GAME_NAME: Wrath
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GITHUB_NAME: ${{ github.repository_owner }}
-        PACKAGE_OWNER: xADDBx
+        PACKAGE_OWNER: cabarius
         BRANCH_REF: ${{ github.event.pull_request.head.sha }}
 
     - name: Upload build artifacts
