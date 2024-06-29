@@ -34,6 +34,7 @@ using System.Diagnostics;
 using Kingmaker.EntitySystem.Entities;
 using Owlcat.Runtime.Core.Logging;
 using Kingmaker.UI.MVVM._VM.CharGen.Phases.Alignment;
+using Kingmaker.Designers.Mechanics.Recommendations;
 
 namespace ToyBox.BagOfPatches {
     internal static class LevelUp {
@@ -809,5 +810,14 @@ namespace ToyBox.BagOfPatches {
             }
         }
 #endif
+        [HarmonyPatch(typeof(RecommendationHasFeature))]
+        public static class RecommendHasFeature_Patch {
+            [HarmonyPatch(nameof(RecommendationHasFeature.GetPriority)), HarmonyPostfix]
+            public static void GetPriority_Patch(ref RecommendationPriority __result) {
+                if (settings.toggleFeatureRecommendations){
+                    __result = RecommendationPriority.Same;
+                }
+            }
+        }
     }
 }

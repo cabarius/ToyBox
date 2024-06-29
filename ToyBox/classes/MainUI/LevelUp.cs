@@ -84,6 +84,11 @@ namespace ToyBox {
                     Space(25);
                     Label(("Experimental".cyan() + ": lets you select any feat ignoring prerequisites.".green()).localize());
                 },
+                () => {
+                    Toggle("Ignore Feature Recommendations".localize(), ref Settings.toggleFeatureRecommendations);
+                    Space(25);
+                    Label(("Makes the thumbs up/down in disappear in selections".green()).localize());
+                },
                 () => Toggle("Allow Companions to Take Mythic Classes".localize(), ref Settings.toggleAllowCompanionsToBecomeMythic),
                 () => Toggle("Allow Pets to Take Mythic Classes".localize(), ref Settings.toggleAllowMythicPets),
                 () => Toggle("Ignore Prerequisites When Choosing A Feat".localize(), ref Settings.toggleFeaturesIgnorePrerequisites),
