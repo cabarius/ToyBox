@@ -48,7 +48,7 @@ Here is a summarized list of features. This list only includes a part of the fea
 
 ### ToyBox Rogue - Ver 1.5.17 built for Rogue Trader 1.2.0.28
 * (***ADDB***) Unlimited Stacking of Modifiers no longer applies to enemies.
-* (***ADDB***) Added Level Up => Ignore Archetypes Prerequisites. It's buggy. It allos picking e.g. Warrior => Master Tactician. This does not allow picking 2 archetypes from the same level or skipping one.
+* (***ADDB***) Added Level Up => Ignore Archetypes Prerequisites. It's buggy. It allows picking e.g. Warrior => Master Tactician. This does not allow picking 2 archetypes from the same level or skipping one.
 * (***ADDB***) Renamed "Walk (no run) Range" to "Max walk distance". Also changed the implementation; it should now also work when trying to interact with something.
 * (***ADDB***) Added Bag of Ticks => Other Multipliers => Min sprint distance.
 
