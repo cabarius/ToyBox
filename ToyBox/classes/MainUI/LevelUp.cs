@@ -15,8 +15,25 @@ namespace ToyBox {
             HStack("Create & Level Up".localize(), 1,
                 () => { },
                 () => {
-                    Toggle("Respec from Level 0".localize(), ref Settings.toggleSetDefaultRespecLevelZero, 300.width());
+                    if (Toggle("Respec from Level 0".localize(), ref Settings.toggleSetDefaultRespecLevelZero, 300.width())) {
+                        Settings.toggleSetDefaultRespecLevelFifteen &= !Settings.toggleSetDefaultRespecLevelZero;
+                        Settings.toggleSetDefaultRespecLevelThirtyfive &= !Settings.toggleSetDefaultRespecLevelZero;
+                    }
                     Label("This allows rechosing the first arcehtype. Also makes Companion respec start from level 0.".green().localize());
+                },
+                () => {
+                    if (Toggle("Respec from Level 15".localize(), ref Settings.toggleSetDefaultRespecLevelFifteen, 300.width())) {
+                        Settings.toggleSetDefaultRespecLevelZero &= !Settings.toggleSetDefaultRespecLevelFifteen;
+                        Settings.toggleSetDefaultRespecLevelThirtyfive &= !Settings.toggleSetDefaultRespecLevelFifteen;
+                    }
+                    Label("This allows rechosing the second archetype.".green());
+                },
+                () => {
+                    if (Toggle("Respec from Level 35".localize(), ref Settings.toggleSetDefaultRespecLevelThirtyfive, 300.width())) {
+                        Settings.toggleSetDefaultRespecLevelZero &= !Settings.toggleSetDefaultRespecLevelThirtyfive;
+                        Settings.toggleSetDefaultRespecLevelFifteen &= !Settings.toggleSetDefaultRespecLevelThirtyfive;
+                    }
+                    Label("This allows rechosing the third archetype.".green());
                 },
                 () => Toggle("Ignore Archetypes Prerequisites".localize(), ref Settings.toggleIgnoreCareerPrerequisites),
                 () => Toggle("Ignore Talent Prerequisites".localize(), ref Settings.toggleFeaturesIgnorePrerequisites),

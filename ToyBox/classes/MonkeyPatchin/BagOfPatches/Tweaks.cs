@@ -18,7 +18,7 @@ namespace ToyBox.BagOfPatches {
             return true;
         }
         [HarmonyPatch]
-        private static class UnitHelper_CreateMoveCommandParamsRT_Patch {
+        private static class Sprint_Walk_Range_Patches {
             private static int GetMaxWalkDistance() {
                 return (int)(Settings.walkRangeMultiplier * BlueprintRoot.Instance.MaxWalkDistance);
             }
@@ -33,10 +33,10 @@ namespace ToyBox.BagOfPatches {
             [HarmonyTranspiler]
             private static IEnumerable<CodeInstruction> CreateMoveCommandParamsRT(IEnumerable<CodeInstruction> instructions) {
                 var fieldInfo = AccessTools.Field(typeof(BlueprintRoot), nameof(BlueprintRoot.MaxWalkDistance));
-                var methodInfo = AccessTools.Method(typeof(UnitHelper_CreateMoveCommandParamsRT_Patch), nameof(GetMaxWalkDistance));
+                var methodInfo = AccessTools.Method(typeof(Sprint_Walk_Range_Patches), nameof(GetMaxWalkDistance));
 
                 var fieldInfo2 = AccessTools.Field(typeof(BlueprintRoot), nameof(BlueprintRoot.MinSprintDistance));
-                var methodInfo2 = AccessTools.Method(typeof(UnitHelper_CreateMoveCommandParamsRT_Patch), nameof(GetMinSprintDistance));
+                var methodInfo2 = AccessTools.Method(typeof(Sprint_Walk_Range_Patches), nameof(GetMinSprintDistance));
                 foreach (var instruction in instructions) {
                     if (instruction.opcode == OpCodes.Ldfld && instruction.operand as FieldInfo == fieldInfo) {
                         yield return new CodeInstruction(OpCodes.Pop);

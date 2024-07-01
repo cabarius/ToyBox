@@ -37,6 +37,10 @@ namespace ToyBox.BagOfPatches {
             public static int getMaybeZero(UnitProgressionData _instance) {
                 if (Settings.toggleSetDefaultRespecLevelZero) {
                     return int.MinValue;
+                } else if (Settings.toggleSetDefaultRespecLevelFifteen) {
+                    return 15;
+                } else if (Settings.toggleSetDefaultRespecLevelThirtyfive) {
+                    return 35;
                 } else {
                     var tmp = _instance.Owner.Blueprint.GetDefaultLevel();
                     return tmp;
@@ -150,7 +154,7 @@ namespace ToyBox.BagOfPatches {
             [HarmonyPatch(nameof(BlueprintUnit.CreateEntity))]
             [HarmonyPostfix]
             public static void CreateEntity(BaseUnitEntity __result) {
-                if (Settings.toggleSetDefaultRespecLevelZero) {
+                if (Settings.toggleSetDefaultRespecLevelZero || Settings.toggleSetDefaultRespecLevelFifteen || Settings.toggleSetDefaultRespecLevelThirtyfive) {
                     if (new StackTrace().ToString().Contains($"{typeof(LevelUpManager).FullName}.{nameof(LevelUpManager.RecalculatePreview)}")) {
                         __result.Progression.Respec();
                     }

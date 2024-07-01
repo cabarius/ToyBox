@@ -176,6 +176,8 @@ namespace ToyBox {
         public bool toggleIgnoreCareerPrerequisites = false;
         public bool toggleFeaturesIgnorePrerequisites = false;
         public bool toggleSetDefaultRespecLevelZero = false;
+        public bool toggleSetDefaultRespecLevelFifteen = false;
+        public bool toggleSetDefaultRespecLevelThirtyfive = false;
 
         // Multipliers
         public float experienceMultiplier = 1;
